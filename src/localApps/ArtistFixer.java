@@ -65,7 +65,7 @@ public class ArtistFixer {
         Iterator<String> audioIt = sampleAudioList.iterator();
         /* Get Medatata from Song */
         while (audioIt.hasNext()) {
-            String checkingAddr = audioIt.next();;
+            String checkingAddr = audioIt.next();
             try {
                 MetaSong aMeta = new MetaSong(checkingAddr);
                 String toCheckArtist = aMeta.getArtist();
