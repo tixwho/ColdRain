@@ -24,6 +24,8 @@ public class MetaSong {
     private String fileName;
     private String trackTitle;
     private String trackNo;
+    private String discNo;
+    private String totalDiscNo;
     private String artist;
     private String album;
     private String albumArtist;
@@ -41,6 +43,8 @@ public class MetaSong {
         setFileName(AudioFile.getBaseFilename(new File(addr)));
         setTrackTitle(tag.getFirst(FieldKey.TITLE));
         setTrackNo(tag.getFirst(FieldKey.TRACK));
+        setDiscNo(tag.getFirst(FieldKey.DISC_NO));
+        setTotalDiscNo(tag.getFirst(FieldKey.DISC_TOTAL));
         setArtist(tag.getFirst(FieldKey.ARTIST));
         setAlbum(tag.getFirst(FieldKey.ALBUM));
         setAlbumArtist(tag.getFirst(FieldKey.ALBUM_ARTIST));
@@ -92,6 +96,22 @@ public class MetaSong {
         this.trackNo = trackNo;
     }
 
+    public String getDiscNo() {
+        return discNo;
+    }
+
+    public void setDiscNo(String discNo) {
+        this.discNo = discNo;
+    }
+
+    public String getTotalDiscNo() {
+        return totalDiscNo;
+    }
+
+    public void setTotalDiscNo(String totalDiscNo) {
+        this.totalDiscNo = totalDiscNo;
+    }
+
     public String getArtist() {
         return artist;
     }
@@ -132,6 +152,8 @@ public class MetaSong {
         return LENGTH;
     }
 
+    
+    //possible enhancement: use reflect and a list to automatically rotate and write
     public void writeMetaToFile()
         throws KeyNotFoundException, FieldDataInvalidException, CannotWriteException {
         if (trackTitle != null && trackTitle != "") {
@@ -140,6 +162,12 @@ public class MetaSong {
         }
         if (trackNo != null && trackNo != "") {
             tag.setField(FieldKey.TRACK, trackNo);
+        }
+        if (discNo != null && discNo != "") {
+            tag.setField(FieldKey.DISC_NO, discNo);
+        }
+        if (totalDiscNo != null && totalDiscNo != "") {
+            tag.setField(FieldKey.DISC_TOTAL, totalDiscNo);
         }
         if (artist != null && artist != "") {
             tag.setField(FieldKey.ARTIST, artist);
