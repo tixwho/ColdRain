@@ -9,6 +9,9 @@ import tables.M3U8Song;
 import tables.M3U8Table;
 import toolkit.NewFileWriter;
 
+//网易云导出来的歌单是从/Cloudmusic开始的相对路径，这玩意儿能帮忙补成绝对路径
+//其实还应该写个程序把.ncm结尾的路径改成.flac或者.mp3的...但是有的解出来是flac有的是mp3,不好说。
+//还是让他们人工改吧，应该要改的不会太多。如果有需要的话可以另写一个app做这个
 public class M3U8_LocationFixer {
 
     public static void fixALocation(String m3u8loc, String newDirLoc)

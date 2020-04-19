@@ -14,6 +14,7 @@ import tables.MetaSong;
 import toolkit.LogMaker;
 import toolkit.MethodInvoker;
 
+//类似一次性程序，用来从文件名读取metadata然后写进去
 public class MetaFromName {
 
     public static void generateAMeta(String audioAddr,String divider) throws CannotReadException, IOException,

@@ -20,6 +20,8 @@ import toolkit.MisUtils;
 import toolkit.NewFileWriter;
 import toolkit.Timer;
 
+//用metadata写新文件名并更新m3u 格式为 歌手-歌名
+//也是第一次让我意识到了windows路径还有不支持某些字符这回事，当时可让我一顿debug，debug了整整两天
 public class SongFormatizer {
 
     public static String[] calcAudioLoc(String audioFileLoc) throws CannotReadException,

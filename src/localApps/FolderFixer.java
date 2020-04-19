@@ -17,6 +17,8 @@ import toolkit.MethodInvoker;
 import toolkit.MisUtils;
 import toolkit.NewFileWriter;
 
+//只是暂时性用的，用法是通过metadata读专辑，然后用专辑名创新文件夹放进去
+//不仅黑历史而且还有bug，如果专辑名包含windows路径不支持字符（比如/）会当场爆炸
 public class FolderFixer {
 
     /*

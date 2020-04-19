@@ -13,6 +13,7 @@ import tables.ZplSong;
 import tables.ZplTable;
 import toolkit.DirMaker;
 
+//用zpl去复制歌，算是对文件读写的尝试；现在没啥卵用
 public class ZPL_CopySong {
 
     public static void copySongFromAZplTable(String address) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, DocumentException, IOException {

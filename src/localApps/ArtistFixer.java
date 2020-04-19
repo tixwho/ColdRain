@@ -25,6 +25,7 @@ import toolkit.MisUtils;
 import toolkit.PlaylistUpdater;
 import toolkit.Timer;
 
+//最新力作，虽然有的地方还是不堪入目但是至少比以前好了
 public class ArtistFixer {
 
 

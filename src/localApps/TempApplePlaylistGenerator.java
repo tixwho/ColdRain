@@ -5,6 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import tables.M3UTable;
 import toolkit.NewFileWriter;
 
+//temp是因为数据库化之后就不需要了，不过这里哪个app不是这样呢(
+//会从"\Discography"开始往后截路径，并且把"\"都转换成"/" 有优化空间，不过对我是够用了
 public class TempApplePlaylistGenerator {
 
     public static void main(String[] args) {

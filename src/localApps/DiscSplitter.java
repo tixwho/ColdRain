@@ -17,6 +17,8 @@ import toolkit.LogMaker;
 import toolkit.MethodInvoker;
 import toolkit.MisUtils;
 
+
+//黑历史系列，等删
 public class DiscSplitter {
 
     public static String[] calcNewAudioLoc(String parentFolderLoc, String audioLoc)

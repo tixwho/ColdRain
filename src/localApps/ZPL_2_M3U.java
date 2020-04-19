@@ -9,6 +9,7 @@ import tables.ZplTable;
 import toolkit.DirMaker;
 import toolkit.NewFileWriter;
 
+//极早期作品，为了把groove音乐的歌单拷出来；根本就没人用zpl吧喂
 public class ZPL_2_M3U {
 
     // NOTICE: args already set up in Run-Run Configurations-Arguments
