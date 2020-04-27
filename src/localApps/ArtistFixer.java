@@ -27,6 +27,12 @@ import toolkit.Timer;
 
 //最新力作，虽然有的地方还是不堪入目但是至少比以前好了
 public class ArtistFixer {
+    
+    /* Upcoming Feature:
+     * even if name is not perfectly matched (sakuzyo vs xi), if contains name, enter a list
+     * for manual check.
+     * Notice: finding ways to avoid confusion caused by short artist name (e.g. b, An)
+     */
 
 
     public static HashMap<String, String> readModList(String toReadXmlLoc)
