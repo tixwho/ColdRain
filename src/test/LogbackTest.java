@@ -2,6 +2,8 @@ package test;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
 
 public class LogbackTest extends LogAncestorTest{
     private static final Logger log = LoggerFactory.getLogger(LogbackTest.class);
@@ -17,6 +19,12 @@ public class LogbackTest extends LogAncestorTest{
         log.info("I'm static!");
     }
     public static void main(String[] args) {
+        /*How to set log level*/
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();     
+        ch.qos.logback.classic.Logger rootlogger = loggerContext.getLogger(LogbackTest.class);
+        rootlogger.setLevel(Level.ERROR);
+        
+        log.info("here");
         log.error("SHIT");
     }
 

@@ -8,9 +8,9 @@ import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
-import tables.M3USong;
-import tables.M3UTable;
-import tables.MetaSong;
+import old.localModels.M3USong;
+import old.localModels.M3UTable;
+import old.localModels.MetaSong;
 import toolkit.NewFileWriter;
 
 public class SingleUse_IslandFixer {

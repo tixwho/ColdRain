@@ -5,10 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import tables.M3U8Song;
-import tables.M3U8Table;
-import tables.M3USong;
-import tables.M3UTable;
+import old.localModels.M3U8Song;
+import old.localModels.M3U8Table;
+import old.localModels.M3USong;
+import old.localModels.M3UTable;
 
 public class NewFileWriter {
 

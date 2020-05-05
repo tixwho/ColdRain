@@ -1,0 +1,14 @@
+<hibernate-mapping package="database.databaseModels">
+   <class name="TestFileModel" table="TESTHIB">
+      <meta attribute="class-description">
+         This class is for hibernate testing
+      </meta>
+      <id name="fid" type="int" column="fid">
+         <generator class="native"/>
+      </id>
+      <property name="addr" column="addr" type="string"/>
+      <property name="title" column="title" type="string"/>
+      <property name="artist" column="artist" type="string"/>
+      <property name="album" column="album" type="string"/>
+   </class>
+</hibernate-mapping>

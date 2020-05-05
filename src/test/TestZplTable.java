@@ -3,8 +3,8 @@ package test;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import org.dom4j.DocumentException;
-import tables.ZplSong;
-import tables.ZplTable;
+import old.localModels.ZplSong;
+import old.localModels.ZplTable;
 
 public class TestZplTable {
 

@@ -1,7 +1,7 @@
 package test;
 
 import org.dom4j.DocumentException;
-import reader.ZplOriginalReader;
+import old.readers.ZplOriginalReader;
 public class TestXmlReader {
    
     //测试过程中使用，目前已废弃

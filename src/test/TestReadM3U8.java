@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import org.dom4j.DocumentException;
-import reader.M3U8Reader;
-import reader.SongReader;
-import tables.M3U8Song;
+import old.localModels.M3U8Song;
+import old.readers.M3U8Reader;
+import old.readers.SongReader;
 
 public class TestReadM3U8 {
 
