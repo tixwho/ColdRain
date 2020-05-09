@@ -5,10 +5,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import exception.ErrorCodes;
+import exception.NativeReflectionException;
+import exception.PlaylistIOException;
 import local.generic.AbstractPlaylistReader;
+import local.generic.AbstractPlaylistTable;
 import local.generic.SupportedMeta;
 import toolkit.LogMaker;
 
@@ -17,27 +18,34 @@ public class M3uReader extends AbstractPlaylistReader {
     String src;
 
     @Override
-    // customize exception to
-    //IOE-> FileOperationEx Nosuch/Security->MethodConstructEx IllegalAccess/IllArg/Inv->MethodInvEx
-    //todo: move reflective method to generic.
-    public void read(File f) throws IOException, NoSuchMethodException, SecurityException,
-        IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
-        //IMPORTANT! SET supportedMeta Array to SuperClass.
-        this.setSupportedMeta(suppMeta);
-        //test
-        LogMaker.logs("suppMeta:" + super.suppMeta[0]);
-        InputStreamReader in = new InputStreamReader(new FileInputStream(f), "utf-8");
-        BufferedReader br = new BufferedReader(in);
-        String tempData; // each lines contains a src.
-        while ((tempData = br.readLine()) != null) {
-            M3uPlaylistSong aSong = new M3uPlaylistSong();
-            src=tempData;
-            //move everything beneath to generic
-            setAllProperties(this,aSong);
-            songArrList.add(aSong);
+    // customize exception .
+    public void read(File f) throws PlaylistIOException, NativeReflectionException {
+        try {
+            // IMPORTANT! SET supportedMeta Array to SuperClass.
+            this.setSupportedMeta(suppMeta);
+            // test
+            LogMaker.logs("suppMeta:" + super.suppMeta[0]);
+            InputStreamReader in = new InputStreamReader(new FileInputStream(f), "utf-8");
+            BufferedReader br = new BufferedReader(in);
+            String tempData; // each lines contains a src.
+            while ((tempData = br.readLine()) != null) {
+                M3uSong aSong = new M3uSong();
+                src = tempData;
+                // move everything beneath to generic
+                setAllProperties(this, aSong);
+                songArrList.add(aSong);
+            }
+            br.close();
+        } catch (IOException ioe) {
+            throw new PlaylistIOException("M3UReader IO Exception", ioe, ErrorCodes.BASE_IO_ERROR);
         }
-        br.close();
 
+    }
+
+    @Override
+    public AbstractPlaylistTable getTable() {
+
+        return new M3uTable(songArrList, suppMeta);
     }
 
 }

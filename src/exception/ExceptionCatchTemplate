@@ -1,0 +1,25 @@
+catch(IOException ioe) {
+            throw new PlaylistIOException("M3UReader IO Exception", ioe, ErrorCodes.BASE_IO_ERROR);
+        }catch(NoSuchMethodException nsme) {
+            throw new NativeReflectionException("M3UReader Reflection Exception",nsme,ErrorCodes.REFLECT_UNKNOWN_METHOD_ERROR);
+        }catch(IllegalAccessException iace) {
+            throw new NativeReflectionException("M3UReader Reflection Exception",iace,ErrorCodes.ILLEGAL_ACCESS_ERROR);
+        }catch(IllegalArgumentException iare) {
+            throw new NativeReflectionException("M3UReader Reflection Exception",iare,ErrorCodes.ILLEGAL_ARGUMENT_ERROR);
+        }catch(InvocationTargetException ite) {
+            throw new NativeReflectionException("M3UReader Reflection Exception",ite,ErrorCodes.INVOCATION_TARGET_ERROR);
+        }catch(NoSuchFieldException nfe) {
+            throw new NativeReflectionException("M3UReader Reflection Exception",nfe,ErrorCodes.NO_SUCH_FIELD_ERROR);
+        }catch(SecurityException se) {
+            throw new NativeReflectionException("M3UReader Reflection Exception",se,ErrorCodes.SECURITY_ERROR);        
+        }catch(CannotReadException cre) {
+            throw new MetaIOException ("File Reading Exception",cre,ErrorCodes.AUDIOFILE_READING_ERROR);
+        }catch(IOException ioe) {
+            throw new MetaIOException ("File Reading Exception",ioe,ErrorCodes.AUDIOFILE_IO_ERROR);
+        }catch(TagException te) {
+            throw new MetaIOException ("File Reading Exception",te,ErrorCodes.AUDIOFILE_TAG_ERROR);
+        }catch(ReadOnlyFileException rofe) {
+            throw new MetaIOException ("File Reading Exception",rofe,ErrorCodes.READONLY_FILE_ERROR);
+        }catch(InvalidAudioFrameException iafe) {
+            throw new MetaIOException ("File Reading Exception",iafe,ErrorCodes.INVALID_AUDIOFRAME_ERROR);
+        }

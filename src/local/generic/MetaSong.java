@@ -14,9 +14,13 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
+import exception.ErrorCodes;
+import exception.MetaIOException;
 import toolkit.LogMaker;
 
 public class MetaSong {
+
+    // NOTICE: THIS IS NOT AN ACTUAL SONG IMPLEMENTED IN ANY TYPE OF PLAYLIST
 
     private AudioFile aof;
     private Tag tag;
@@ -31,34 +35,49 @@ public class MetaSong {
     private String albumArtist;
     private final String FORMAT;
     private final String SAMPLERATE;
-    private final int BITRATE;
-    private final int LENGTH;
+    private final String BITRATE;
+    private final String LENGTH;
 
-    public MetaSong(String addr) throws CannotReadException, IOException, TagException,
-        ReadOnlyFileException, InvalidAudioFrameException {
-
-        aof = AudioFileIO.read(new File(addr));
-        tag = aof.getTag();
-        setSrc(addr);
-        setFileName(AudioFile.getBaseFilename(new File(addr)));
-        setTrackTitle(tag.getFirst(FieldKey.TITLE));
-        setTrackNo(tag.getFirst(FieldKey.TRACK));
-        setDiscNo(tag.getFirst(FieldKey.DISC_NO));
-        setTotalDiscNo(tag.getFirst(FieldKey.DISC_TOTAL));
-        setArtist(tag.getFirst(FieldKey.ARTIST));
-        setAlbum(tag.getFirst(FieldKey.ALBUM));
-        setAlbumArtist(tag.getFirst(FieldKey.ALBUM_ARTIST));
-        AudioHeader aoh = aof.getAudioHeader();
-        this.FORMAT = aoh.getFormat();
-        this.SAMPLERATE = aoh.getSampleRate();
-        this.BITRATE = (int) aoh.getBitRateAsNumber();
-        this.LENGTH = aoh.getTrackLength();
-        //debug start
-        LogMaker.logs("format::"+this.FORMAT);
-        LogMaker.logs("SampleRate::"+this.SAMPLERATE);
-        LogMaker.logs("testbit::"+aoh.getBitRateAsNumber());
-        //debug delete
-
+    public MetaSong(String addr) throws MetaIOException {
+        try {
+            aof = AudioFileIO.read(new File(addr));
+            tag = aof.getTag();
+            setSrc(addr);
+            setFileName(AudioFile.getBaseFilename(new File(addr)));
+            setTrackTitle(tag.getFirst(FieldKey.TITLE));
+            setTrackNo(tag.getFirst(FieldKey.TRACK));
+            setDiscNo(tag.getFirst(FieldKey.DISC_NO));
+            setTotalDiscNo(tag.getFirst(FieldKey.DISC_TOTAL));
+            setArtist(tag.getFirst(FieldKey.ARTIST));
+            setAlbum(tag.getFirst(FieldKey.ALBUM));
+            setAlbumArtist(tag.getFirst(FieldKey.ALBUM_ARTIST));
+            AudioHeader aoh = aof.getAudioHeader();
+            this.FORMAT = aoh.getFormat();
+            this.SAMPLERATE = aoh.getSampleRate();
+            this.BITRATE = aoh.getBitRate();
+            this.LENGTH = String.valueOf(aoh.getTrackLength());
+            // debug start
+            // LogMaker.logs("format::"+this.FORMAT);
+            // LogMaker.logs("SampleRate::"+this.SAMPLERATE);
+            // LogMaker.logs("testbit::"+aoh.getBitRateAsNumber());
+            LogMaker.logs("Metaed: " + src);
+            // debug delete
+        } catch (CannotReadException cre) {
+            throw new MetaIOException("AudioFile Reading Exception", cre,
+                ErrorCodes.AUDIOFILE_READING_ERROR);
+        } catch (IOException ioe) {
+            throw new MetaIOException("AudioFile Reading Exception", ioe,
+                ErrorCodes.AUDIOFILE_IO_ERROR);
+        } catch (TagException te) {
+            throw new MetaIOException("AudioFile Reading Exception", te,
+                ErrorCodes.AUDIOFILE_TAG_ERROR);
+        } catch (ReadOnlyFileException rofe) {
+            throw new MetaIOException("AudioFile Reading Exception", rofe,
+                ErrorCodes.READONLY_FILE_ERROR);
+        } catch (InvalidAudioFrameException iafe) {
+            throw new MetaIOException("AudioFile Reading Exception", iafe,
+                ErrorCodes.INVALID_AUDIOFRAME_ERROR);
+        }
 
     }
 
@@ -135,7 +154,7 @@ public class MetaSong {
     public void setAlbumArtist(String albumArtist) {
         this.albumArtist = albumArtist;
     }
-    
+
     public String getFORMAT() {
         return FORMAT;
     }
@@ -143,43 +162,52 @@ public class MetaSong {
     public String getSAMPLERATE() {
         return SAMPLERATE;
     }
-    
-    public int getBITRATE() {
+
+    public String getBITRATE() {
         return BITRATE;
     }
-    
-    public int getLENGTH() {
+
+    public String getLENGTH() {
         return LENGTH;
     }
 
-    
-    //possible enhancement: use reflect and a list to automatically rotate and write
-    public void writeMetaToFile()
-        throws KeyNotFoundException, FieldDataInvalidException, CannotWriteException {
-        if (trackTitle != null && trackTitle != "") {
-            tag.setField(FieldKey.TITLE, trackTitle);
-            //throws KeyNotFoundException, FieldDataInvaidException
+
+    // possible enhancement: use reflect and a list to automatically rotate and write
+    public void writeMetaToFile() throws MetaIOException {
+        try {
+            if (trackTitle != null && trackTitle != "") {
+                tag.setField(FieldKey.TITLE, trackTitle);
+                // throws KeyNotFoundException, FieldDataInvaidException
+            }
+            if (trackNo != null && trackNo != "") {
+                tag.setField(FieldKey.TRACK, trackNo);
+            }
+            if (discNo != null && discNo != "") {
+                tag.setField(FieldKey.DISC_NO, discNo);
+            }
+            if (totalDiscNo != null && totalDiscNo != "") {
+                tag.setField(FieldKey.DISC_TOTAL, totalDiscNo);
+            }
+            if (artist != null && artist != "") {
+                tag.setField(FieldKey.ARTIST, artist);
+            }
+            if (album != null && album != "") {
+                tag.setField(FieldKey.ALBUM, album);
+            }
+            if (albumArtist != null && albumArtist != "") {
+                tag.setField(FieldKey.ALBUM_ARTIST, albumArtist);
+            }
+            AudioFileIO.write(aof);
+        } catch (KeyNotFoundException kne) {
+            throw new MetaIOException("AudioFile Writing Exception", kne,
+                ErrorCodes.KEYNOTFOUND_ERROR);
+        } catch (FieldDataInvalidException fdie) {
+            throw new MetaIOException("AudioFile Writing Exception", fdie,
+                ErrorCodes.INVALID_FIELDDATA_ERROR);
+        } catch (CannotWriteException cwe) {
+            throw new MetaIOException("AudioFile Writing Exception", cwe,
+                ErrorCodes.CANNOTWRITE_ERROR);
         }
-        if (trackNo != null && trackNo != "") {
-            tag.setField(FieldKey.TRACK, trackNo);
-        }
-        if (discNo != null && discNo != "") {
-            tag.setField(FieldKey.DISC_NO, discNo);
-        }
-        if (totalDiscNo != null && totalDiscNo != "") {
-            tag.setField(FieldKey.DISC_TOTAL, totalDiscNo);
-        }
-        if (artist != null && artist != "") {
-            tag.setField(FieldKey.ARTIST, artist);
-        }
-        if (album != null && album != "") {
-            tag.setField(FieldKey.ALBUM, album);
-        }
-        if (albumArtist != null && albumArtist != "") {
-            tag.setField(FieldKey.ALBUM_ARTIST, albumArtist);
-        }
-        AudioFileIO.write(aof);
-        //throws CannotWriteException
 
     }
 
