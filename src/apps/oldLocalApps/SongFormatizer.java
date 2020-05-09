@@ -13,7 +13,7 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
 import old.localModels.M3USong;
 import old.localModels.M3UTable;
-import old.localModels.MetaSong;
+import old.localModels.MetaSong_old;
 import toolkit.LogMaker;
 import toolkit.MethodInvoker;
 import toolkit.MisUtils;
@@ -26,7 +26,7 @@ public class SongFormatizer {
 
     public static String[] calcAudioLoc(String audioFileLoc) throws CannotReadException,
         IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-        MetaSong singleSongMeta = new MetaSong(audioFileLoc);
+        MetaSong_old singleSongMeta = new MetaSong_old(audioFileLoc);
         String artist = singleSongMeta.getArtist();
         String name = singleSongMeta.getTrackTitle();
         String suffix = MisUtils.getSuffix(audioFileLoc);

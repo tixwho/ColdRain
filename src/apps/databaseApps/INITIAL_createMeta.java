@@ -11,7 +11,7 @@ import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
-import old.localModels.MetaSong;
+import old.localModels.MetaSong_old;
 import toolkit.LogMaker;
 import toolkit.MethodInvoker;
 import toolkit.MisUtils;
@@ -44,13 +44,13 @@ public class INITIAL_createMeta {
         ArrayList<String> sampleAudioList = new ArrayList<String>();
         sampleAudioList = MethodInvoker.singlizeInputR(folderAddr, allowedAudio, sampleAudioList);
         Iterator<String> audioIt = sampleAudioList.iterator();
-        ArrayList<MetaSong> metaList = new ArrayList<MetaSong>();
+        ArrayList<MetaSong_old> metaList = new ArrayList<MetaSong_old>();
 
         // 2. Get Metadata from each audio file separately.
         while (audioIt.hasNext()) {
             String singleFileaddr = audioIt.next();
             try {
-                MetaSong aSong = new MetaSong(singleFileaddr);
+                MetaSong_old aSong = new MetaSong_old(singleFileaddr);
                 metaList.add(aSong);
 
             } catch (CannotReadException | IOException | TagException | ReadOnlyFileException
@@ -81,7 +81,7 @@ public class INITIAL_createMeta {
             // create MAINMETA everytime launch
             statement.executeUpdate(createSentence);
             // iterate through metadata list to insert metadata into sqlite.
-            for (MetaSong singleMeta : metaList) {
+            for (MetaSong_old singleMeta : metaList) {
                 String title = singleMeta.getTrackTitle();
                 String artist = singleMeta.getArtist();
                 String album = singleMeta.getAlbum();

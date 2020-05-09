@@ -16,7 +16,7 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import toolkit.LogMaker;
 
-public class MetaSong {
+public class MetaSong_old {
 
     private AudioFile aof;
     private Tag tag;
@@ -34,7 +34,7 @@ public class MetaSong {
     private final int BITRATE;
     private final int LENGTH;
 
-    public MetaSong(String addr) throws CannotReadException, IOException, TagException,
+    public MetaSong_old(String addr) throws CannotReadException, IOException, TagException,
         ReadOnlyFileException, InvalidAudioFrameException {
 
         aof = AudioFileIO.read(new File(addr));

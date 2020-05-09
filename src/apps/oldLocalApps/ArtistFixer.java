@@ -18,7 +18,7 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.TagException;
 import exception.NormalE.NoCorrespondingFileTypeFound;
-import old.localModels.MetaSong;
+import old.localModels.MetaSong_old;
 import toolkit.LogMaker;
 import toolkit.MethodInvoker;
 import toolkit.MisUtils;
@@ -74,7 +74,7 @@ public class ArtistFixer {
         while (audioIt.hasNext()) {
             String checkingAddr = audioIt.next();
             try {
-                MetaSong aMeta = new MetaSong(checkingAddr);
+                MetaSong_old aMeta = new MetaSong_old(checkingAddr);
                 String toCheckArtist = aMeta.getArtist();
                 if (modMap.containsKey(toCheckArtist)) {
                     aMeta.setArtist(modMap.get(toCheckArtist));

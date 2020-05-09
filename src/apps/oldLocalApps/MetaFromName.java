@@ -10,7 +10,7 @@ import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.TagException;
-import old.localModels.MetaSong;
+import old.localModels.MetaSong_old;
 import toolkit.LogMaker;
 import toolkit.MethodInvoker;
 
@@ -19,7 +19,7 @@ public class MetaFromName {
 
     public static void generateAMeta(String audioAddr,String divider) throws CannotReadException, IOException,
         TagException, ReadOnlyFileException, InvalidAudioFrameException, KeyNotFoundException, CannotWriteException {
-        MetaSong aSong = new MetaSong(audioAddr);
+        MetaSong_old aSong = new MetaSong_old(audioAddr);
         File inpFile = new File(audioAddr);
         String nameWithSuffix = inpFile.getName();
         String pureFilename = nameWithSuffix.substring(0,nameWithSuffix.lastIndexOf("."));

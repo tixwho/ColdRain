@@ -14,7 +14,7 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
 import apps.testApps.BaseTestApp;
 import database.databaseModels.FileModel;
-import old.localModels.MetaSong;
+import old.localModels.MetaSong_old;
 import toolkit.HibernateUtils;
 import toolkit.LogMaker;
 import toolkit.MethodInvoker;
@@ -35,13 +35,13 @@ public class TEST_insertHibernate3 extends BaseTestApp {
             "E:\\lzx\\etc\\OST\\Discography",
             allowedAudio, sampleAudioList);
         Iterator<String> audioIt = sampleAudioList.iterator();
-        ArrayList<MetaSong> metaList = new ArrayList<MetaSong>();
+        ArrayList<MetaSong_old> metaList = new ArrayList<MetaSong_old>();
 
         // 2. Get Metadata from each audio file separately.
         while (audioIt.hasNext()) {
             String singleFileaddr = audioIt.next();
             try {
-                MetaSong aSong = new MetaSong(singleFileaddr);
+                MetaSong_old aSong = new MetaSong_old(singleFileaddr);
                 metaList.add(aSong);
                 LogMaker.logs(HibernateUtils.splitFormat(aSong.getFORMAT())[0]);
 
@@ -62,14 +62,14 @@ public class TEST_insertHibernate3 extends BaseTestApp {
         }
 
         // start oper
-        for (MetaSong perSong : metaList) {
+        for (MetaSong_old perSong : metaList) {
             ME.addRecord(perSong);
         }
         ME.taskEnd();
 
     }
 
-    public Integer addRecord(MetaSong metaIn) {
+    public Integer addRecord(MetaSong_old metaIn) {
         Session session = factory.openSession();
         Transaction tx = null;
         Integer fid = null;

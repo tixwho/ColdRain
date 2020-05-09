@@ -16,7 +16,7 @@ import org.jaudiotagger.tag.TagException;
 import exception.RuntimeE.EmptyListException;
 import old.localModels.M3USong;
 import old.localModels.M3UTable;
-import old.localModels.MetaSong;
+import old.localModels.MetaSong_old;
 
 public class MisUtils {
 
@@ -168,7 +168,7 @@ public class MisUtils {
     }
     
     //copied from SongFormatizer. Input is a metadata.
-    public static String[] calcAudioLoc(MetaSong singleSongMeta) throws CannotReadException,
+    public static String[] calcAudioLoc(MetaSong_old singleSongMeta) throws CannotReadException,
     IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
     String artist = singleSongMeta.getArtist();
     String name = singleSongMeta.getTrackTitle();

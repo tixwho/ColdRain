@@ -9,6 +9,10 @@ public class Timer {
     private long passedTime = -1;
     private ArrayList<Long> checkPointList = new ArrayList<Long>();
     
+    public Timer() {
+        this.timerEnd();//flush
+    }
+    
     public void timerStart() {
         this.startTime = System.currentTimeMillis();
         //this.startTime = System.nanoTime();

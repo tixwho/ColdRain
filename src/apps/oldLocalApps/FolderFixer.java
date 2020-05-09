@@ -11,7 +11,7 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
 import old.localModels.M3USong;
 import old.localModels.M3UTable;
-import old.localModels.MetaSong;
+import old.localModels.MetaSong_old;
 import toolkit.LogMaker;
 import toolkit.MethodInvoker;
 import toolkit.MisUtils;
@@ -37,7 +37,7 @@ public class FolderFixer {
         ArrayList<String> sampleFlacList = MethodInvoker.singlizeInput(folderAddr, ".flac");
         Iterator<String> flacIt = sampleFlacList.iterator();
         // step 1: get album name
-        MetaSong sampleMetaSong = new MetaSong(flacIt.next());
+        MetaSong_old sampleMetaSong = new MetaSong_old(flacIt.next());
         String albumName = sampleMetaSong.getAlbum();
         LogMaker.logs("Checked Album- " + albumName);
         // step 2: calculate new folder name

@@ -14,25 +14,54 @@ public enum SupportedMeta {
     SupportedMeta(String property) {
         this.property = property;
     }
-    
-    public String getMetaName() {
+
+    public String getProperty() {
         return this.property;
     }
 
 
     public static Method getGetter(AbstractPlaylistSong songInstance, SupportedMeta meta)
-        throws NoSuchMethodException, SecurityException {     
+        throws NoSuchMethodException, SecurityException {
+        String property_name = meta.property;
+        String methodName =
+            "get" + property_name.substring(0, 1).toUpperCase() + property_name.substring(1);
+        // testing method for reflcet
+        System.out.println("TEST in SongReader MethodName: " + methodName);
+        Method gotGetMethod = songInstance.getClass().getMethod(methodName); // 千万别给getter入参，谁给谁傻逼
+        return gotGetMethod;
+
+
+
+    }
+
+
+    public static Method getSetter(AbstractPlaylistSong songInstance, SupportedMeta meta)
+        throws NoSuchMethodException, SecurityException {
+        String property_name = meta.property;
+        String methodName =
+            "set" + property_name.substring(0, 1).toUpperCase() + property_name.substring(1);
+        // testing method for reflcet
+        // System.out.println("TEST in SongReader MethodName: " + methodName);
+        Method gotSetMethod = songInstance.getClass().getMethod(methodName, String.class); // 逗号后相当于给一个固定类型的参
+        return gotSetMethod;
+
+    }
+
+    // explicitly cross out MetaSong so no need to extend MetaSong and prevent confusion.
+
+    public static Method getGetter(MetaSong songInstance, SupportedMeta meta)
+        throws NoSuchMethodException, SecurityException {
         String property_name = meta.property;
         String methodName =
             "get" + property_name.substring(0, 1).toUpperCase() + property_name.substring(1);
         // testing method for reflcet
         // System.out.println("TEST in SongReader MethodName: " + methodName);
-        Method gotGetMethod = songInstance.getClass().getMethod(methodName, String.class); // 逗号后相当于给一个固定类型的参
+        Method gotGetMethod = songInstance.getClass().getMethod(methodName); // 逗号后相当于给一个固定类型的参
         return gotGetMethod;
 
     }
-    
-    public static Method getSetter(AbstractPlaylistSong songInstance, SupportedMeta meta)
+
+    public static Method getSetter(MetaSong songInstance, SupportedMeta meta)
         throws NoSuchMethodException, SecurityException {
         String property_name = meta.property;
         String methodName =
@@ -71,6 +100,27 @@ public enum SupportedMeta {
         }
         return rtrMap;
 
+    }
+
+
+
+    /**
+     * Return EnumMap setting all attributes true/false as input
+     * 
+     * @param bool Default value for map
+     * @return EnumMap covers all EnumType with default value.
+     */
+    public static EnumMap<SupportedMeta, Boolean> getInfoMap(boolean bool) {
+        if (bool == true) {
+            EnumMap<SupportedMeta, Boolean> fullTrueMap =
+                new EnumMap<SupportedMeta, Boolean>(SupportedMeta.class);
+            for (SupportedMeta eachInfotype : SupportedMeta.values()) {
+                fullTrueMap.put(eachInfotype, true);
+            }
+            return fullTrueMap;
+        } else {
+            return getInfoMap();
+        }
     }
 
     /**

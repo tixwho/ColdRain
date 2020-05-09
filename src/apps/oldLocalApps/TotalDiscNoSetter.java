@@ -8,7 +8,7 @@ import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.TagException;
-import old.localModels.MetaSong;
+import old.localModels.MetaSong_old;
 import toolkit.LogMaker;
 import toolkit.MethodInvoker;
 import toolkit.Timer;
@@ -26,7 +26,7 @@ public class TotalDiscNoSetter {
         MethodInvoker.singlizeInputR(toAddAudioFolderAddr, allowedSuffix, audioList);
         for (String audioLoc : audioList) {
             try {
-                MetaSong aMeta = new MetaSong(audioLoc);
+                MetaSong_old aMeta = new MetaSong_old(audioLoc);
                 //test
                 LogMaker.logs(audioLoc+" totalDisc:" +aMeta.getTotalDiscNo());
                 aMeta.setTotalDiscNo(toAddTotalDiscDesc);

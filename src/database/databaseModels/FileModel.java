@@ -1,6 +1,6 @@
 package database.databaseModels;
 
-import old.localModels.MetaSong;
+import old.localModels.MetaSong_old;
 import toolkit.HibernateUtils;
 
 public class FileModel {
@@ -23,7 +23,7 @@ public class FileModel {
     private int quality_num;
 
     /* Constructor */
-    public FileModel(MetaSong meta) {
+    public FileModel(MetaSong_old meta) {
         this.location = meta.getSrc();
         this.title = meta.getTrackTitle();
         this.album = meta.getAlbum();

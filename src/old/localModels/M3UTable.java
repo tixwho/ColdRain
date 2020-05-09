@@ -36,7 +36,7 @@ public class M3UTable {
             SongReader singleReader = new SongReader(songInfo, "m3u");
             M3USong packedSong = singleReader.getM3USong();
             String src = packedSong.getSrc();
-            MetaSong mtSong = new MetaSong(src);
+            MetaSong_old mtSong = new MetaSong_old(src);
             packedSong.setMetaSong(mtSong);
             playlist.add(packedSong);
         }

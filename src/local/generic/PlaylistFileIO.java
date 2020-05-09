@@ -12,7 +12,7 @@ public class PlaylistFileIO {
     private AbstractPlaylistWriter writer;
     private AbstractPlaylistTable table;
     private AbstractPlaylistReader reader;
-    private HashMap<String,AbstractPlaylistReader> readerMap;
-    private HashMap<String,AbstractPlaylistWriter> writerMap;
+    private HashMap<String, AbstractPlaylistReader> readerMap;
+    private HashMap<String, AbstractPlaylistWriter> writerMap;
 
 }

@@ -11,7 +11,7 @@ import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
-import old.localModels.MetaSong;
+import old.localModels.MetaSong_old;
 import toolkit.DirMaker;
 import toolkit.LogMaker;
 import toolkit.MethodInvoker;
@@ -24,7 +24,7 @@ public class DiscSplitter {
     public static String[] calcNewAudioLoc(String parentFolderLoc, String audioLoc)
         throws CannotReadException, IOException, TagException, ReadOnlyFileException,
         InvalidAudioFrameException {
-        MetaSong singleSongMeta = new MetaSong(audioLoc);
+        MetaSong_old singleSongMeta = new MetaSong_old(audioLoc);
         String album = singleSongMeta.getAlbum();
         // try generate a new folder for album.
         File possibleNewFolder = new File(parentFolderLoc, MisUtils.replaceIlligalFilename(album));

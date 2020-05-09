@@ -10,7 +10,7 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
 import old.localModels.M3USong;
 import old.localModels.M3UTable;
-import old.localModels.MetaSong;
+import old.localModels.MetaSong_old;
 import toolkit.NewFileWriter;
 
 public class SingleUse_IslandFixer {
@@ -34,7 +34,7 @@ public class SingleUse_IslandFixer {
             String fullPath = islandFolder.getPath().concat("\\").concat(fileLoc);
             //debug
             System.out.println("fullPath: "+fullPath);
-            MetaSong aMetaSong = new MetaSong(fullPath);
+            MetaSong_old aMetaSong = new MetaSong_old(fullPath);
             aSong.setMetaSong(aMetaSong);
             origFileList.add(aSong);
         }

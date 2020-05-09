@@ -1,6 +1,6 @@
 package database.databaseModels;
 
-import old.localModels.MetaSong;
+import old.localModels.MetaSong_old;
 
 public class TestFileModel {
     
@@ -11,7 +11,7 @@ public class TestFileModel {
     private String album;
     
     
-    public TestFileModel(MetaSong meta) {
+    public TestFileModel(MetaSong_old meta) {
         this.addr = meta.getSrc();
         this.title = meta.getTrackTitle();
         this.artist = meta.getArtist();

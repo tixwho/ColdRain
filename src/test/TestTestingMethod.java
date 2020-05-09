@@ -16,7 +16,7 @@ import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
-import old.localModels.MetaSong;
+import old.localModels.MetaSong_old;
 import toolkit.LogMaker;
 import toolkit.MethodInvoker;
 
@@ -34,7 +34,7 @@ public class TestTestingMethod {
 
         for (String addr:receivedList) {
             try {
-                MetaSong aMeta = new MetaSong(addr);
+                MetaSong_old aMeta = new MetaSong_old(addr);
                 String albumName = aMeta.getAlbum();
                 if (ourMap.containsKey(albumName)) {
                     ourMap.get(albumName).addOne();

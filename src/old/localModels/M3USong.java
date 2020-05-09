@@ -2,7 +2,7 @@ package old.localModels;
 
 public class M3USong {
     private String src;
-    private MetaSong metaSong;
+    private MetaSong_old metaSong;
     private boolean isMetaEd = false;
     
     public M3USong() {
@@ -17,11 +17,11 @@ public class M3USong {
         this.src = src;
     }
 
-    public MetaSong getMetaSong() {
+    public MetaSong_old getMetaSong() {
         return metaSong;
     }
 
-    public void setMetaSong(MetaSong metaSong) {
+    public void setMetaSong(MetaSong_old metaSong) {
         this.metaSong = metaSong;
         this.isMetaEd = true;
     }
