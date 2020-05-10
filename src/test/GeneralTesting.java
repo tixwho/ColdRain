@@ -1,71 +1,68 @@
 package test;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.TagException;
+import org.slf4j.Logger;
 import exception.MetaIOException;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
 import local.generic.AbstractPlaylistReader;
 import local.generic.AbstractPlaylistSong;
+import local.generic.BaseTestingClass;
 import local.m3u.M3uReader;
 import local.m3u.M3uTable;
 import toolkit.LogMaker;
 import toolkit.MethodInvoker;
-import toolkit.Timer;
 
-public class GeneralTesting {
-    
-    //用后既删
-    public static void main (String[] args) {
-        Timer tim = new Timer();
+public class GeneralTesting extends BaseTestingClass{
+    // 用后既删
+    public static void main(String[] args) {
+        GeneralTesting me = new GeneralTesting();
+        me.selfCtrl.setLevel("error");
+        me.readerCtrl.setLevel("error");
         AbstractPlaylistReader reader = new M3uReader();
         ArrayList<String> folderList = new ArrayList<String>();
         String[] allowedSuffix = {".m3u"};
-        MethodInvoker.singlizeInputR("C:\\Users\\ASUS\\Music\\Dopamine\\Playlists",allowedSuffix,folderList );
+        MethodInvoker.singlizeInputR("C:\\Users\\ASUS\\Music\\Dopamine\\Playlists\\Abyss.m3u", allowedSuffix,
+            folderList);
         tim.timerStart();
 
-  
-            for (String path:folderList) {
-                try {
-                    reader.read(path);
-                } catch (PlaylistIOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (NativeReflectionException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+
+        for (String path : folderList) {
+            try {
+                reader.read(path);
+            } catch (PlaylistIOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (NativeReflectionException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
+        }
 
         M3uTable testTable = (M3uTable) reader.getTable();
         M3uTable testTable2 = new M3uTable();
 
-            try {
-                testTable2.setInfoFromTable(testTable);
-            } catch (NativeReflectionException e) {
+        try {
+            testTable2.setInfoFromTable(testTable);
+        } catch (NativeReflectionException e) {
 
-                e.printStackTrace();
-            } catch (MetaIOException e) {
+            e.printStackTrace();
+        } catch (MetaIOException e) {
 
-                e.printStackTrace();
-            }
-      
-        ArrayList<AbstractPlaylistSong> arr = testTable2.getSongArrList();
-        for (AbstractPlaylistSong songIn:arr) {
-            LogMaker.logs("songIn: " + songIn.getSrc());
+            e.printStackTrace();
         }
-        
+
+        ArrayList<AbstractPlaylistSong> arr = testTable2.getSongArrList();
+        for (AbstractPlaylistSong songIn : arr) {
+            logger.info("songIn: "+songIn.getSrc());
+        }
+
         tim.timerPeriod();
         try {
             Method met = AbstractPlaylistSong.class.getMethod("getSrc");
             LogMaker.logs("retrieved!");
-        }catch(NoSuchMethodException nse) {
+        } catch (NoSuchMethodException nse) {
             nse.printStackTrace();
         }
         tim.timerEnd();

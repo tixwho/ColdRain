@@ -1,14 +1,11 @@
 package local.generic;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.EnumMap;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.TagException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import exception.ErrorCodes;
 import exception.MetaIOException;
 import exception.NativeReflectionException;
@@ -26,6 +23,11 @@ public abstract class AbstractPlaylistTable {
      */
 
     protected ArrayList<AbstractPlaylistSong> songArrList = new ArrayList<AbstractPlaylistSong>();
+    
+    /**
+     * Universal logger for playlistTable.
+     */
+    public static Logger logger = LoggerFactory.getLogger(AbstractPlaylistTable.class);
 
     /* constructor */
     public AbstractPlaylistTable() {
