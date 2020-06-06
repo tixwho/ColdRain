@@ -11,7 +11,7 @@
         <property name="connection.useUnicode">true</property> 
         <property name="connection.characterEncoding">UTF-8</property>
         <property name="hibernate.connection.url">
-            jdbc:sqlite:D:/SQLite/SQLiteDB/testPlaylist.db
+            jdbc:sqlite:E:\lzx\Discovery\ColdRain\ColdRainTest.db
           <!--  一种简写形式
               jdbc:mysql:///student  -->
         </property>
@@ -30,13 +30,17 @@
             值 update： 如果数据库里面不存在表，创建；如果已经存在，更新 -->
         <property name="hibernate.hbm2ddl.auto">update</property>
         <!-- 仅供测试用 每次运行都会drop原来的表 慎用 -->
-        <!-- <property name="hibernate.hbm2ddl.auto">create</property> -->
+        <property name="hibernate.hbm2ddl.auto">create</property>
         
         <!-- 配置事务自动提交 -->
         <!-- <property name="hibernate.connection.autocommit">true</property> -->
 
         <!-- 引入映射配置文件 -->
-        <mapping resource="database/databaseModels/TestFileModel.hbm.xml" />
-        <mapping resource="database/databaseModels/FileModel.hbm.xml" />
+        <!-- <mapping resource="database/testDatabaseModels/TestFileModel.hbm.xml" /> -->
+        <!--<mapping resource="database/testDatabaseModels/FileModel.hbm.xml" />-->
+        <mapping resource="database/testDatabaseModels2/File1.hbm.xml" />
+        <mapping resource="database/testDatabaseModels2/FileProperty1.hbm.xml" />
+        <mapping resource="database/testDatabaseModels2/Meta1.hbm.xml" />
+        <mapping resource="database/testDatabaseModels2/Album1.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

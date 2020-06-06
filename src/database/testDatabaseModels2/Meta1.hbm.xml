@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2020-5-20 12:53:22 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="database.testDatabaseModels2.Meta1" table="META1">
+        <id name="mid" type="int">
+            <column name="MID" />
+            <generator class="native" />
+        </id>
+        <property name="title" type="java.lang.String">
+            <column name="TITLE" />
+        </property>
+        <property name="artist" type="java.lang.String">
+            <column name="ARTIST" />
+        </property>
+        <property name="trackNo" type="java.lang.String">
+            <column name="TRACKNO" />
+        </property>
+        <property name="discNo" type="java.lang.String">
+            <column name="DISCNO" />
+        </property>
+        <many-to-one name="album" class="database.testDatabaseModels2.Album1" fetch="select">
+            <column name="ALBUM" />
+        </many-to-one>
+        <set name="files_orig" table="FILE1" inverse="true" lazy="true">
+            <key>
+                <column name="ORIGMETA" />
+            </key>
+            <one-to-many class="database.testDatabaseModels2.File1" />
+        </set>
+        <set name="files_mod" table="FILE1" inverse="true" lazy="true">
+            <key>
+                <column name="MODIFIEDMETA" />
+            </key>
+            <one-to-many class="database.testDatabaseModels2.File1" />
+        </set>
+    </class>
+</hibernate-mapping>

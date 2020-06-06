@@ -1,6 +1,12 @@
 package local.generic;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -22,6 +28,11 @@ public abstract class AbstractPlaylistReader {
      * 
      */
     protected SupportedMeta[] suppMeta;
+    protected InputStreamReader in;
+    protected BufferedReader br;
+    protected XMLHelper xmlhelper; //actually no need to declare here. AbstractXMLPlaylistReader
+    
+    protected String tempData;
 
     /**
      * ArrayList contains PlaylistSong instances
@@ -32,6 +43,12 @@ public abstract class AbstractPlaylistReader {
      * Universal logger for playlistReader.
      */
     public static Logger logger = LoggerFactory.getLogger(AbstractPlaylistReader.class);
+    
+    //constructor: call initializeMeta()
+    public AbstractPlaylistReader() {
+        initializeMeta();
+        logger.debug("Meta Initialized in:" + this.getClass());
+    }
 
 
     // abstract methods
@@ -42,7 +59,27 @@ public abstract class AbstractPlaylistReader {
      * @throws PlaylistIOException
      * @throws NativeReflectionException
      */
-    public abstract void read(File f) throws PlaylistIOException, NativeReflectionException;
+    public void read(File f) throws PlaylistIOException, NativeReflectionException{
+        logger.info("Start reading playlist "+f.toString());
+        songArrList.clear();//flush before use.
+        setStream(f);
+        readHeading();        
+        try {
+            if (tempData==null) {//to handle circumstances that tempData is not readed in heading
+                tempData = br.readLine(); //readFirstLine
+            }  
+            while (tempData != null) {
+            readASong();
+            tempData = br.readLine();
+            }
+        }catch (IOException ioe) {
+            throw new PlaylistIOException("Error in reading bufferedReader",ioe,ErrorCodes.BASE_IO_ERROR);
+        }
+        readEnding();
+        closeStream();
+        logger.debug("Reading playlist complete!" + f.toString());
+        
+    }
 
     /**
      * Read Playlist File with corresponding reading method by String. Add throws later.
@@ -54,6 +91,25 @@ public abstract class AbstractPlaylistReader {
         read(new File(src));
     }
     // universal methods
+    
+    protected abstract void initializeMeta();
+    
+    /**
+     * Have not read any line yet.
+     */
+    protected abstract void readHeading();
+    
+    /**
+     * NOTICE: Not Always Read a Song!!!
+     * Read current line stored in Reader, and act correspondingly.
+     * If song instance in playlist file occupy more than one line, then extra scanning need to be
+     * taken in this method.
+     * Ending of this method is always add a song to songArrList.
+     * @throws NativeReflectionException
+     */
+    protected abstract void readASong() throws NativeReflectionException;
+    
+    protected abstract void readEnding();
 
 
     /**
@@ -65,7 +121,7 @@ public abstract class AbstractPlaylistReader {
         return songArrList;
     }
 
-    public abstract AbstractPlaylistTable getTable();
+    public abstract AbstractPlaylistTable getTable() throws PlaylistIOException;
 
     public void setAllProperties(AbstractPlaylistReader typicalReader, AbstractPlaylistSong aSong)
         throws NativeReflectionException {
@@ -99,6 +155,31 @@ public abstract class AbstractPlaylistReader {
 
     public void setSupportedMeta(SupportedMeta[] metaArray) {
         suppMeta = metaArray;
+    }
+    
+    protected void setStream(File f) throws PlaylistIOException{
+        try {
+            in = new InputStreamReader(new FileInputStream(f), "utf-8");
+            br = new BufferedReader(in);
+            
+        } catch (FileNotFoundException fnfe) {
+            throw new PlaylistIOException("Error in reading playlist file",fnfe,ErrorCodes.BASE_IO_ERROR);
+        } catch (UnsupportedEncodingException uee) {
+            throw new PlaylistIOException("Error in reading",uee,ErrorCodes.UNSUPPORTED_ENCODING_ERROR);
+        } 
+        logger.debug("Stream created!");
+        
+    }
+    
+    protected void closeStream() throws PlaylistIOException{
+        try {
+            in.close();
+            br.close();
+        } catch (IOException ioe) {
+            throw new PlaylistIOException("Error in closing outputStream",ioe,ErrorCodes.BASE_IO_ERROR);
+        }
+        
+        logger.debug("Stream closed!");
     }
 
 

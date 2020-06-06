@@ -21,7 +21,14 @@ public class TotalDiscNoSetter {
         tim.timerStart();
         String toAddAudioFolderAddr = args[0];
         String toAddTotalDiscDesc = args[1]; // format: 01,02,03...
+        String settingUpDisc="01"; //default to 01
+        boolean setUpFlag = false;
         String[] allowedSuffix = {".mp3", ".flac"};
+        //add a temp function to set discno
+        if(args.length==3) {
+            settingUpDisc=args[2];
+            setUpFlag=true;
+        }
         ArrayList<String> audioList = new ArrayList<String>();
         MethodInvoker.singlizeInputR(toAddAudioFolderAddr, allowedSuffix, audioList);
         for (String audioLoc : audioList) {
@@ -30,6 +37,9 @@ public class TotalDiscNoSetter {
                 //test
                 LogMaker.logs(audioLoc+" totalDisc:" +aMeta.getTotalDiscNo());
                 aMeta.setTotalDiscNo(toAddTotalDiscDesc);
+                if(setUpFlag) {
+                    aMeta.setDiscNo(settingUpDisc);
+                }
                 aMeta.writeMetaToFile();
                 LogMaker.logs("After::"+audioLoc+" totalDisc:" +aMeta.getTotalDiscNo());
             } catch (CannotReadException | IOException | TagException | ReadOnlyFileException

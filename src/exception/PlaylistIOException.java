@@ -11,6 +11,10 @@ public class PlaylistIOException extends Exception{
     public PlaylistIOException(String message) {
         super(message);
     }
+    public PlaylistIOException(String message, ErrorCodes errorCode) {
+        super(message);
+        this.errorCode = errorCode.getCode();
+    }
     
     public PlaylistIOException(String message,Throwable cause) {
         super(message,cause);

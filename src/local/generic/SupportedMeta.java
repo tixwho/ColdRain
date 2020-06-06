@@ -2,6 +2,8 @@ package local.generic;
 
 import java.lang.reflect.Method;
 import java.util.EnumMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public enum SupportedMeta {
     SRC("src"), FILENAME("fileName"), TRACKTITLE("trackTitle"), TRACKNO("trackNo"), DISCNO(
@@ -26,7 +28,7 @@ public enum SupportedMeta {
         String methodName =
             "get" + property_name.substring(0, 1).toUpperCase() + property_name.substring(1);
         // testing method for reflcet
-        System.out.println("TEST in SongReader MethodName: " + methodName);
+        //System.out.println("TEST in SupportedMeta MethodName: " + methodName);
         Method gotGetMethod = songInstance.getClass().getMethod(methodName); // 千万别给getter入参，谁给谁傻逼
         return gotGetMethod;
 
@@ -55,7 +57,7 @@ public enum SupportedMeta {
         String methodName =
             "get" + property_name.substring(0, 1).toUpperCase() + property_name.substring(1);
         // testing method for reflcet
-        // System.out.println("TEST in SongReader MethodName: " + methodName);
+        // System.out.println("TEST in SupportedMeta MethodName: " + methodName);
         Method gotGetMethod = songInstance.getClass().getMethod(methodName); // 逗号后相当于给一个固定类型的参
         return gotGetMethod;
 
@@ -67,7 +69,7 @@ public enum SupportedMeta {
         String methodName =
             "set" + property_name.substring(0, 1).toUpperCase() + property_name.substring(1);
         // testing method for reflcet
-        // System.out.println("TEST in SongReader MethodName: " + methodName);
+        // System.out.println("TEST in SupportedMeta MethodName: " + methodName);
         Method gotSetMethod = songInstance.getClass().getMethod(methodName, String.class); // 逗号后相当于给一个固定类型的参
         return gotSetMethod;
 

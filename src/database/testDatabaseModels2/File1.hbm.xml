@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2020-5-20 12:53:22 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="database.testDatabaseModels2.File1" table="FILE1">
+        <id name="fileID" type="int">
+            <column name="FILEID" />
+            <generator class="native" />
+        </id>
+        <property name="src" type="java.lang.String">
+            <column name="SRC" />
+        </property>
+        <one-to-one name="fileProperty" class="database.testDatabaseModels2.FileProperty1"></one-to-one>
+        <many-to-one name="origMeta" class="database.testDatabaseModels2.Meta1" fetch="select">
+            <column name="ORIGMETA" />
+        </many-to-one>
+        <many-to-one name="modifiedMeta" class="database.testDatabaseModels2.Meta1" fetch="select">
+            <column name="MODIFIEDMETA" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

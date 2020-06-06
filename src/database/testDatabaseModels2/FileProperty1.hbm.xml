@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2020-5-20 12:53:22 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="database.testDatabaseModels2.FileProperty1" table="FILEPROPERTY1">
+        <id name="fpid" type="int">
+            <column name="FPID" />
+            <generator class="native" />
+        </id>
+        <property name="bitdepth" type="java.lang.String">
+            <column name="BITDEPTH" />
+        </property>
+        <property name="bitrate" type="int">
+            <column name="BITRATE" />
+        </property>
+        <property name="samplerate" type="int">
+            <column name="SAMPLERATE" />
+        </property>
+        <one-to-one name="fileModel" class="database.testDatabaseModels2.File1"></one-to-one>
+    </class>
+</hibernate-mapping>

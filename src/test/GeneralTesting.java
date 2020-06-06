@@ -2,28 +2,28 @@ package test;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import org.slf4j.Logger;
 import exception.MetaIOException;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
 import local.generic.AbstractPlaylistReader;
 import local.generic.AbstractPlaylistSong;
-import local.generic.BaseTestingClass;
+import local.generic.BaseLocalTestingClass;
 import local.m3u.M3uReader;
 import local.m3u.M3uTable;
+import local.m3u.M3uWriter;
 import toolkit.LogMaker;
 import toolkit.MethodInvoker;
 
-public class GeneralTesting extends BaseTestingClass{
+public class GeneralTesting extends BaseLocalTestingClass{
     // 用后既删
     public static void main(String[] args) {
         GeneralTesting me = new GeneralTesting();
-        me.selfCtrl.setLevel("error");
-        me.readerCtrl.setLevel("error");
+        me.setAllLevel("debug");
+//        me.readerCtrl.setLevel("error");
         AbstractPlaylistReader reader = new M3uReader();
         ArrayList<String> folderList = new ArrayList<String>();
         String[] allowedSuffix = {".m3u"};
-        MethodInvoker.singlizeInputR("C:\\Users\\ASUS\\Music\\Dopamine\\Playlists\\Abyss.m3u", allowedSuffix,
+        MethodInvoker.singlizeInputR("C:\\Users\\ASUS\\Music\\Dopamine\\Playlists", allowedSuffix,
             folderList);
         tim.timerStart();
 
@@ -40,7 +40,14 @@ public class GeneralTesting extends BaseTestingClass{
             }
         }
 
-        M3uTable testTable = (M3uTable) reader.getTable();
+        M3uTable testTable;
+        try {
+            testTable= (M3uTable) reader.getTable();
+        } catch (PlaylistIOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+            return;
+        }
         M3uTable testTable2 = new M3uTable();
 
         try {
@@ -55,15 +62,22 @@ public class GeneralTesting extends BaseTestingClass{
 
         ArrayList<AbstractPlaylistSong> arr = testTable2.getSongArrList();
         for (AbstractPlaylistSong songIn : arr) {
-            logger.info("songIn: "+songIn.getSrc());
+            logger.trace("songIn: "+songIn.getSrc());
         }
 
-        tim.timerPeriod();
+        tim.timerPeriod("blah");
         try {
             Method met = AbstractPlaylistSong.class.getMethod("getSrc");
             LogMaker.logs("retrieved!");
         } catch (NoSuchMethodException nse) {
             nse.printStackTrace();
+        }
+        M3uWriter writer = new M3uWriter();
+        writer.setSongArrList(testTable2.getSongArrList());
+        try {
+            writer.write("E:\\lzx\\Discovery\\Absys.m3u");
+        } catch (PlaylistIOException e) {
+            e.printStackTrace();
         }
         tim.timerEnd();
     }

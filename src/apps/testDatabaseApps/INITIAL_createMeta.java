@@ -1,4 +1,4 @@
-package apps.databaseApps;
+package apps.testDatabaseApps;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -16,7 +16,7 @@ import toolkit.LogMaker;
 import toolkit.MethodInvoker;
 import toolkit.MisUtils;
 
-public class TEST_createMeta {
+public class INITIAL_createMeta {
 
     public static String createInsertSentence(String tableName, String title, String artist,
         String album, boolean isTemp) {
@@ -73,7 +73,7 @@ public class TEST_createMeta {
         try {
             // create a database connection
             connection =
-                DriverManager.getConnection("jdbc:sqlite:D:/SQLite/SQLiteDB/testPlaylist.db");
+                DriverManager.getConnection("jdbc:sqlite:E:/lzx/etc/OST/Databases/COLDRAIN_MAIN.db");
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30); // set timeout to 30 sec.
             // drop MAINMETA when testing.

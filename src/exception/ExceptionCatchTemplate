@@ -1,6 +1,8 @@
 catch(IOException ioe) {
             throw new PlaylistIOException("M3UReader IO Exception", ioe, ErrorCodes.BASE_IO_ERROR);
-        }catch(NoSuchMethodException nsme) {
+        }catch (UnsupportedEncodingException uee) {
+            throw new PlaylistIOException("Error in creating new Playlist File",uee,ErrorCodes.UNSUPPORTED_ENCODING_ERROR);
+        } catch(NoSuchMethodException nsme) {
             throw new NativeReflectionException("M3UReader Reflection Exception",nsme,ErrorCodes.REFLECT_UNKNOWN_METHOD_ERROR);
         }catch(IllegalAccessException iace) {
             throw new NativeReflectionException("M3UReader Reflection Exception",iace,ErrorCodes.ILLEGAL_ACCESS_ERROR);

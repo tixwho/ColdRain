@@ -1,4 +1,4 @@
-package apps.databaseApps;
+package apps.testDatabaseApps;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
-import database.databaseModels.TestFileModel;
+import database.testDatabaseModels.TestFileModel;
 import old.localModels.MetaSong_old;
 import toolkit.HibernateUtils;
 import toolkit.LogMaker;

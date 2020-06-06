@@ -43,7 +43,8 @@ public class MetaFromName {
         String divider = args[1];
         String[] allowedAudio = {".flac", ".mp3"};
         LogMaker.logs("srcFolder: " + folderAddr);
-        ArrayList<String> sampleAudioList = MethodInvoker.singlizeInput(folderAddr, allowedAudio);
+        ArrayList<String> sampleAudioList = new ArrayList<String>();
+        MethodInvoker.singlizeInputR(folderAddr, allowedAudio,sampleAudioList);
         Iterator<String> audioIt = sampleAudioList.iterator();
         // 2. iterate through audio files and set meta.
         while (audioIt.hasNext()) {

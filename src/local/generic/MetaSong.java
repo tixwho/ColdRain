@@ -54,12 +54,14 @@ public class MetaSong {
             AudioHeader aoh = aof.getAudioHeader();
             this.FORMAT = aoh.getFormat();
             this.SAMPLERATE = aoh.getSampleRate();
-            this.BITRATE = aoh.getBitRate();
+            this.BITRATE = String.valueOf(aoh.getBitRateAsNumber());
             this.LENGTH = String.valueOf(aoh.getTrackLength());
             // debug start
-            // LogMaker.logs("format::"+this.FORMAT);
-            // LogMaker.logs("SampleRate::"+this.SAMPLERATE);
-            // LogMaker.logs("testbit::"+aoh.getBitRateAsNumber());
+            /*
+             * LogMaker.logs("format::"+this.FORMAT); LogMaker.logs("SampleRate::"+this.SAMPLERATE);
+             * LogMaker.logs("testbit::"+aoh.getBitRateAsNumber());
+             * LogMaker.logs("testbit2::"+this.BITRATE);
+             */
             LogMaker.logs("Metaed: " + src);
             // debug delete
         } catch (CannotReadException cre) {

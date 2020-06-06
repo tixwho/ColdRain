@@ -40,8 +40,21 @@ public class MisUtils {
 
     // return file suffix as a string.
     public static String getSuffix(String fileSrc) {
+        //debug
+        System.out.println("file:"+fileSrc);
         String fileSuffix = fileSrc.substring(fileSrc.lastIndexOf("."));
         return fileSuffix;
+    }
+    
+    public static String getFilename(String fileSrc) {
+        File f = new File(fileSrc);
+        return f.getName();
+    }
+    
+    public static String getPureFilename(String fileSrc) {
+        File f = new File(fileSrc);
+        String fileN = f.getName();
+        return fileN.substring(0,fileN.lastIndexOf("."));
     }
 
     // rename a folder (move everything to the new folder, then discard the original one.)

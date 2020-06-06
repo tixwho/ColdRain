@@ -1,4 +1,4 @@
-<hibernate-mapping package="database.databaseModels">
+<hibernate-mapping package="database.testDatabaseModels">
    <class name="FileModel" table="TESTFILE">
       <meta attribute="class-description">
          This class is for hibernate testing 2

@@ -9,12 +9,14 @@ import org.slf4j.LoggerFactory;
 import exception.ErrorCodes;
 import exception.MetaIOException;
 import exception.NativeReflectionException;
+import exception.PlaylistIOException;
 
 public abstract class AbstractPlaylistTable {
 
 
 
     protected SupportedMeta[] suppMeta;
+    protected Class<?> correspondingSongClass;
     // use enumMap to identify if everything in new table is contained in old
     // if it is, directly use table info. if not, cosntruct metasong and retrieve.
 
@@ -23,7 +25,7 @@ public abstract class AbstractPlaylistTable {
      */
 
     protected ArrayList<AbstractPlaylistSong> songArrList = new ArrayList<AbstractPlaylistSong>();
-    
+
     /**
      * Universal logger for playlistTable.
      */
@@ -31,13 +33,28 @@ public abstract class AbstractPlaylistTable {
 
     /* constructor */
     public AbstractPlaylistTable() {
-
+        initializeMeta();
+        initializeSongInstance();
     }
 
-    public AbstractPlaylistTable(ArrayList<AbstractPlaylistSong> songArrList,
-        SupportedMeta[] suppMeta) {
-        this.songArrList = songArrList;
-        this.suppMeta = suppMeta;
+    
+    public AbstractPlaylistTable(ArrayList<AbstractPlaylistSong> songArrList) throws PlaylistIOException {
+        this();
+        if (!songArrList.isEmpty()) {
+            if(!this.correspondingSongClass.isInstance(songArrList.get(0))){
+                throw new PlaylistIOException("Wrong Song Instance!",ErrorCodes.BASE_IO_ERROR);
+            }
+        }
+        this.songArrList=songArrList;
+    }
+
+    public AbstractPlaylistTable(AbstractPlaylistTable unknownTable)
+        throws NativeReflectionException, MetaIOException {
+        this();
+        if (!this.correspondingSongClass.equals(unknownTable.getCorrespondingSongClass())) {
+            setDesiredSongArrList(this.correspondingSongClass, this.suppMeta,
+                unknownTable.getSupportedMeta(), unknownTable.getSongArrList());
+        }
     }
 
     protected void setDesiredSongArrList(Class<?> clazz, SupportedMeta[] localMeta,
@@ -111,6 +128,10 @@ public abstract class AbstractPlaylistTable {
     public abstract void setInfoFromTable(AbstractPlaylistTable foreignTable)
         throws NativeReflectionException, MetaIOException;
 
+    protected abstract void initializeMeta();
+
+    protected abstract void initializeSongInstance();
+
     public SupportedMeta[] getSupportedMeta() {
         return this.suppMeta;
     }
@@ -125,6 +146,14 @@ public abstract class AbstractPlaylistTable {
 
     public void setSongArrList(ArrayList<AbstractPlaylistSong> songArrList) {
         this.songArrList = songArrList;
+    }
+
+    public Class<?> getCorrespondingSongClass() {
+        return correspondingSongClass;
+    }
+
+    public void setCorrespondingSongClass(Class<?> correspondingSongClass) {
+        this.correspondingSongClass = correspondingSongClass;
     }
 
 }

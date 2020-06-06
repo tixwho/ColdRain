@@ -1,4 +1,4 @@
-package database.databaseModels;
+package database.testDatabaseModels;
 
 import old.localModels.MetaSong_old;
 import toolkit.HibernateUtils;
