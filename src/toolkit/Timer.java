@@ -78,7 +78,7 @@ public class Timer {
     }
     public void getPassedTime() {
         this.passedTime = this.endTime - this.startTime;
-        LogMaker.logs("passed: "+this.passedTime+" millis");
+        //LogMaker.logs("passed: "+this.passedTime+" millis");
     }
     
     public void printCheckPoint() {

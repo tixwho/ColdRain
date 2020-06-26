@@ -10,4 +10,5 @@ public abstract class BaseLoggingClass {
     public void setAllLevel(String lvl) {
         selfCtrl.setLevel(lvl);
     }
+
 }
