@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import org.apache.commons.io.input.BOMInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import exception.ErrorCodes;
@@ -157,15 +158,20 @@ public abstract class AbstractPlaylistReader {
         suppMeta = metaArray;
     }
     
+    //added BOMInputStream
     protected void setStream(File f) throws PlaylistIOException{
         try {
-            in = new InputStreamReader(new FileInputStream(f), "utf-8");
+            BOMInputStream bomIn = new BOMInputStream(new FileInputStream(f));
+            in = new InputStreamReader(bomIn, "utf-8");
             br = new BufferedReader(in);
+            logger.info("BOM Status: "+bomIn.hasBOM());
             
         } catch (FileNotFoundException fnfe) {
             throw new PlaylistIOException("Error in reading playlist file",fnfe,ErrorCodes.BASE_IO_ERROR);
         } catch (UnsupportedEncodingException uee) {
             throw new PlaylistIOException("Error in reading",uee,ErrorCodes.UNSUPPORTED_ENCODING_ERROR);
+        } catch (IOException ioe) {
+            throw new PlaylistIOException("Error in reading BOM status",ioe,ErrorCodes.BASE_IO_ERROR);
         } 
         logger.debug("Stream created!");
         
