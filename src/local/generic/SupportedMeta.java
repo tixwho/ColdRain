@@ -2,8 +2,6 @@ package local.generic;
 
 import java.lang.reflect.Method;
 import java.util.EnumMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public enum SupportedMeta {
     SRC("src"), FILENAME("fileName"), TRACKTITLE("trackTitle"), TRACKNO("trackNo"), DISCNO(
