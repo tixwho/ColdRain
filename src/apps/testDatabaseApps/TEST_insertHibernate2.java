@@ -12,21 +12,21 @@ import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
-import apps.testApps.BaseTestApp;
+import database.generic.BaseDatabaseTestingClass;
 import database.testDatabaseModels.FileModel;
 import old.localModels.MetaSong_old;
 import toolkit.HibernateUtils;
 import toolkit.LogMaker;
 import toolkit.MethodInvoker;
 
-public class TEST_insertHibernate2 extends BaseTestApp{
+public class TEST_insertHibernate2 extends BaseDatabaseTestingClass{
 
     private static SessionFactory factory;
 
     public static void main(String[] args) throws CannotReadException, IOException, TagException,
         ReadOnlyFileException, InvalidAudioFrameException {
         TEST_insertHibernate2 ME = new TEST_insertHibernate2();
-        ME.taskStart();
+        tim.timerStart();
         String[] allowedAudio = {".flac", ".mp3"};
         ArrayList<String> sampleAudioList = new ArrayList<String>();
         sampleAudioList = MethodInvoker.singlizeInputR(
@@ -62,7 +62,7 @@ public class TEST_insertHibernate2 extends BaseTestApp{
         for (MetaSong_old perSong : metaList) {
             ME.addRecord(perSong);
         }
-        ME.taskEnd();
+        tim.timerEnd();
 
     }
 
