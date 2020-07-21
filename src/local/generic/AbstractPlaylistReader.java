@@ -31,7 +31,6 @@ public abstract class AbstractPlaylistReader {
     protected SupportedMeta[] suppMeta;
     protected InputStreamReader in;
     protected BufferedReader br;
-    protected XMLHelper xmlhelper; //actually no need to declare here. AbstractXMLPlaylistReader
     
     protected String tempData;
 
@@ -97,8 +96,9 @@ public abstract class AbstractPlaylistReader {
     
     /**
      * Have not read any line yet.
+     * @throws PlaylistIOException 
      */
-    protected abstract void readHeading();
+    protected abstract void readHeading() throws PlaylistIOException;
     
     /**
      * NOTICE: Not Always Read a Song!!!

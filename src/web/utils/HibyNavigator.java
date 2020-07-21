@@ -68,7 +68,7 @@ public class HibyNavigator extends BaseWebLoggingClass {
 
 
         emphasize();
-        handleUpload(trialFilePath);
+        handleUpload(in);
         logger.info("COMPLETE!");
 
 

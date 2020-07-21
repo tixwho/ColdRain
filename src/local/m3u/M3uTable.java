@@ -17,6 +17,10 @@ public class M3uTable extends AbstractPlaylistTable {
     public M3uTable(ArrayList<AbstractPlaylistSong> songArrList) throws PlaylistIOException {
         super(songArrList);
     }
+    
+    public M3uTable(AbstractPlaylistTable unknownTable) throws NativeReflectionException, MetaIOException {
+        super(unknownTable);
+    }
 
     @Override
     public void setInfoFromTable(AbstractPlaylistTable foreignTable)

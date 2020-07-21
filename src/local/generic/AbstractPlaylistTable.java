@@ -37,7 +37,6 @@ public abstract class AbstractPlaylistTable {
         initializeSongInstance();
     }
 
-    
     public AbstractPlaylistTable(ArrayList<AbstractPlaylistSong> songArrList) throws PlaylistIOException {
         this();
         if (!songArrList.isEmpty()) {

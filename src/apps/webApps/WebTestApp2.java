@@ -18,7 +18,7 @@ public class WebTestApp2 extends BaseWebTestingClass {
         hiby.setAllLevel("trace");
         hiby.initializeChromeDriver(chromeDriverPath);
         hiby.initializeRefPaths(refPaths);
-        hiby.testFunc2("E:\\lzx\\etc\\OST\\Discography\\gravityWall／shØut");
+        hiby.testFunc("E:\\lzx\\etc\\OST\\Discography\\割れたリンゴ _雪に咲く花");
         //hiby.testFunc2("E:\\lzx\\etc\\OST\\Discography2\\ふ・れ・ん・ど・し・た・い");
         //hiby.testFunc2("E:\\lzx\\etc\\OST\\Discography2\\\\モノノケ・イン・ザ・フィクション");
         //hiby.testFunc2(folderName);
