@@ -4,9 +4,9 @@ import local.generic.AbstractPlaylistSong;
 
 public class M3u8Song extends AbstractPlaylistSong {
     
-    protected String artist;
-    protected String trackTitle;
-    protected String LENGTH;
+    protected String artist=null;
+    protected String trackTitle=null;
+    protected String LENGTH=null;
     public String getArtist() {
         return artist;
     }

@@ -63,7 +63,7 @@ public abstract class AbstractPlaylistReader {
      */
     public void read(File f) throws PlaylistIOException, NativeReflectionException {
         logger.info("Start reading playlist " + f.toString());
-        songArrList.clear();// flush before use.
+        resetEntity();
         setStream(f);
         readHeading();
         try {
@@ -96,6 +96,9 @@ public abstract class AbstractPlaylistReader {
     // universal methods
 
     protected abstract void initializeMeta();
+    
+    protected abstract void resetEntity();
+
 
     /**
      * Have not read any line yet.

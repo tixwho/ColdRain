@@ -21,6 +21,7 @@ public class PlaylistIOTest extends BaseLocalTestingClass {
         tim.timerStart();
         String src = "C:\\Users\\ASUS\\Music\\Dopamine\\Playlists\\RevueStarlight! OST.m3u";
         String src3 = "E:\\lzx\\Discovery\\ColdRain\\Playlist_now.m3u";
+        String src4 = "E:\\program files\\foobar2000\\playlists\\AD Piano.m3u8";
 
         AbstractPlaylistReader reader = new M3uReader();
         reader.read(src);
@@ -38,5 +39,14 @@ public class PlaylistIOTest extends BaseLocalTestingClass {
             M3u8Song mSong = (M3u8Song)eachSong;
             System.out.println(mSong);
         }
+        reader.read(src4);
+        aArrList = reader.getSongArrList();
+        for(AbstractPlaylistSong eachSong:aArrList) {
+            M3u8Song mSong = (M3u8Song)eachSong;
+            System.out.println(mSong);
+        }
+        M3u8Table cTable = new M3u8Table(reader.getTable());
+        writer.setSongArrList(cTable.getSongArrList());
+        writer.write(src3,true);
     }
 }

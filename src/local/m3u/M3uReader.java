@@ -6,7 +6,7 @@ import local.generic.AbstractPlaylistReader;
 import local.generic.AbstractPlaylistTable;
 
 public class M3uReader extends AbstractPlaylistReader {
-    String src;
+    String src=null;
 
     @Override
     public AbstractPlaylistTable getTable() throws PlaylistIOException {
@@ -40,6 +40,13 @@ public class M3uReader extends AbstractPlaylistReader {
     @Override
     protected void initializeMeta() {
         this.setSupportedMeta(M3uUtils.getSupportedMeta());
+        
+    }
+
+    @Override
+    protected void resetEntity() {
+        songArrList.clear();// flush before use.
+        src=null;
         
     }
 

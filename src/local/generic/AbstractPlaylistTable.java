@@ -50,10 +50,14 @@ public abstract class AbstractPlaylistTable {
     public AbstractPlaylistTable(AbstractPlaylistTable unknownTable)
         throws NativeReflectionException, MetaIOException {
         this();
+        /*
         if (!this.correspondingSongClass.equals(unknownTable.getCorrespondingSongClass())) {
             setDesiredSongArrList(this.correspondingSongClass, this.suppMeta,
                 unknownTable.getSupportedMeta(), unknownTable.getSongArrList());
         }
+        */
+        setDesiredSongArrList(this.correspondingSongClass, this.suppMeta,
+            unknownTable.getSupportedMeta(), unknownTable.getSongArrList());
     }
 
     /**
@@ -83,10 +87,20 @@ public abstract class AbstractPlaylistTable {
                 AbstractPlaylistSong newSong = (AbstractPlaylistSong) clazz.newInstance();
                 // if supported, use reflect to get desired instance
                 if (metaSupportedFlag) {
-
+                    MetaSong aMetaSong=null;//not initialized
                     for (SupportedMeta aMeta : localMeta) {
                         Method getMethod = SupportedMeta.getGetter(aForeignSong, aMeta);
                         Object meta = getMethod.invoke(aForeignSong);
+                        //check if it's null
+                        if(meta==null) {
+                            if(aMetaSong==null) {
+                                //create a MetaSong object to retrieve missing info
+                                aMetaSong = new MetaSong(aForeignSong.getSrc());                                
+                            }
+                            Method getMethod2 = SupportedMeta.getGetter(aMetaSong, aMeta);
+                            meta =getMethod2.invoke(aMetaSong);
+
+                        }
                         Method setMethod = SupportedMeta.getSetter(newSong, aMeta);
                         setMethod.invoke(newSong, meta);
 

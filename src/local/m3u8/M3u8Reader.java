@@ -31,6 +31,7 @@ public class M3u8Reader extends AbstractPlaylistReader {
             if (checkAnnotation(tempData)) {
                 logger.debug("Heading annotation detected");
             }
+            tempData = br.readLine();//skip heading 
         } catch (IOException ioe) {
             throw new PlaylistIOException("Error in reading bufferedReader", ioe,
                 ErrorCodes.BASE_IO_ERROR);
@@ -93,6 +94,7 @@ public class M3u8Reader extends AbstractPlaylistReader {
 
     private boolean checkAnnotation(String line) {
         String first = line.substring(0, 1);
+        System.out.println("CHECKING:"+line);
         return first.equals("#");
     }
     
@@ -103,6 +105,16 @@ public class M3u8Reader extends AbstractPlaylistReader {
         }
         String checking = toCheckPhrase.substring(0,toCheckHead.length());
         return checking.equals(toCheckHead);
+    }
+
+    @Override
+    protected void resetEntity() {
+        songArrList.clear();// flush before use.
+        src=null;
+        artist=null;
+        trackTitle=null;
+        LENGTH=null;
+        
     }
 
 }
