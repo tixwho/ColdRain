@@ -56,6 +56,15 @@ public abstract class AbstractPlaylistTable {
         }
     }
 
+    /**
+     * A Universal Table Converter for different tables
+     * @param clazz class instance of playlistSong TO SET
+     * @param localMeta supported meta info in local table
+     * @param foreignMeta supported meta info in foreign table
+     * @param foreignArrList  foreign arrList to set
+     * @throws NativeReflectionException
+     * @throws MetaIOException
+     */
     protected void setDesiredSongArrList(Class<?> clazz, SupportedMeta[] localMeta,
         SupportedMeta[] foreignMeta, ArrayList<AbstractPlaylistSong> foreignArrList)
         throws NativeReflectionException, MetaIOException {

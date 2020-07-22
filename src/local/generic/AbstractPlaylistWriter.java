@@ -91,7 +91,7 @@ public abstract class AbstractPlaylistWriter {
 
     }
 
-    protected abstract void writeHeading();
+    protected abstract void writeHeading() throws PlaylistIOException;
 
     protected abstract void writeEnding();
 

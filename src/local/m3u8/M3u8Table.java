@@ -6,6 +6,7 @@ import exception.NativeReflectionException;
 import exception.PlaylistIOException;
 import local.generic.AbstractPlaylistSong;
 import local.generic.AbstractPlaylistTable;
+import local.generic.SupportedMeta;
 
 public class M3u8Table extends AbstractPlaylistTable {
     
@@ -25,7 +26,11 @@ public class M3u8Table extends AbstractPlaylistTable {
     @Override
     public void setInfoFromTable(AbstractPlaylistTable foreignTable)
         throws NativeReflectionException, MetaIOException {
-        // TODO Auto-generated method stub
+        SupportedMeta[] foreignSuppMeta = foreignTable.getSupportedMeta();
+        ArrayList<AbstractPlaylistSong> foreignArr = foreignTable.getSongArrList();
+        super.setDesiredSongArrList(M3u8Song.class, this.getSupportedMeta(), foreignSuppMeta,
+            foreignArr);
+        logger.debug("converted M3U8 Table from:"+foreignTable.getClass());
 
     }
 

@@ -9,6 +9,11 @@ import local.generic.AbstractPlaylistTable;
 
 public class M3u8Reader extends AbstractPlaylistReader {
     
+    String src=null;
+    String artist=null;
+    String trackTitle=null;
+    String LENGTH=null;
+
 
     @Override
     protected void initializeMeta() {
@@ -18,42 +23,86 @@ public class M3u8Reader extends AbstractPlaylistReader {
 
     @Override
     protected void readHeading() throws PlaylistIOException {
-        // TODO Auto-generated method stub
-        //if #EXTINF do normal read
-        //if #, skip
-        //else, notify.
+        // if #EXTINF do normal read
+        // if #, skip
+        // else, notify.
         try {
-            tempData=br.readLine();
-            if(checkAnnotation(tempData)) {
+            tempData = br.readLine();
+            if (checkAnnotation(tempData)) {
                 logger.debug("Heading annotation detected");
             }
         } catch (IOException ioe) {
-            throw new PlaylistIOException("Error in reading bufferedReader",ioe,ErrorCodes.BASE_IO_ERROR);
+            throw new PlaylistIOException("Error in reading bufferedReader", ioe,
+                ErrorCodes.BASE_IO_ERROR);
         }
 
     }
 
     @Override
-    protected void readASong() throws NativeReflectionException {
-        // TODO Auto-generated method stub
+    protected void readASong() throws NativeReflectionException, PlaylistIOException {
+        // first line already loaded
+        try {
+            //skip empty lines
+            while(tempData=="") {
+                tempData = br.readLine();
+            }
+            //check if it is annotation
+            if(startWith(tempData,"#EXTINF:")) {
+                String divider = "<di>";
+                //replace all divider with "<di>
+                String modStr = tempData;
+                modStr = modStr.replace(":",divider);//replace first ":"
+                modStr = modStr.replace(",",divider);//replace first ","
+                modStr = modStr.replace(" - ",divider);//replace" - " notice the blank;
+                String[] arr = modStr.split(divider);
+                LENGTH = arr[1];
+                artist = arr[2];
+                trackTitle = arr[3];
+                // read tracklength(in seconds), artist, title;
+                tempData = br.readLine();
+                //set src and pack a song instance;
+                M3u8Song aSong = new M3u8Song();
+                src = tempData;
+                super.setAllProperties(this,aSong);
+                super.songArrList.add(aSong);
+                
+            }else {
+                //set src and pack a song instance;
+                M3u8Song aSong = new M3u8Song();
+                src = tempData;
+                super.setAllProperties(this,aSong);
+                super.songArrList.add(aSong);
+            }
+        }catch (IOException ioe) {
+            throw new PlaylistIOException("Error in reading bufferedReader", ioe,
+                ErrorCodes.BASE_IO_ERROR);
+        }
 
     }
 
     @Override
     protected void readEnding() {
-        // TODO Auto-generated method stub
+        // do nothing. m3u8 does not have ending.
 
     }
 
     @Override
     public AbstractPlaylistTable getTable() throws PlaylistIOException {
-        // TODO Auto-generated method stub
-        return null;
+        return new M3u8Table(songArrList);
     }
-    
+
     private boolean checkAnnotation(String line) {
         String first = line.substring(0, 1);
         return first.equals("#");
+    }
+    
+    private boolean startWith(String toCheckPhrase,String toCheckHead) {
+        //check index
+        if(toCheckHead.length()>toCheckPhrase.length()) {
+            return false;
+        }
+        String checking = toCheckPhrase.substring(0,toCheckHead.length());
+        return checking.equals(toCheckHead);
     }
 
 }

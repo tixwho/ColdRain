@@ -31,8 +31,9 @@ public abstract class AbstractPlaylistReader {
     protected SupportedMeta[] suppMeta;
     protected InputStreamReader in;
     protected BufferedReader br;
-    
+
     protected String tempData;
+    protected boolean songEndFlag = false;//true when all song readed and call readEnd
 
     /**
      * ArrayList contains PlaylistSong instances
@@ -43,8 +44,8 @@ public abstract class AbstractPlaylistReader {
      * Universal logger for playlistReader.
      */
     public static Logger logger = LoggerFactory.getLogger(AbstractPlaylistReader.class);
-    
-    //constructor: call initializeMeta()
+
+    // constructor: call initializeMeta()
     public AbstractPlaylistReader() {
         initializeMeta();
         logger.debug("Meta Initialized in:" + this.getClass());
@@ -54,31 +55,33 @@ public abstract class AbstractPlaylistReader {
     // abstract methods
 
     /**
-     * Read Playlist File with corresponding reading method. Add throws later.
+     * Read Playlist File with corresponding reading method.
+     * Will automatically load next line after read a song.
      * 
      * @throws PlaylistIOException
      * @throws NativeReflectionException
      */
-    public void read(File f) throws PlaylistIOException, NativeReflectionException{
-        logger.info("Start reading playlist "+f.toString());
-        songArrList.clear();//flush before use.
+    public void read(File f) throws PlaylistIOException, NativeReflectionException {
+        logger.info("Start reading playlist " + f.toString());
+        songArrList.clear();// flush before use.
         setStream(f);
-        readHeading();        
+        readHeading();
         try {
-            if (tempData==null) {//to handle circumstances that tempData is not readed in heading
-                tempData = br.readLine(); //readFirstLine
-            }  
-            while (tempData != null) {
-            readASong();
-            tempData = br.readLine();
+            if (tempData == null) {// to handle circumstances that tempData is not readed in heading
+                tempData = br.readLine(); // readFirstLine
             }
-        }catch (IOException ioe) {
-            throw new PlaylistIOException("Error in reading bufferedReader",ioe,ErrorCodes.BASE_IO_ERROR);
+            while ((tempData != null) && (songEndFlag == false)) {
+                readASong();
+                tempData = br.readLine();
+            }
+        } catch (IOException ioe) {
+            throw new PlaylistIOException("Error in reading bufferedReader", ioe,
+                ErrorCodes.BASE_IO_ERROR);
         }
         readEnding();
         closeStream();
         logger.debug("Reading playlist complete!" + f.toString());
-        
+
     }
 
     /**
@@ -91,25 +94,27 @@ public abstract class AbstractPlaylistReader {
         read(new File(src));
     }
     // universal methods
-    
+
     protected abstract void initializeMeta();
-    
+
     /**
      * Have not read any line yet.
-     * @throws PlaylistIOException 
+     * 
+     * @throws PlaylistIOException
      */
     protected abstract void readHeading() throws PlaylistIOException;
-    
+
     /**
-     * NOTICE: Not Always Read a Song!!!
-     * Read current line stored in Reader, and act correspondingly.
-     * If song instance in playlist file occupy more than one line, then extra scanning need to be
-     * taken in this method.
-     * Ending of this method is always add a song to songArrList.
+     * NOTICE: Not Always Read a Song!!! Read current line stored in Reader, and act
+     * correspondingly. If song instance in playlist file occupy more than one line, then extra
+     * scanning need to be taken in this method. Ending of this method is always add a song to
+     * songArrList.
+     * 
      * @throws NativeReflectionException
+     * @throws PlaylistIOException
      */
-    protected abstract void readASong() throws NativeReflectionException;
-    
+    protected abstract void readASong() throws NativeReflectionException, PlaylistIOException;
+
     protected abstract void readEnding();
 
 
@@ -157,34 +162,38 @@ public abstract class AbstractPlaylistReader {
     public void setSupportedMeta(SupportedMeta[] metaArray) {
         suppMeta = metaArray;
     }
-    
-    //added BOMInputStream
-    protected void setStream(File f) throws PlaylistIOException{
+
+    // added BOMInputStream
+    protected void setStream(File f) throws PlaylistIOException {
         try {
             BOMInputStream bomIn = new BOMInputStream(new FileInputStream(f));
             in = new InputStreamReader(bomIn, "utf-8");
             br = new BufferedReader(in);
-            logger.info("BOM Status: "+bomIn.hasBOM());
-            
+            logger.info("BOM Status: " + bomIn.hasBOM());
+
         } catch (FileNotFoundException fnfe) {
-            throw new PlaylistIOException("Error in reading playlist file",fnfe,ErrorCodes.BASE_IO_ERROR);
+            throw new PlaylistIOException("Error in reading playlist file", fnfe,
+                ErrorCodes.BASE_IO_ERROR);
         } catch (UnsupportedEncodingException uee) {
-            throw new PlaylistIOException("Error in reading",uee,ErrorCodes.UNSUPPORTED_ENCODING_ERROR);
+            throw new PlaylistIOException("Error in reading", uee,
+                ErrorCodes.UNSUPPORTED_ENCODING_ERROR);
         } catch (IOException ioe) {
-            throw new PlaylistIOException("Error in reading BOM status",ioe,ErrorCodes.BASE_IO_ERROR);
-        } 
+            throw new PlaylistIOException("Error in reading BOM status", ioe,
+                ErrorCodes.BASE_IO_ERROR);
+        }
         logger.debug("Stream created!");
-        
+
     }
-    
-    protected void closeStream() throws PlaylistIOException{
+
+    protected void closeStream() throws PlaylistIOException {
         try {
             in.close();
             br.close();
         } catch (IOException ioe) {
-            throw new PlaylistIOException("Error in closing outputStream",ioe,ErrorCodes.BASE_IO_ERROR);
+            throw new PlaylistIOException("Error in closing outputStream", ioe,
+                ErrorCodes.BASE_IO_ERROR);
         }
-        
+
         logger.debug("Stream closed!");
     }
 

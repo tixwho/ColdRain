@@ -16,7 +16,7 @@ public class M3uWriter extends AbstractPlaylistWriter {
         } catch (IOException ioe) {
             throw new PlaylistIOException("M3UWriter IO Exception", ioe, ErrorCodes.BASE_IO_ERROR);
         }
-        logger.trace("writted:" + aPlaylistSong.getSrc());
+        logger.trace("written:" + aPlaylistSong.getSrc());
 
     }
 

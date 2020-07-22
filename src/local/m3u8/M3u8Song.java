@@ -26,6 +26,11 @@ public class M3u8Song extends AbstractPlaylistSong {
         this.LENGTH = LENGTH;
     }
     
+    @Override
+    public String toString() {
+        return ("M3u8Song[src:"+src+", artist:"+artist+", trackTitle:"+trackTitle+", LENGTH:"+LENGTH+"]");
+    }
+    
     
 
 }
