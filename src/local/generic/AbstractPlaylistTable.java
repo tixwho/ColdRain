@@ -150,6 +150,11 @@ public abstract class AbstractPlaylistTable {
     public abstract void setInfoFromTable(AbstractPlaylistTable foreignTable)
         throws NativeReflectionException, MetaIOException;
 
+    public void setFullInfoTable() throws NativeReflectionException, MetaIOException {
+        setDesiredSongArrList(this.correspondingSongClass, this.suppMeta,
+            this.getSupportedMeta(), this.getSongArrList());
+    }
+    
     protected abstract void initializeMeta();
 
     protected abstract void initializeSongInstance();

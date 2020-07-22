@@ -40,13 +40,13 @@ public class PlaylistIOTest extends BaseLocalTestingClass {
             System.out.println(mSong);
         }
         reader.read(src4);
-        aArrList = reader.getSongArrList();
+        M3u8Table cTable = (M3u8Table) reader.getTable();
+        cTable.setFullInfoTable();
+        aArrList = cTable.getSongArrList();
         for(AbstractPlaylistSong eachSong:aArrList) {
             M3u8Song mSong = (M3u8Song)eachSong;
             System.out.println(mSong);
         }
-        M3u8Table cTable = new M3u8Table(reader.getTable());
-        writer.setSongArrList(cTable.getSongArrList());
-        writer.write(src3,true);
+        writer.write(src3,cTable,true);
     }
 }

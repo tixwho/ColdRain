@@ -86,6 +86,16 @@ public abstract class AbstractPlaylistWriter {
             write(new File(newFileLoc));
         }
     }
+    
+    public void write(String newFileLoc, AbstractPlaylistTable inTable,boolean bomToggle) throws PlaylistIOException {
+        setSongArrList(inTable.getSongArrList());
+        write(newFileLoc,bomToggle);
+    }
+    
+    public void write(String newFileLoc, AbstractPlaylistTable inTable) throws PlaylistIOException {
+        setSongArrList(inTable.getSongArrList());
+        write(newFileLoc);
+    }
 
     protected void writeBom() {
 
