@@ -1,6 +1,6 @@
 package exception;
 
-public class PlaylistIOException extends Exception{
+public class PlaylistIOException extends ColdRainException{
 
     /**
      * 
@@ -12,8 +12,7 @@ public class PlaylistIOException extends Exception{
         super(message);
     }
     public PlaylistIOException(String message, ErrorCodes errorCode) {
-        super(message);
-        this.errorCode = errorCode.getCode();
+        super(message,errorCode);
     }
     
     public PlaylistIOException(String message,Throwable cause) {
@@ -21,8 +20,7 @@ public class PlaylistIOException extends Exception{
     }
     
     public PlaylistIOException(String message,Throwable cause, ErrorCodes errorCode) {
-        super(message,cause);
-        this.errorCode = errorCode.getCode();
+        super(message,cause,errorCode);
     }
     
     public Integer getErrorCode() {

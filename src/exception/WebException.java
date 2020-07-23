@@ -1,6 +1,6 @@
 package exception;
 
-public class WebException extends Exception{
+public class WebException extends ColdRainException{
 
 
     /**
@@ -20,13 +20,11 @@ public class WebException extends Exception{
         super(message,cause);
     }
     public WebException(String message,ErrorCodes errorCode) {
-        super(message);
-        this.errorCode = errorCode.getCode();
+        super(message,errorCode);
     }
     
     public WebException(String message,Throwable cause, ErrorCodes errorCode) {
-        super(message,cause);
-        this.errorCode = errorCode.getCode();
+        super(message,cause,errorCode);
     }
     
     public Integer getErrorCode() {

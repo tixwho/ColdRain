@@ -1,6 +1,6 @@
 package exception;
 
-public class MetaIOException extends Exception{
+public class MetaIOException extends ColdRainException{
 
     /**
      * 
@@ -16,9 +16,12 @@ public class MetaIOException extends Exception{
         super(message,cause);
     }
     
+    public MetaIOException(String message, ErrorCodes errorCode) {
+        super(message,errorCode);
+    }
+    
     public MetaIOException(String message,Throwable cause, ErrorCodes errorCode) {
-        super(message,cause);
-        this.errorCode = errorCode.getCode();
+        super(message,cause,errorCode);
     }
     
     public Integer getErrorCode() {

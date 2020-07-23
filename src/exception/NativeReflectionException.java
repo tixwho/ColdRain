@@ -1,6 +1,6 @@
 package exception;
 
-public class NativeReflectionException extends Exception{
+public class NativeReflectionException extends ColdRainException{
 
     /**
      * 
@@ -16,9 +16,12 @@ public class NativeReflectionException extends Exception{
         super(message,cause);
     }
     
+    public NativeReflectionException(String message, ErrorCodes errorCode) {
+        super(message,errorCode);
+    }
+    
     public NativeReflectionException(String message,Throwable cause, ErrorCodes errorCode) {
-        super(message,cause);
-        this.errorCode = errorCode.getCode();
+        super(message,cause,errorCode);
     }
     
     public Integer getErrorCode() {
