@@ -67,35 +67,13 @@ public abstract class AbstractPlaylistWriter {
             write(f);
         }
     }
-
-
-    /**
-     * Write a new corresponding playlist file to the specific location.
-     * 
-     * @param newFileLoc Output location of new playlist file.
-     * @throws PlaylistIOException
-     */
-    public void write(String newFileLoc) throws PlaylistIOException {
-        write(new File(newFileLoc));
-    }
-
-    public void write(String newFileLoc, boolean bomToggle) throws PlaylistIOException {
-        if (bomToggle) {
-            write(new File(newFileLoc), bomToggle);
-        } else {
-            write(new File(newFileLoc));
-        }
-    }
     
-    public void write(String newFileLoc, AbstractPlaylistTable inTable,boolean bomToggle) throws PlaylistIOException {
-        setSongArrList(inTable.getSongArrList());
-        write(newFileLoc,bomToggle);
+    public void write(File f, AbstractPlaylistTable table, boolean bomToggle) throws PlaylistIOException {
+        setSongArrList(table.getSongArrList());
+        write(f,bomToggle);
     }
+
     
-    public void write(String newFileLoc, AbstractPlaylistTable inTable) throws PlaylistIOException {
-        setSongArrList(inTable.getSongArrList());
-        write(newFileLoc);
-    }
 
     protected void writeBom() {
 

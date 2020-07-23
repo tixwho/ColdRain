@@ -84,15 +84,6 @@ public abstract class AbstractPlaylistReader {
 
     }
 
-    /**
-     * Read Playlist File with corresponding reading method by String. Add throws later.
-     * 
-     * @throws PlaylistIOException
-     * @throws NativeReflectionException
-     */
-    public void read(String src) throws PlaylistIOException, NativeReflectionException {
-        read(new File(src));
-    }
     // universal methods
 
     protected abstract void initializeMeta();

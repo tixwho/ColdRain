@@ -88,7 +88,7 @@ public class PlaylistFileIO {
             throw new PlaylistIOException("Unsupported playlist file suffix!",
                 ErrorCodes.UNSUPPORTED_PLAYLIST_ERROR);
         }
-        apw.write(f.getAbsolutePath(), unknownTable, bomToggle);
+        apw.write(f, unknownTable, bomToggle);
     }
 
 

@@ -1,5 +1,6 @@
 package apps.testApps;
 
+import java.io.File;
 import java.util.ArrayList;
 import exception.MetaIOException;
 import exception.NativeReflectionException;
@@ -44,10 +45,10 @@ public class tempBOMWriter extends BaseLocalTestingClass {
         AbstractPlaylistWriter writer = new M3uWriter();
         for (String loc: m3ufilesLoc) {
             System.out.println("loc: "+loc);
-            reader.read(loc);
+            reader.read(new File(loc));
             M3uTable aTable = (M3uTable) reader.getTable();
             writer.setSongArrList(aTable.getSongArrList());
-            writer.write(loc,true);
+            writer.write(new File(loc),true);
             System.out.println("written:"+loc);
             i+=1;
         }

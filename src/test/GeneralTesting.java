@@ -1,5 +1,6 @@
 package test;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import exception.MetaIOException;
@@ -30,7 +31,7 @@ public class GeneralTesting extends BaseLocalTestingClass{
 
         for (String path : folderList) {
             try {
-                reader.read(path);
+                reader.read(new File(path)  );
             } catch (PlaylistIOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -75,7 +76,7 @@ public class GeneralTesting extends BaseLocalTestingClass{
         M3uWriter writer = new M3uWriter();
         writer.setSongArrList(testTable2.getSongArrList());
         try {
-            writer.write("E:\\lzx\\Discovery\\Absys.m3u");
+            writer.write(new File("E:\\lzx\\Discovery\\Absys.m3u"));
         } catch (PlaylistIOException e) {
             e.printStackTrace();
         }
