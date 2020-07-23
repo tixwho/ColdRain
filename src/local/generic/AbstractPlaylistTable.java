@@ -17,6 +17,7 @@ public abstract class AbstractPlaylistTable {
 
     protected SupportedMeta[] suppMeta;
     protected Class<?> correspondingSongClass;
+    protected SupportedPlaylistFormat suppFormat;
     // use enumMap to identify if everything in new table is contained in old
     // if it is, directly use table info. if not, cosntruct metasong and retrieve.
 
@@ -187,6 +188,14 @@ public abstract class AbstractPlaylistTable {
 
     public void setCorrespondingSongClass(Class<?> correspondingSongClass) {
         this.correspondingSongClass = correspondingSongClass;
+    }
+
+    public SupportedPlaylistFormat getSuppFormat() {
+        return suppFormat;
+    }
+
+    public void setSuppFormat(SupportedPlaylistFormat suppFormat) {
+        this.suppFormat = suppFormat;
     }
 
 }

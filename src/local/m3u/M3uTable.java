@@ -7,6 +7,7 @@ import exception.PlaylistIOException;
 import local.generic.AbstractPlaylistSong;
 import local.generic.AbstractPlaylistTable;
 import local.generic.SupportedMeta;
+import local.generic.SupportedPlaylistFormat;
 
 public class M3uTable extends AbstractPlaylistTable {
 
@@ -35,6 +36,7 @@ public class M3uTable extends AbstractPlaylistTable {
     @Override
     protected void initializeMeta() {
         super.setSupportedMeta(M3uUtils.getSupportedMeta());
+        super.setSuppFormat(SupportedPlaylistFormat.M3U);
         
     }
 
