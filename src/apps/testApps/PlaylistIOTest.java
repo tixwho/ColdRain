@@ -1,52 +1,24 @@
 package apps.testApps;
 
-import java.util.ArrayList;
 import exception.MetaIOException;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
-import local.generic.AbstractPlaylistReader;
-import local.generic.AbstractPlaylistSong;
+import local.generic.AbstractPlaylistTable;
 import local.generic.BaseLocalTestingClass;
-import local.m3u.M3uReader;
-import local.m3u.M3uTable;
-import local.m3u8.M3u8Reader;
-import local.m3u8.M3u8Song;
-import local.m3u8.M3u8Table;
-import local.m3u8.M3u8Writer;
+import local.generic.PlaylistFileIO;
 
 public class PlaylistIOTest extends BaseLocalTestingClass {
 
     public static void main(String[] args)
         throws PlaylistIOException, NativeReflectionException, MetaIOException {
-        tim.timerStart();
+        PlaylistIOTest me = new PlaylistIOTest();
+        me.setAllLevel("debug");
         String src = "C:\\Users\\ASUS\\Music\\Dopamine\\Playlists\\RevueStarlight! OST.m3u";
         String src3 = "E:\\lzx\\Discovery\\ColdRain\\Playlist_now.m3u";
         String src4 = "E:\\program files\\foobar2000\\playlists\\AD Piano.m3u8";
 
-        AbstractPlaylistReader reader = new M3uReader();
-        reader.read(src);
-        M3uTable aTable = (M3uTable) reader.getTable();
-        M3u8Table bTable = new M3u8Table(aTable);
-        tim.timerPeriod("table created");
-        M3u8Writer writer = new M3u8Writer();
-        writer.setSongArrList(bTable.getSongArrList());
-        writer.write(src3, true);
-        tim.timerPeriod("written");
-        reader = new M3u8Reader();
-        reader.read(src3);
-        ArrayList<AbstractPlaylistSong> aArrList = reader.getSongArrList();
-        for(AbstractPlaylistSong eachSong:aArrList) {
-            M3u8Song mSong = (M3u8Song)eachSong;
-            System.out.println(mSong);
-        }
-        reader.read(src4);
-        M3u8Table cTable = (M3u8Table) reader.getTable();
-        cTable.setFullInfoTable();
-        aArrList = cTable.getSongArrList();
-        for(AbstractPlaylistSong eachSong:aArrList) {
-            M3u8Song mSong = (M3u8Song)eachSong;
-            System.out.println(mSong);
-        }
-        writer.write(src3,cTable,true);
+        AbstractPlaylistTable aTable=PlaylistFileIO.readPlaylist(src);
+        aTable.printAllSong();
+        PlaylistFileIO.readPlaylist(src4).printAllSong();
     }
 }

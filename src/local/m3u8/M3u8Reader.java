@@ -94,7 +94,6 @@ public class M3u8Reader extends AbstractPlaylistReader {
 
     private boolean checkAnnotation(String line) {
         String first = line.substring(0, 1);
-        System.out.println("CHECKING:"+line);
         return first.equals("#");
     }
     

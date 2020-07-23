@@ -155,6 +155,12 @@ public abstract class AbstractPlaylistTable {
             this.getSupportedMeta(), this.getSongArrList());
     }
     
+    public void printAllSong() {
+        for(AbstractPlaylistSong aSong:songArrList) {
+            logger.debug(aSong.toString());
+        }
+    }
+    
     protected abstract void initializeMeta();
 
     protected abstract void initializeSongInstance();
