@@ -6,6 +6,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import exception.ErrorCodes;
+import exception.MetaIOException;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
 import local.m3u.M3uReader;
@@ -35,30 +36,63 @@ public class PlaylistFileIO {
     private HashMap<String, AbstractPlaylistWriter> writersMap =
         new HashMap<String, AbstractPlaylistWriter>();
 
-    
-    public static AbstractPlaylistTable readPlaylist(File f) throws PlaylistIOException, NativeReflectionException {
+
+    public static AbstractPlaylistTable readPlaylist(File f)
+        throws PlaylistIOException, NativeReflectionException {
         return getDefaultPlaylistFileIO().readPlaylistFile(f);
     }
-    
-    public static AbstractPlaylistTable readPlaylist(String filePath) throws PlaylistIOException, NativeReflectionException {
-        return readPlaylist(new File(filePath));
+
+    public static void writePlaylistAs(AbstractPlaylistTable table, File f,
+        SupportedPlaylistFormat format, boolean bomToggle)
+        throws NativeReflectionException, MetaIOException, PlaylistIOException {
+        getDefaultPlaylistFileIO().writePlaylistFileAs(table, f, format, bomToggle);
+        return;
     }
 
-    public AbstractPlaylistTable readPlaylistFile(File f) throws PlaylistIOException, NativeReflectionException {
+    public static void writePlaylist(AbstractPlaylistTable table, File f, boolean bomToggle)
+        throws NativeReflectionException, MetaIOException, PlaylistIOException {
+        writePlaylistAs(table, f, table.getSuppFormat(), bomToggle);
+    }
+
+    public AbstractPlaylistTable readPlaylistFile(File f)
+        throws PlaylistIOException, NativeReflectionException {
         String ext = FilenameUtils.getExtension(f.getAbsolutePath());
-        logger.debug("Reading playlist file:"+f.toString());
+        logger.debug("Reading playlist file:" + f.toString());
         AbstractPlaylistReader apr = readersMap.get(ext);
-        logger.trace("extension:"+ext);
-        if (apr == null)
-        {
-            throw new PlaylistIOException("Unsupported playlist file suffix!",ErrorCodes.UNSUPPORTED_PLAYLIST_ERROR);
+        logger.trace("extension:" + ext);
+        if (apr == null) {
+            throw new PlaylistIOException("Unsupported playlist file suffix!",
+                ErrorCodes.UNSUPPORTED_PLAYLIST_ERROR);
         }
         apr.read(f);
         return apr.getTable();
     }
-    
-    
-    
+
+    public void writePlaylistFileAs(AbstractPlaylistTable table, File f,
+        SupportedPlaylistFormat format, boolean bomToggle)
+        throws NativeReflectionException, MetaIOException, PlaylistIOException {
+        Class<?> destinationTableClass = SupportedPlaylistFormat.getPlaylistClass(format);
+        AbstractPlaylistTable unknownTable;
+        try {
+            unknownTable = (AbstractPlaylistTable) destinationTableClass.newInstance();
+            unknownTable.setInfoFromTable(table);
+        } catch (InstantiationException ie) {
+            throw new NativeReflectionException("Error initializing new table instance", ie,
+                ErrorCodes.INSTANSTIATE_ERROR);
+        } catch (IllegalAccessException iae) {
+            throw new NativeReflectionException("Error initializing new table instance", iae,
+                ErrorCodes.ILLEGAL_ACCESS_ERROR);
+        }
+        AbstractPlaylistWriter apw = writersMap.get(unknownTable.getSuppFormat().getFileSuffix());
+        if (apw == null) {
+            throw new PlaylistIOException("Unsupported playlist file suffix!",
+                ErrorCodes.UNSUPPORTED_PLAYLIST_ERROR);
+        }
+        apw.write(f.getAbsolutePath(), unknownTable, bomToggle);
+    }
+
+
+
     /**
      * Creates an instance.
      */
@@ -79,13 +113,13 @@ public class PlaylistFileIO {
     }
 
     private void prepareReadersAndWriters() {
-        //prepare readers
-        readersMap.put(SupportedPlaylistFormat.M3U.getFileSuffix(),new M3uReader());
-        readersMap.put(SupportedPlaylistFormat.M3U8.getFileSuffix(),new M3u8Reader());
-        
-        //prepare writers
-        writersMap.put(SupportedPlaylistFormat.M3U.getFileSuffix(),new M3uWriter());
-        writersMap.put(SupportedPlaylistFormat.M3U8.getFileSuffix(),new M3u8Writer());
+        // prepare readers
+        readersMap.put(SupportedPlaylistFormat.M3U.getFileSuffix(), new M3uReader());
+        readersMap.put(SupportedPlaylistFormat.M3U8.getFileSuffix(), new M3u8Reader());
+
+        // prepare writers
+        writersMap.put(SupportedPlaylistFormat.M3U.getFileSuffix(), new M3uWriter());
+        writersMap.put(SupportedPlaylistFormat.M3U8.getFileSuffix(), new M3u8Writer());
     }
 
 
