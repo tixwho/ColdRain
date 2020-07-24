@@ -2,6 +2,7 @@ package local.generic;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.AudioHeader;
@@ -211,6 +212,12 @@ public class MetaSong {
                 ErrorCodes.CANNOTWRITE_ERROR);
         }
 
+    }
+    
+    @Override
+    public String toString() {
+        return MessageFormat.format("{0}[src={1}, title={2},  artist={3}, album={4}]", new Object[] {
+            getClass().getSimpleName(), src, trackTitle, artist, album});
     }
 
 
