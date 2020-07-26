@@ -24,7 +24,7 @@ public class Album2 implements Serializable{
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="album_seq")
     private Integer aid;
-    private String albumName;
+    private String album;
     private String albumArtist;
     private String totalDisc;
     @OneToMany(mappedBy="album")
@@ -35,7 +35,7 @@ public class Album2 implements Serializable{
     }
     
     public Album2(MetaSong meta) {
-        this.albumName=meta.getAlbum();
+        this.album=meta.getAlbum();
         this.albumArtist=meta.getAlbumArtist();
         this.totalDisc=meta.getTotalDiscNo();
     }
@@ -46,11 +46,11 @@ public class Album2 implements Serializable{
     public void setAid(Integer aid) {
         this.aid = aid;
     }
-    public String getAlbumName() {
-        return albumName;
+    public String getAlbum() {
+        return album;
     }
-    public void setAlbumName(String albumName) {
-        this.albumName = albumName;
+    public void setAlbum(String album) {
+        this.album = album;
     }
     public String getAlbumArtist() {
         return albumArtist;
@@ -75,7 +75,7 @@ public class Album2 implements Serializable{
     
     @Override
     public String toString() {
-        return "Album2 [aid=" + aid + ", albumName=" + albumName + ", totalDisc=" + totalDisc
+        return "Album2 [aid=" + aid + ", albumName=" + album + ", totalDisc=" + totalDisc
             + ", files=" + files + "]";
     }
     

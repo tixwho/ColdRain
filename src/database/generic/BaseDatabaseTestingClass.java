@@ -10,7 +10,7 @@ public class BaseDatabaseTestingClass extends BaseDatabaseLoggingClass {
     
     protected void printWelcome() {
         logger.error("TESTING CLASS INITIALIZED: All logging system set to Error");
-        logger.error("Supported logger: self");
+        logger.error("Supported logger: self,pojo");
         logger.error("TIMER INITILIZED: call tim");
         logger.error("------SETUP COMPLETE------");
     }

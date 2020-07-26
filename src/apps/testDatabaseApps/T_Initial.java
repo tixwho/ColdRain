@@ -6,6 +6,10 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import database.generic.BaseDatabaseTestingClass;
+import database.models.ArtistModel;
+import database.models.FileInfoModel;
+import database.models.FileModel;
+import database.models.MetaModel;
 import database.testDatabaseModels2.Album1;
 import database.testDatabaseModels3.Album2;
 import database.testDatabaseModels3.File2;
@@ -20,11 +24,11 @@ import local.generic.MetaSong;
 import local.generic.PlaylistFileIO;
 import toolkit.LogMaker;
 
-public class T_New1to1 extends BaseDatabaseTestingClass {
+public class T_Initial extends BaseDatabaseTestingClass {
 
     public static void main(String[] args)
         throws PlaylistIOException, NativeReflectionException, MetaIOException {
-        T_New1to1 me = new T_New1to1();
+        T_Initial me = new T_Initial();
         me.setAllLevel("debug");
         BaseLocalTestingClass they = new BaseLocalTestingClass();
         they.setAllLevel("debug");
@@ -33,9 +37,13 @@ public class T_New1to1 extends BaseDatabaseTestingClass {
         testTable.printAllSong();
         for (AbstractPlaylistSong aSong : testTable.getSongArrList()) {
             MetaSong aMeta = new MetaSong(aSong.getSrc());
-            Album2 album = guaranteeAlbum2(aMeta);
-            File2 file = createFile2(aMeta);
-            setRelation(album,file);
+            FileModel fileM = FileModel.createFileInfoModel(aMeta);
+            FileInfoModel fileInfoM = FileInfoModel.createFileInfoModel(aMeta);
+            fileInfoM.attachFileModel(fileM);
+            MetaModel metaM = MetaModel.createMetaModel(aMeta);
+            fileM.attachMetaModel(metaM);
+            ArtistModel artistM = ArtistModel.guaranteeArtistModel(aMeta);
+            metaM.attachArtistModel(artistM);
         }
 
     }
@@ -59,6 +67,7 @@ public class T_New1to1 extends BaseDatabaseTestingClass {
         System.out.println("Set Relation!");
     }
     
+    /*
     private static Album2 guaranteeAlbum2(MetaSong meta) {
         Album2 returnAlbum;
         String album = meta.getAlbum();
@@ -77,6 +86,7 @@ public class T_New1to1 extends BaseDatabaseTestingClass {
         }
         return returnAlbum;
     }
+    */
 
     private static File2 createFile2(MetaSong meta) {
         File2 aFile2 = new File2(meta);
@@ -89,17 +99,6 @@ public class T_New1to1 extends BaseDatabaseTestingClass {
         System.out.println("Created File");
         return aFile2;
 
-    }
-    
-    private static Album2 createAlbum2(MetaSong meta) {
-        Album2 aAlbum2 = new Album2(meta);
-        Session session = InitSessionFactory.getNewSession();
-        Transaction tx = session.beginTransaction();
-        session.save(aAlbum2);
-        tx.commit();
-        session.close();
-        System.out.println("created album!");
-        return aAlbum2;
     }
 
 

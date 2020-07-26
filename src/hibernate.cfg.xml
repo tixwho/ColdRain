@@ -38,7 +38,9 @@
         <!-- 引入映射配置文件 -->
         <!-- <mapping resource="database/testDatabaseModels/TestFileModel.hbm.xml" /> -->
         <!--<mapping resource="database/testDatabaseModels/FileModel.hbm.xml" />-->
-        <mapping class="database.testDatabaseModels3.File2"/>
-        <mapping class="database.testDatabaseModels3.Album2"/>
+        <mapping class="database.models.FileInfoModel"/>
+        <mapping class="database.models.FileModel"/>
+        <mapping class="database.models.MetaModel"/>
+        <mapping class="database.models.ArtistModel"/>
     </session-factory>
 </hibernate-configuration>
