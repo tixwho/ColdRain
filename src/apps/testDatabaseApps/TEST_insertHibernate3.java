@@ -32,7 +32,7 @@ public class TEST_insertHibernate3 extends BaseDatabaseTestingClass {
         String[] allowedAudio = {".flac", ".mp3"};
         ArrayList<String> sampleAudioList = new ArrayList<String>();
         sampleAudioList = MethodInvoker.singlizeInputR(
-            "E:\\lzx\\etc\\OST\\Discography",
+            "E:\\lzx\\Discovery\\ColdRain\\Discography",
             allowedAudio, sampleAudioList);
         Iterator<String> audioIt = sampleAudioList.iterator();
         ArrayList<MetaSong_old> metaList = new ArrayList<MetaSong_old>();

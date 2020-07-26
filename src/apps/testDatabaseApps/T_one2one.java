@@ -51,13 +51,15 @@ public class T_one2one extends BaseDatabaseTestingClass {
         // tip: save fron "one" side first.
         for (MetaSong eachMeta : metaList) {
             LogMaker.logs("--------------------------");
+            System.out.println(eachMeta);
             Session session = factory.openSession();
-            session.beginTransaction();
+            //session.beginTransaction();
             // create objects
             File1 aFile = new File1(eachMeta);
             FileProperty1 aFileProperty = new FileProperty1(eachMeta);
             // put before session to guarantee session not locked
             Album1 aAlbum = guaranteeAlbum(session, eachMeta);
+            System.out.println(aAlbum);
             Meta1 aMeta = guaranteeMeta(session,eachMeta,aAlbum);
             // files-fielsProperty one-to-one
             aFile.setFileProperty(aFileProperty);
@@ -74,7 +76,6 @@ public class T_one2one extends BaseDatabaseTestingClass {
             session.save(aFile);
             session.save(aFileProperty);
 
-            session.getTransaction().commit();
             session.close();
         }
         tim.timerPeriod("Created base info!");
@@ -98,10 +99,12 @@ public class T_one2one extends BaseDatabaseTestingClass {
         String album = meta.getAlbum();
         String albumArtist = meta.getAlbumArtist();
         Album1 returnAlbum;
+        session.beginTransaction();
         Query<Album1> q =
             session.createQuery("from Album1 a where a.album=?0 and a.albumArtist=?1");
         q.setParameter(0, album);
         q.setParameter(1, albumArtist);
+        session.getTransaction().commit();
         List<Album1> albumList = q.list();
         if (albumList.size() == 0) {
             LogMaker.logs("Nope");
@@ -121,12 +124,14 @@ public class T_one2one extends BaseDatabaseTestingClass {
         String title=meta.getTrackTitle();
         String artist=meta.getArtist();
         Meta1 returnMeta;
+        session.beginTransaction();
         @SuppressWarnings("unchecked")
         Query<Meta1> q =
             session.createQuery("from Meta1 m where m.title=?0 and m.artist=?1 and m.album=?2");
         q.setParameter(0, title);
         q.setParameter(1, artist);
         q.setParameter(2,album);
+        session.getTransaction().commit();
         List<Meta1> metaList = q.list();
         if (metaList.size() == 0) {
             LogMaker.logs("Nope");

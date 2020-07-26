@@ -1,5 +1,6 @@
 package database.testDatabaseModels2;
 
+import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
 import local.generic.MetaSong;
@@ -49,6 +50,12 @@ public class Album1 {
     public void setMetas(Set<Meta1> metas) {
         this.metas = metas;
     }
+    
+    /* Possible new toString impl*/
+    public String toString() {
+        return MessageFormat.format("{0}[id={1}, name={2}]", new Object[] {
+              getClass().getSimpleName(), aid, album });
+     }
 
     
     

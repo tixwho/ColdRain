@@ -75,9 +75,6 @@ public class MethodInvoker {
     public static ArrayList<String> singlizeInputR(String checkingAddr, String[] suffixlist,
         ArrayList<String> storeList) {
         File checkAddr = new File(checkingAddr);
-        //debug
-        System.out.println("is directory?"+checkAddr.isDirectory());
-        System.out.println("is empty?"+checkAddr.exists());
         if (checkAddr.isDirectory()) {
             String s[] = checkAddr.list();
             for (String singlef: s){
