@@ -98,7 +98,7 @@ public class SongModel extends DatabasePOJO implements Serializable {
         session.saveOrUpdate(this);
         logger.trace("SongModel updated!");
         tx.commit();
-        logger.debug("All change commited!");
+        logger.debug("All change commited! Attached ArtistModel to SongModel.");
         session.close();
     }
     
@@ -110,7 +110,7 @@ public class SongModel extends DatabasePOJO implements Serializable {
         session.save(album);
         tx.commit();
         session.close();
-        logger.debug("Created an artist!");
+        logger.debug("Created a SongModel!");
         return album;
     }
 

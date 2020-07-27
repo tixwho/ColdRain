@@ -167,9 +167,9 @@ public class AlbumModel extends DatabasePOJO implements Serializable {
             logger.trace("ArtistModel (album) merged!");
         }
         session.saveOrUpdate(this);
-        logger.trace("MetaModel updated!");
+        logger.trace("AlbumModel updated!");
         tx.commit();
-        logger.debug("All change commited!");
+        logger.debug("All change commited! Attached ArtistModel to AlbumModel.");
         session.close();
 
     }

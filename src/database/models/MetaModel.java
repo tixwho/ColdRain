@@ -125,7 +125,7 @@ public class MetaModel extends DatabasePOJO implements Serializable{
         session.save(metaM);
         tx.commit();
         session.close();
-        System.out.println("Created Meta");
+        logger.info("New MetaModel Created!");
         return metaM;
     }
     
@@ -144,7 +144,7 @@ public class MetaModel extends DatabasePOJO implements Serializable{
         session.saveOrUpdate(this);
         logger.trace("MetaModel updated!");
         tx.commit();
-        logger.debug("All change commited!");
+        logger.debug("All change commited! ArtistModel attached to MetaModel.");
         session.close();
     }
     
@@ -163,7 +163,7 @@ public class MetaModel extends DatabasePOJO implements Serializable{
         session.saveOrUpdate(this);
         logger.trace("MetaModel updated!");
         tx.commit();
-        logger.debug("All change commited!");
+        logger.debug("All change commited! AlbumModel attached to MetaModel.");
         session.close();
     }
     
@@ -182,7 +182,7 @@ public class MetaModel extends DatabasePOJO implements Serializable{
         session.saveOrUpdate(this);
         logger.trace("MetaModel updated!");
         tx.commit();
-        logger.debug("All change commited!");
+        logger.debug("All change commited! SongModel attached to MetaModel.");
         session.close();
     }
     
