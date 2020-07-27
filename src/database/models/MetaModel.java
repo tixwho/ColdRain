@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import org.hibernate.Hibernate;
+import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import database.generic.DatabasePOJO;
@@ -39,6 +41,15 @@ public class MetaModel extends DatabasePOJO implements Serializable{
     @ManyToOne
     @JoinColumn(name = "artistid")
     private ArtistModel artistM;
+    
+    @ManyToOne
+    @JoinColumn(name = "albumid")
+    private AlbumModel albumM;
+    
+    @ManyToOne
+    @JoinColumn(name = "songid")
+    private SongModel songM;
+    
     
     String trackTitle;
     String trackNo;
@@ -93,6 +104,19 @@ public class MetaModel extends DatabasePOJO implements Serializable{
     public void setArtistM(ArtistModel artistM) {
         this.artistM = artistM;
     }
+
+    public AlbumModel getAlbumM() {
+        return albumM;
+    }
+    public void setAlbumM(AlbumModel albumM) {
+        this.albumM = albumM;
+    }
+    public SongModel getSongM() {
+        return songM;
+    }
+    public void setSongM(SongModel songM) {
+        this.songM = songM;
+    }
     public static MetaModel createMetaModel(MetaSong meta) {
         MetaModel metaM = new MetaModel(meta);
 
@@ -123,6 +147,45 @@ public class MetaModel extends DatabasePOJO implements Serializable{
         logger.debug("All change commited!");
         session.close();
     }
+    
+    public void attachAlbumModel(AlbumModel albumModel) {
+        Session session = InitSessionFactory.getNewSession();
+        Transaction tx = session.beginTransaction();
+        System.out.println("Refreshing...");
+        session.refresh(this);
+        session.refresh(albumModel);
+        this.setAlbumM(albumModel);
+        logger.trace("Album Model binded to MetaModel!");
+        albumModel.getMetaModels().add(this);
+        logger.trace("Meta Model binded to AlbumModel!");
+        session.saveOrUpdate(albumModel);
+        logger.trace("AlbumModel updated!");
+        session.saveOrUpdate(this);
+        logger.trace("MetaModel updated!");
+        tx.commit();
+        logger.debug("All change commited!");
+        session.close();
+    }
+    
+    public void attachSongModel(SongModel songModel) {
+        Session session = InitSessionFactory.getNewSession();
+        Transaction tx = session.beginTransaction();
+        System.out.println("Refreshing...");
+        session.refresh(this);
+        session.refresh(songModel);
+        this.setSongM(songModel);
+        logger.trace("Song Model binded to MetaModel!");
+        songModel.getMetaModels().add(this);
+        logger.trace("Meta Model binded to SongModel!");
+        session.saveOrUpdate(songModel);
+        logger.trace("SongModel updated!");
+        session.saveOrUpdate(this);
+        logger.trace("MetaModel updated!");
+        tx.commit();
+        logger.debug("All change commited!");
+        session.close();
+    }
+    
     
     
 

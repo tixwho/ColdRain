@@ -34,6 +34,12 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
     @OneToMany(mappedBy="artistM")
     private Set<MetaModel> metaModels = new HashSet<MetaModel>();
     
+    @OneToMany(mappedBy="albumArtistM")
+    private Set<AlbumModel> albumModels = new HashSet<AlbumModel>();
+    
+    @OneToMany(mappedBy="artistM")
+    private Set<SongModel> songModels = new HashSet<SongModel>();
+    
     private String artist;
     
     public ArtistModel() {
@@ -61,6 +67,23 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
         this.metaModels = metaModels;
     }
 
+
+    public Set<AlbumModel> getAlbumModels() {
+        return albumModels;
+    }
+
+    public void setAlbumModels(Set<AlbumModel> albumModels) {
+        this.albumModels = albumModels;
+    }
+
+    public Set<SongModel> getSongModels() {
+        return songModels;
+    }
+
+    public void setSongModels(Set<SongModel> songModels) {
+        this.songModels = songModels;
+    }
+
     public String getArtist() {
         return artist;
     }
@@ -77,13 +100,28 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
         session.save(artist);
         tx.commit();
         session.close();
-        System.out.println("Created File");
+        logger.debug("Created an artist!");
+        return artist;
+    }
+    
+    public static ArtistModel createArtistModel(String artistName) {
+
+        ArtistModel artist = new ArtistModel();
+        artist.setArtist(artistName);
+        Session session = InitSessionFactory.getNewSession();
+        Transaction tx = session.beginTransaction();
+        session.save(artist);
+        tx.commit();
+        session.close();
+        logger.debug("Created an artist!");
         return artist;
     }
     
     public static ArtistModel guaranteeArtistModel(MetaSong meta) {
+
         ArtistModel returnArtistM;
         String artist = meta.getArtist();
+        logger.debug("Checking artist:"+artist);
         Session session=InitSessionFactory.getNewSession();
         session.beginTransaction();
         @SuppressWarnings("unchecked")
@@ -92,9 +130,32 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
         ArtistModel toCheckArtistM = q.uniqueResult();
         session.close();
         if (toCheckArtistM == null){
+            logger.debug("Artist NOT FOUND");
             returnArtistM=createArtistModel(meta);
         }else {
+            logger.debug("Artist FOUND");
             returnArtistM = toCheckArtistM;
+        }
+        return returnArtistM;
+    }
+    
+    public static ArtistModel guaranteeArtistModel_album(MetaSong meta) {
+        ArtistModel returnArtistM;
+        String artist = meta.getAlbumArtist();
+        logger.debug("Checking album artist:"+artist);
+        Session session=InitSessionFactory.getNewSession();
+        session.beginTransaction();
+        @SuppressWarnings("unchecked")
+        Query<ArtistModel> q= (Query<ArtistModel>) session.createQuery("from ArtistModel a where a.artist=?0");
+        q.setParameter(0, artist);
+        ArtistModel toCheckArtistM = q.uniqueResult();
+        session.close();
+        if (toCheckArtistM == null){
+            logger.debug("Album Artist NOT FOUND");
+            returnArtistM=createArtistModel(artist);
+        }else {
+            returnArtistM = toCheckArtistM;
+            logger.debug("Album Artist FOUND");
         }
         return returnArtistM;
     }

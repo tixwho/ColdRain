@@ -3,44 +3,45 @@
         "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-    <session-factory>
-        <!-- 配置数据库的相关信息 -->
-        <property name="hibernate.connection.driver_class">
-            org.sqlite.JDBC
-        </property>
-        <property name="connection.useUnicode">true</property> 
-        <property name="connection.characterEncoding">UTF-8</property>
-        <property name="hibernate.connection.url">
-            jdbc:sqlite:E:\lzx\Discovery\ColdRain\ColdRainTest.db
-          <!--  一种简写形式
-              jdbc:mysql:///student  -->
-        </property>
-        <!-- 配置数据库的方言 比如在mysql里面有关键字 limit ，只能使用在mysql里面 
-            让hibernate识别到不同数据库自己特有的语句 -->
-        <property name="hibernate.dialect">
-            org.hibernate.dialect.SQLiteDialect
-        </property>
+	<session-factory>
+		<!-- 配置数据库的相关信息 -->
+		<property name="hibernate.connection.driver_class">
+			org.sqlite.JDBC
+		</property>
+		<property name="connection.useUnicode">true</property>
+		<property name="connection.characterEncoding">UTF-8</property>
+		<property name="hibernate.connection.url">
+			jdbc:sqlite:E:\lzx\Discovery\ColdRain\ColdRainTest.db
+			<!-- 一种简写形式 jdbc:mysql:///student -->
+		</property>
+		<!-- 配置数据库的方言 比如在mysql里面有关键字 limit ，只能使用在mysql里面 让hibernate识别到不同数据库自己特有的语句 -->
+		<property name="hibernate.dialect">
+			org.hibernate.dialect.SQLiteDialect
+		</property>
 
-        <!-- 配置hibernate的相关信息 -->
-        <!-- 是否显示底层的sql语句 -->
-        <property name="hibernate.show_sql">true</property>
-        <!-- 是否格式化sql语句 -->
-        <property name="hibernate.format_sql">true</property>
-        <!-- hibernate会帮自己创建数据库表，默认不会创建，需要配置。 
-            值 update： 如果数据库里面不存在表，创建；如果已经存在，更新 -->
-        <property name="hibernate.hbm2ddl.auto">update</property>
-        <!-- 仅供测试用 每次运行都会drop原来的表 慎用 -->
-        <property name="hibernate.hbm2ddl.auto">create</property>
-        
-        <!-- 配置事务自动提交 -->
-        <!-- <property name="hibernate.connection.autocommit">true</property> -->
+		<!-- 配置hibernate的相关信息 -->
+		<!-- 是否显示底层的sql语句 -->
+		<property name="hibernate.show_sql">true</property>
+		<!-- 是否格式化sql语句 -->
+		<property name="hibernate.format_sql">true</property>
+		<!-- hibernate会帮自己创建数据库表，默认不会创建，需要配置。 值 update： 如果数据库里面不存在表，创建；如果已经存在，更新 -->
+		<property name="hibernate.hbm2ddl.auto">update</property>
+		<!-- 仅供测试用 每次运行都会drop原来的表 慎用 -->
+		<property name="hibernate.hbm2ddl.auto">create</property>
 
-        <!-- 引入映射配置文件 -->
-        <!-- <mapping resource="database/testDatabaseModels/TestFileModel.hbm.xml" /> -->
-        <!--<mapping resource="database/testDatabaseModels/FileModel.hbm.xml" />-->
-        <mapping class="database.models.FileInfoModel"/>
-        <mapping class="database.models.FileModel"/>
-        <mapping class="database.models.MetaModel"/>
-        <mapping class="database.models.ArtistModel"/>
-    </session-factory>
+		<!-- 配置事务自动提交 -->
+		<!-- <property name="hibernate.connection.autocommit">true</property> -->
+		<!-- 解决指向同一entity的复数collection出现lazyinitialization问题 -->
+		<property name="hibernate.enable_lazy_load_no_trans">true</property>
+		<!-- 引入映射配置文件 -->
+		<!-- <mapping resource="database/testDatabaseModels/TestFileModel.hbm.xml" 
+			/> -->
+		<!--<mapping resource="database/testDatabaseModels/FileModel.hbm.xml" /> -->
+		<mapping class="database.models.FileInfoModel" />
+		<mapping class="database.models.FileModel" />
+		<mapping class="database.models.MetaModel" />
+		<mapping class="database.models.ArtistModel" />
+		<mapping class="database.models.AlbumModel"/>
+		<mapping class="database.models.SongModel"/>
+	</session-factory>
 </hibernate-configuration>

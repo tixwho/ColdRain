@@ -6,10 +6,12 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import database.generic.BaseDatabaseTestingClass;
+import database.models.AlbumModel;
 import database.models.ArtistModel;
 import database.models.FileInfoModel;
 import database.models.FileModel;
 import database.models.MetaModel;
+import database.models.SongModel;
 import database.testDatabaseModels2.Album1;
 import database.testDatabaseModels3.Album2;
 import database.testDatabaseModels3.File2;
@@ -32,11 +34,13 @@ public class T_Initial extends BaseDatabaseTestingClass {
         me.setAllLevel("debug");
         BaseLocalTestingClass they = new BaseLocalTestingClass();
         they.setAllLevel("debug");
-        String playlist = "E:\\lzx\\Discovery\\ColdRain\\Discography\\DatabasePlaylist.m3u";
+        //String playlist = "E:\\lzx\\Discovery\\ColdRain\\Discography\\DatabasePlaylist.m3u";
+        String playlist = "E:\\program files\\foobar2000\\playlists\\Casual English.m3u8";
         AbstractPlaylistTable testTable = PlaylistFileIO.readPlaylist(new File(playlist));
         testTable.printAllSong();
         for (AbstractPlaylistSong aSong : testTable.getSongArrList()) {
             MetaSong aMeta = new MetaSong(aSong.getSrc());
+            System.out.println("aMeta Date:"+aMeta.getAlbumDate());
             FileModel fileM = FileModel.createFileInfoModel(aMeta);
             FileInfoModel fileInfoM = FileInfoModel.createFileInfoModel(aMeta);
             fileInfoM.attachFileModel(fileM);
@@ -44,28 +48,15 @@ public class T_Initial extends BaseDatabaseTestingClass {
             fileM.attachMetaModel(metaM);
             ArtistModel artistM = ArtistModel.guaranteeArtistModel(aMeta);
             metaM.attachArtistModel(artistM);
+            AlbumModel albumM = AlbumModel.guaranteeAlbumModel(aMeta);
+            metaM.attachAlbumModel(albumM);
+            SongModel songM = SongModel.guaranteeSongModel(aMeta);
+            metaM.attachSongModel(songM);
+            
         }
 
     }
     
-    
-    private static void setRelation(Album2 album, File2 file) {
-        Session session = InitSessionFactory.getNewSession();
-        Transaction tx = session.beginTransaction();
-        System.out.println("Refreshing...");
-        session.refresh(album);
-        session.refresh(file);
-        album.getFiles().add(file);
-        file.setAlbum(album);
-
-        System.out.println("Album Update?");
-        session.saveOrUpdate(album);
-        System.out.println("File Update?");
-        session.saveOrUpdate(file);
-        tx.commit();
-        session.close();
-        System.out.println("Set Relation!");
-    }
     
     /*
     private static Album2 guaranteeAlbum2(MetaSong meta) {

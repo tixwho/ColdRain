@@ -1,7 +1,7 @@
 package database.models;
 
+import java.io.File;
 import java.io.Serializable;
-import java.text.MessageFormat;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,6 +31,7 @@ public class FileModel extends DatabasePOJO implements Serializable{
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="file_seq")
     private Integer fileid;
     private String src;
+    private Long lastModified;
     //notice: use album to test relation first. later it will be replaced by mid.
     @ManyToOne
     @JoinColumn(name = "metaid")
@@ -45,6 +46,8 @@ public class FileModel extends DatabasePOJO implements Serializable{
     
     public FileModel(MetaSong meta) {
         this.src=meta.getSrc();
+        File f = new File(meta.getSrc());
+        this.lastModified = f.lastModified();
     }
     
     
@@ -63,6 +66,14 @@ public class FileModel extends DatabasePOJO implements Serializable{
     }
     
     
+    public Long getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(Long lastModified) {
+        this.lastModified = lastModified;
+    }
+
     public MetaModel getMetaM() {
         return metaM;
     }
