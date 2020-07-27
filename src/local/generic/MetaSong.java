@@ -34,6 +34,7 @@ public class MetaSong {
     private String artist;
     private String album;
     private String albumArtist;
+    private String albumDate;
     private final String FORMAT;
     private final String SAMPLERATE;
     private final String BITRATE;
@@ -52,6 +53,7 @@ public class MetaSong {
             setArtist(tag.getFirst(FieldKey.ARTIST));
             setAlbum(tag.getFirst(FieldKey.ALBUM));
             setAlbumArtist(tag.getFirst(FieldKey.ALBUM_ARTIST));
+            setAlbumDate(tag.getFirst(FieldKey.YEAR));
             AudioHeader aoh = aof.getAudioHeader();
             this.FORMAT = aoh.getFormat();
             this.SAMPLERATE = aoh.getSampleRate();
@@ -158,6 +160,14 @@ public class MetaSong {
         this.albumArtist = albumArtist;
     }
 
+    public String getAlbumDate() {
+        return albumDate;
+    }
+
+    public void setAlbumDate(String albumDate) {
+        this.albumDate = albumDate;
+    }
+
     public String getFORMAT() {
         return FORMAT;
     }
@@ -199,6 +209,9 @@ public class MetaSong {
             }
             if (albumArtist != null && albumArtist != "") {
                 tag.setField(FieldKey.ALBUM_ARTIST, albumArtist);
+            }
+            if (albumDate != null && albumDate != "") {
+                tag.setField(FieldKey.YEAR, albumDate);
             }
             AudioFileIO.write(aof);
         } catch (KeyNotFoundException kne) {
