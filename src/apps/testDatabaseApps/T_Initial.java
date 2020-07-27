@@ -8,7 +8,7 @@ import org.hibernate.query.Query;
 import database.generic.BaseDatabaseTestingClass;
 import database.models.AlbumModel;
 import database.models.ArtistModel;
-import database.models.FileInfoModel;
+import database.models.FileInfoComp;
 import database.models.FileModel;
 import database.models.MetaModel;
 import database.models.SongModel;
@@ -42,8 +42,6 @@ public class T_Initial extends BaseDatabaseTestingClass {
             MetaSong aMeta = new MetaSong(aSong.getSrc());
             System.out.println("aMeta Date:"+aMeta.getAlbumDate());
             FileModel fileM = FileModel.createFileInfoModel(aMeta);
-            FileInfoModel fileInfoM = FileInfoModel.createFileInfoModel(aMeta);
-            fileInfoM.attachFileModel(fileM);
             MetaModel metaM = MetaModel.createMetaModel(aMeta);
             fileM.attachMetaModel(metaM);
             ArtistModel artistM = ArtistModel.guaranteeArtistModel(aMeta);

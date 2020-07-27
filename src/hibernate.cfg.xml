@@ -37,7 +37,7 @@
 		<!-- <mapping resource="database/testDatabaseModels/TestFileModel.hbm.xml" 
 			/> -->
 		<!--<mapping resource="database/testDatabaseModels/FileModel.hbm.xml" /> -->
-		<mapping class="database.models.FileInfoModel" />
+		<mapping class="database.models.FileInfoComp" />
 		<mapping class="database.models.FileModel" />
 		<mapping class="database.models.MetaModel" />
 		<mapping class="database.models.ArtistModel" />

@@ -37,8 +37,8 @@ public class FileModel extends DatabasePOJO implements Serializable{
     @JoinColumn(name = "metaid")
     private MetaModel metaM;
     //fileInfo 1to1, use the same id
-    @OneToOne(mappedBy="fileM")
-    private FileInfoModel fileInfoM;
+ 
+    private FileInfoComp fileInfoC;
     
     public FileModel() {
         
@@ -83,18 +83,19 @@ public class FileModel extends DatabasePOJO implements Serializable{
     }
     
 
-    public FileInfoModel getFileInfoM() {
-        return fileInfoM;
+    public FileInfoComp getFileInfoC() {
+        return fileInfoC;
     }
 
-    public void setFileInfoM(FileInfoModel fileInfoM) {
-        this.fileInfoM = fileInfoM;
+    public void setFileInfoC(FileInfoComp fileInfoM) {
+        this.fileInfoC = fileInfoM;
     }
     
     
     public static FileModel createFileInfoModel(MetaSong meta) {
         FileModel file = new FileModel(meta);
-
+        FileInfoComp fileInfo = new FileInfoComp(meta);
+        file.setFileInfoC(fileInfo);
         Session session = InitSessionFactory.getNewSession();
         Transaction tx = session.beginTransaction();
         session.save(file);
