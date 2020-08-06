@@ -21,7 +21,7 @@ import local.generic.MetaSong;
 
 @Entity
 @Table(name = "Song")
-@SequenceGenerator(name = "song_seq", sequenceName = "song_id_seq")
+@SequenceGenerator(name = "song_seq", sequenceName = "song_id_seq", initialValue = 1, allocationSize = 1)
 public class SongModel extends DatabasePOJO implements Serializable {
 
     /**
@@ -138,5 +138,52 @@ public class SongModel extends DatabasePOJO implements Serializable {
         }
         return returnSongM;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((artistM == null) ? 0 : artistM.hashCode());
+        result = prime * result + ((songid == null) ? 0 : songid.hashCode());
+        result = prime * result + ((trackTitle == null) ? 0 : trackTitle.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        SongModel other = (SongModel) obj;
+        if (artistM == null) {
+            if (other.artistM != null)
+                return false;
+        } else if (!artistM.equals(other.artistM))
+            return false;
+        if (songid == null) {
+            if (other.songid != null)
+                return false;
+        } else if (!songid.equals(other.songid))
+            return false;
+        if (trackTitle == null) {
+            if (other.trackTitle != null)
+                return false;
+        } else if (!trackTitle.equals(other.trackTitle))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "SongModel [songid=" + songid + ", artistM=" + artistM + ", trackTitle=" + trackTitle
+            + "]";
+    }
+    
+    
+
+    
 
 }

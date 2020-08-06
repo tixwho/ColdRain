@@ -12,111 +12,136 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import org.hibernate.Hibernate;
-import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import database.generic.DatabasePOJO;
 import database.utils.InitSessionFactory;
 import local.generic.MetaSong;
 
 
 @Entity
-@Table(name="Meta")
-@SequenceGenerator(name = "meta_seq", sequenceName = "meta_id_seq")
-public class MetaModel extends DatabasePOJO implements Serializable{
+@Table(name = "Meta")
+@SequenceGenerator(name = "meta_seq", sequenceName = "meta_id_seq", initialValue = 1, allocationSize = 1)
+public class MetaModel extends DatabasePOJO implements Serializable {
 
     /**
      * 
      */
     private static final long serialVersionUID = -7680624167194156409L;
-    
+
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="meta_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "meta_seq")
     private Integer metaid;
-    
-    @OneToMany(mappedBy="metaM")
-    private Set<FileModel> fileModels=new HashSet<FileModel>();
-    
-    @ManyToOne
-    @JoinColumn(name = "artistid")
-    private ArtistModel artistM;
-    
+
+    @OneToMany(mappedBy = "metaM")
+    private Set<FileModel> fileModels = new HashSet<FileModel>();
+
+
     @ManyToOne
     @JoinColumn(name = "albumid")
     private AlbumModel albumM;
-    
+
     @ManyToOne
     @JoinColumn(name = "songid")
     private SongModel songM;
-    
-    
-    String trackTitle;
+
+
     String trackNo;
     String discNo;
-    
-    
+
+
     public MetaModel() {
-        
+
     }
+
     public MetaModel(MetaSong meta) {
-        this.trackTitle=meta.getTrackTitle();
-        this.trackNo=meta.getTrackNo();
-        this.discNo=meta.getDiscNo();
+        this.trackNo = meta.getTrackNo();
+        this.discNo = meta.getDiscNo();
     }
-    
-    
+
+
     public Integer getMetaid() {
         return metaid;
     }
+
     public void setMetaid(Integer metaid) {
         this.metaid = metaid;
     }
+
     public Set<FileModel> getFileModels() {
         return fileModels;
     }
+
     public void setFileModels(Set<FileModel> fileModels) {
         this.fileModels = fileModels;
     }
-    public String getTrackTitle() {
-        return trackTitle;
-    }
-    public void setTrackTitle(String trackTitle) {
-        this.trackTitle = trackTitle;
-    }
+
     public String getTrackNo() {
         return trackNo;
     }
+
     public void setTrackNo(String trackNo) {
         this.trackNo = trackNo;
     }
+
     public String getDiscNo() {
         return discNo;
     }
+
     public void setDiscNo(String discNo) {
         this.discNo = discNo;
     }
-    
-    
-    public ArtistModel getArtistM() {
-        return artistM;
-    }
-    public void setArtistM(ArtistModel artistM) {
-        this.artistM = artistM;
-    }
+
 
     public AlbumModel getAlbumM() {
         return albumM;
     }
+
     public void setAlbumM(AlbumModel albumM) {
         this.albumM = albumM;
     }
+
     public SongModel getSongM() {
         return songM;
     }
+
     public void setSongM(SongModel songM) {
         this.songM = songM;
     }
+
+
+    public static MetaModel guaranteeMetaModel(MetaSong meta) {
+        MetaModel returnMetaM;
+        // just need to guarantee SongModel, AlbumModel and title,
+        // since SongModel includes ArtistModel, AlbumModel includes AlbumArtist
+        AlbumModel toCheckAlbumM = AlbumModel.guaranteeAlbumModel(meta);
+        SongModel toCheckSongM = SongModel.guaranteeSongModel(meta);
+        logger.debug("Checking album:" + toCheckAlbumM.getAlbum() + " song:"
+            + toCheckSongM.getTrackTitle() + " by: " + toCheckSongM.getArtistM().getArtist());
+        Session session = InitSessionFactory.getNewSession();
+        session.beginTransaction();
+        @SuppressWarnings("unchecked")
+        Query<MetaModel> q = (Query<MetaModel>) session
+            .createQuery("from MetaModel m where m.albumM=?0 and m.songM=?1");
+        q.setParameter(0, toCheckAlbumM);
+        q.setParameter(1, toCheckSongM);
+        MetaModel toCheckMetaM = q.uniqueResult();
+        session.close();
+        if (toCheckMetaM == null) {
+            logger.debug("Meta NOT FOUND");
+            returnMetaM = createMetaModel(meta);
+            returnMetaM.attachAlbumModel(toCheckAlbumM);
+            returnMetaM.attachSongModel(toCheckSongM);
+        } else {
+            logger.debug("Meta FOUND");
+            returnMetaM = toCheckMetaM;
+        }
+        return returnMetaM;
+
+    }
+
+
     public static MetaModel createMetaModel(MetaSong meta) {
         MetaModel metaM = new MetaModel(meta);
 
@@ -128,26 +153,8 @@ public class MetaModel extends DatabasePOJO implements Serializable{
         logger.info("New MetaModel Created!");
         return metaM;
     }
-    
-    public void attachArtistModel(ArtistModel artistModel) {
-        Session session = InitSessionFactory.getNewSession();
-        Transaction tx = session.beginTransaction();
-        System.out.println("Refreshing...");
-        session.refresh(this);
-        session.refresh(artistModel);
-        this.setArtistM(artistModel);
-        logger.trace("Artist Model binded to MetaModel!");
-        artistModel.getMetaModels().add(this);
-        logger.trace("Meta Model binded to ArtistModel!");
-        session.saveOrUpdate(artistModel);
-        logger.trace("ArtistModel updated!");
-        session.saveOrUpdate(this);
-        logger.trace("MetaModel updated!");
-        tx.commit();
-        logger.debug("All change commited! ArtistModel attached to MetaModel.");
-        session.close();
-    }
-    
+
+
     public void attachAlbumModel(AlbumModel albumModel) {
         Session session = InitSessionFactory.getNewSession();
         Transaction tx = session.beginTransaction();
@@ -166,7 +173,7 @@ public class MetaModel extends DatabasePOJO implements Serializable{
         logger.debug("All change commited! AlbumModel attached to MetaModel.");
         session.close();
     }
-    
+
     public void attachSongModel(SongModel songModel) {
         Session session = InitSessionFactory.getNewSession();
         Transaction tx = session.beginTransaction();
@@ -185,8 +192,68 @@ public class MetaModel extends DatabasePOJO implements Serializable{
         logger.debug("All change commited! SongModel attached to MetaModel.");
         session.close();
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((albumM == null) ? 0 : albumM.hashCode());
+        result = prime * result + ((discNo == null) ? 0 : discNo.hashCode());
+        result = prime * result + ((metaid == null) ? 0 : metaid.hashCode());
+        result = prime * result + ((songM == null) ? 0 : songM.hashCode());
+        result = prime * result + ((trackNo == null) ? 0 : trackNo.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        MetaModel other = (MetaModel) obj;
+        if (albumM == null) {
+            if (other.albumM != null)
+                return false;
+        } else if (!albumM.equals(other.albumM))
+            return false;
+        if (discNo == null) {
+            if (other.discNo != null)
+                return false;
+        } else if (!discNo.equals(other.discNo))
+            return false;
+        if (metaid == null) {
+            if (other.metaid != null)
+                return false;
+        } else if (!metaid.equals(other.metaid))
+            return false;
+        if (songM == null) {
+            if (other.songM != null)
+                return false;
+        } else if (!songM.equals(other.songM))
+            return false;
+        if (trackNo == null) {
+            if (other.trackNo != null)
+                return false;
+        } else if (!trackNo.equals(other.trackNo))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "MetaModel [metaid=" + metaid + ", albumM=" + albumM + ", songM=" + songM
+            + ", trackNo=" + trackNo + ", discNo=" + discNo + "]";
+    }
     
     
+
+
     
+    
+
+
 
 }

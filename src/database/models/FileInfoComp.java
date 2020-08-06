@@ -2,15 +2,8 @@ package database.models;
 
 import java.io.Serializable;
 import javax.persistence.Embeddable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import database.generic.DatabasePOJO;
-import database.utils.InitSessionFactory;
+import database.utils.DbHelper;
 import local.generic.MetaSong;
 
 @Embeddable
@@ -28,16 +21,19 @@ public class FileInfoComp extends DatabasePOJO implements Serializable{
     private String sampleRate;
     private String bitRate;
     private String length;
+    private Integer quality;
     
-    public FileInfoComp() {
-        
+    public Integer getQuality() {
+        return quality;
     }
+
     
     public FileInfoComp(MetaSong meta) {
         this.format= meta.getFORMAT();
         this.sampleRate= meta.getSAMPLERATE();
         this.bitRate=meta.getBITRATE();
         this.length=meta.getLENGTH();
+        this.quality=DbHelper.calcAudioQuality(meta);
     }
 
 
@@ -72,6 +68,24 @@ public class FileInfoComp extends DatabasePOJO implements Serializable{
     public void setLength(String length) {
         this.length = length;
     }
+    
+
+    public void setQuality(Integer quality) {
+        this.quality = quality;
+    }
+
+    public FileInfoComp() {
+        
+    }
+
+
+    @Override
+    public String toString() {
+        return "FileInfoComp [format=" + format + ", sampleRate=" + sampleRate + ", bitRate="
+            + bitRate + ", length=" + length + ", quality=" + quality + "]";
+    }
+    
+    
     
     
     

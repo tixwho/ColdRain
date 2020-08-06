@@ -8,19 +8,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import database.generic.DatabasePOJO;
+import database.utils.DbHelper;
 import database.utils.InitSessionFactory;
+import exception.ColdRainException;
+import exception.DatabaseException;
+import exception.ErrorCodes;
 import local.generic.MetaSong;
 
 
 @Entity
 @Table(name="File")
-@SequenceGenerator(name = "file_seq", sequenceName = "file_id_seq")
+@SequenceGenerator(name = "file_seq", sequenceName = "file_id_seq", initialValue = 1, allocationSize = 1)
 public class FileModel extends DatabasePOJO implements Serializable{
 
     /**
@@ -46,8 +50,7 @@ public class FileModel extends DatabasePOJO implements Serializable{
     
     public FileModel(MetaSong meta) {
         this.src=meta.getSrc();
-        File f = new File(meta.getSrc());
-        this.lastModified = f.lastModified();
+        this.lastModified = DbHelper.calcLastModTimestamp(meta);
     }
     
     
@@ -92,7 +95,7 @@ public class FileModel extends DatabasePOJO implements Serializable{
     }
     
     
-    public static FileModel createFileInfoModel(MetaSong meta) {
+    public static FileModel createFileModel(MetaSong meta) {
         FileModel file = new FileModel(meta);
         FileInfoComp fileInfo = new FileInfoComp(meta);
         file.setFileInfoC(fileInfo);
@@ -103,6 +106,29 @@ public class FileModel extends DatabasePOJO implements Serializable{
         session.close();
         System.out.println("Created File");
         return file;
+    }
+    
+    public static FileModel findFileModel(MetaSong meta) throws DatabaseException {
+        FileModel returnFileM;
+        // just need to guarantee SongModel, AlbumModel and title,
+        // since SongModel includes ArtistModel, AlbumModel includes AlbumArtist
+        logger.debug("Finding FileModel for "+meta.getSrc());
+        Session session = InitSessionFactory.getNewSession();
+        session.beginTransaction();
+        @SuppressWarnings("unchecked")
+        Query<FileModel> q = (Query<FileModel>) session
+            .createQuery("from FileModel f where f.src=?0");
+        q.setParameter(0, meta.getSrc());
+        FileModel toCheckFileM = q.uniqueResult();
+        session.close();
+        if (toCheckFileM == null) {
+            logger.debug("File NOT FOUND");
+            throw new DatabaseException("Does not found corresponding FileModel",ErrorCodes.DATABASE_NOT_FOUND_ERROR);
+        } else {
+            logger.debug("File FOUND");
+            returnFileM = toCheckFileM;
+        }
+        return returnFileM;
     }
     
     public void attachMetaModel(MetaModel metaModel) {
@@ -123,6 +149,21 @@ public class FileModel extends DatabasePOJO implements Serializable{
         logger.debug("All change commited!");
         session.close();
     }
+    
+    public void updateTimeStamp() {
+        Session session = InitSessionFactory.getNewSession();
+        Transaction tx = session.beginTransaction();
+        session.refresh(this);
+        this.lastModified = DbHelper.calcLastModTimestamp(this.getSrc());
+
+        session.saveOrUpdate(this);
+        logger.trace("FileModel timestamp updated!");
+        tx.commit();
+        logger.debug("All change commited! Timestamp updated.");
+        session.close();
+
+    }
+    
 
 
     

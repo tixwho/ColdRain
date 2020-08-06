@@ -19,7 +19,7 @@ import local.generic.MetaSong;
 
 @Entity
 @Table(name="Artist")
-@SequenceGenerator(name = "artist_seq", sequenceName = "artist_id_seq")
+@SequenceGenerator(name = "artist_seq", sequenceName = "artist_id_seq", initialValue = 1, allocationSize = 1)
 public class ArtistModel extends DatabasePOJO implements Serializable {
 
     /**
@@ -30,9 +30,6 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="artist_seq")
     private Integer artistid;
-    
-    @OneToMany(mappedBy="artistM")
-    private Set<MetaModel> metaModels = new HashSet<MetaModel>();
     
     @OneToMany(mappedBy="albumArtistM")
     private Set<AlbumModel> albumModels = new HashSet<AlbumModel>();
@@ -59,13 +56,6 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
         this.artistid = artistid;
     }
 
-    public Set<MetaModel> getMetaModels() {
-        return metaModels;
-    }
-
-    public void setMetaModels(Set<MetaModel> metaModels) {
-        this.metaModels = metaModels;
-    }
 
 
     public Set<AlbumModel> getAlbumModels() {
@@ -159,6 +149,45 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
         }
         return returnArtistM;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((artist == null) ? 0 : artist.hashCode());
+        result = prime * result + ((artistid == null) ? 0 : artistid.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ArtistModel other = (ArtistModel) obj;
+        if (artist == null) {
+            if (other.artist != null)
+                return false;
+        } else if (!artist.equals(other.artist))
+            return false;
+        if (artistid == null) {
+            if (other.artistid != null)
+                return false;
+        } else if (!artistid.equals(other.artistid))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "ArtistModel [artistid=" + artistid + ", artist=" + artist + "]";
+    }
+    
+    
+
     
     
 
