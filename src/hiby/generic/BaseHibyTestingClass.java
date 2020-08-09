@@ -1,11 +1,11 @@
-package web.generic;
+package hiby.generic;
 
 import toolkit.Timer;
 
-public class BaseWebTestingClass extends BaseWebLoggingClass {
+public class BaseHibyTestingClass extends BaseHibyLoggingClass {
 
     public static Timer tim = new Timer();
-    public BaseWebTestingClass() {
+    public BaseHibyTestingClass() {
         printWelcome();
     }
     

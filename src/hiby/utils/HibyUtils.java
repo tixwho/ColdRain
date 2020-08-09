@@ -1,6 +1,6 @@
-package web.utils;
+package hiby.utils;
 
-public class WebUtils {
+public class HibyUtils {
     
     public static String packArray (String[] toPackArray) {
         int arrSize = toPackArray.length;

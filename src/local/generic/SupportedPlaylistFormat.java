@@ -51,4 +51,8 @@ public enum SupportedPlaylistFormat {
         
         return rtrclazz;
     }
+    
+    public static String[] getSupportedPlaylistArray() {
+        return new String[] {"m3u","m3u8"};
+    }
 }

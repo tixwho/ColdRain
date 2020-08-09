@@ -31,4 +31,8 @@ public enum SupportedAudioFormat {
         this.fileSuffix = fileSuffix;
         this.displayName = displayName;
     }
+    
+    public static String[] getSupportedAudioArray() {
+        return new String[] {"mp3","flac"};
+    }
 }

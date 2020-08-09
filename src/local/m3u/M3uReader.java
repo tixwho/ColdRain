@@ -10,8 +10,9 @@ public class M3uReader extends AbstractPlaylistReader {
 
     @Override
     public AbstractPlaylistTable getTable() throws PlaylistIOException {
-
-        return new M3uTable(songArrList);
+        M3uTable rtrTable = new M3uTable(songArrList);
+        rtrTable.setPlaylistSrc(this.playlistSrc);
+        return rtrTable;
     }
 
     @Override

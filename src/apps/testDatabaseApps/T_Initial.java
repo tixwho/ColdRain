@@ -1,10 +1,12 @@
 package apps.testDatabaseApps;
 
 import java.io.File;
+import java.io.IOException;
+import org.apache.commons.io.FileUtils;
 import database.generic.BaseDatabaseTestingClass;
-import database.generic.DbNavigator;
 import database.models.FileModel;
 import database.models.MetaModel;
+import database.service.AudioDBService;
 import exception.DatabaseException;
 import exception.MetaIOException;
 import exception.NativeReflectionException;
@@ -18,7 +20,7 @@ import local.generic.PlaylistFileIO;
 public class T_Initial extends BaseDatabaseTestingClass {
 
     public static void main(String[] args)
-        throws PlaylistIOException, NativeReflectionException, MetaIOException, DatabaseException {
+        throws PlaylistIOException, NativeReflectionException, MetaIOException, DatabaseException, IOException {
         T_Initial me = new T_Initial();
         me.setAllLevel("debug");
         BaseLocalTestingClass they = new BaseLocalTestingClass();
@@ -27,16 +29,42 @@ public class T_Initial extends BaseDatabaseTestingClass {
         //String playlist = "E:\\program files\\foobar2000\\playlists\\Casual English.m3u8";
         AbstractPlaylistTable testTable = PlaylistFileIO.readPlaylist(new File(playlist));
         testTable.printAllSong();
+        
+        boolean isInitializing = true;
+        if(isInitializing) {
+            setHeteroFile();
+        }else {
+            setOrthroFile();
+        }
         for (AbstractPlaylistSong aSong : testTable.getSongArrList()) {
             MetaSong aMeta = new MetaSong(aSong.getSrc());
             System.out.println("aMeta Date:"+aMeta.getAlbumDate());
-            //DbNavigator.loadNewFile(aMeta);
-            DbNavigator.updateMetaForFile(aMeta);
+            if(isInitializing) {
+            AudioDBService.loadNewFile(aMeta);
+            }else {
+            AudioDBService.updateMetaForFile(aMeta);
+            }
             
         }
-        DbNavigator.cleanValidationSets();
+        if(!isInitializing) {
+        AudioDBService.cleanValidationSets();
+        }
         
         
+    }
+    
+    public static void setHeteroFile() throws IOException {
+        logger.info("Hetero");
+        File srcFile = new File("E:\\lzx\\Discovery\\ColdRain\\eufonius - きみがいた.flac");
+        File destFile = new File("E:\\lzx\\Discovery\\ColdRain\\Discography\\eufonius - きみがいた.flac");
+        FileUtils.copyFile(srcFile, destFile);
+    }
+    
+    public static void setOrthroFile() throws IOException {
+        logger.info("Orthro");
+        File srcFile = new File("E:\\lzx\\Discovery\\ColdRain\\Discography\\Island オリジナルサウンドトラック\\eufonius - きみがいた.flac");
+        File destFile = new File("E:\\lzx\\Discovery\\ColdRain\\Discography\\eufonius - きみがいた.flac");
+        FileUtils.copyFile(srcFile, destFile);
     }
     
 

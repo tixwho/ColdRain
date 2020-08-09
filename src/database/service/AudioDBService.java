@@ -1,6 +1,11 @@
-package database.generic;
+package database.service;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
+import org.apache.commons.io.FileUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
@@ -13,13 +18,51 @@ import database.models.SongModel;
 import database.utils.DbHelper;
 import database.utils.InitSessionFactory;
 import exception.DatabaseException;
+import exception.ErrorCodes;
+import exception.MetaIOException;
 import local.generic.MetaSong;
+import local.generic.SupportedAudioFormat;
 
-public class DbNavigator {
-    public static Logger logger = LoggerFactory.getLogger(DbNavigator.class);
+public class AudioDBService {
+    public static Logger logger = LoggerFactory.getLogger(AudioDBService.class);
     public static HashSet<ArtistModel> toValidateArtists;
     public static HashSet<AlbumModel> toValidateAlbums;
     public static HashSet<SongModel> toValidateSongs;
+
+
+    public static void fullScanAudioFiles(File inDir) throws DatabaseException {
+
+
+        // check this is a directory
+        if (!inDir.isDirectory()) {
+            throw new DatabaseException("Not a Directory to apply fullScan",
+                ErrorCodes.BASE_IO_ERROR);
+        }
+
+        // filter audiofiles with SuffixFileFilter (from commonsIO)
+        String[] acceptedAudioFormat = SupportedAudioFormat.getSupportedAudioArray();
+        Collection<File> allAudios= FileUtils.listFiles(inDir, acceptedAudioFormat, true);
+
+        
+        //try find file in database; if not found, insert;
+        for (File audio : allAudios) {
+            String audioStr = audio.getAbsolutePath();
+            MetaSong theMeta;
+            try {
+                theMeta = new MetaSong(audioStr);
+            } catch (MetaIOException me) {
+                // should not happen if all audiofile is valid
+                continue;
+            }
+            try {
+                 FileModel.findFileModel(audioStr);
+            } catch (DatabaseException de) {
+                loadNewFile(theMeta);
+            }
+            //update file
+            updateMetaForFile(theMeta);
+        }
+    }
 
 
     public static FileModel loadNewFile(MetaSong meta) {
@@ -36,20 +79,20 @@ public class DbNavigator {
         // check timeStamp
         long timestampNow = DbHelper.calcLastModTimestamp(meta);
         if (timestampNow != reFileModel.getLastModified()) {
-            logger.info("Start Updating!");
+            logger.info("Start Updating new Meta for File " + reFileModel.getSrc() + "("
+                + reFileModel.getFileid() + ")");
 
             // get MetaModel
             MetaModel toHandleMetaM = reFileModel.getMetaM();
-            logger.warn("MetaModel Info Before:" + toHandleMetaM.toString());
+            logger.trace("MetaModel Info Before:" + toHandleMetaM.toString());
 
             // if only one file use this meta, directly modify current MetaModel
             if (toHandleMetaM.getFileModels().size() == 1) {
+                logger.warn("Only a single file use this meta.");
 
-                MetaModel toCompareMetaM = MetaModel.guaranteeMetaModel(meta);
 
-                if (!toCompareMetaM.equals(toHandleMetaM)) {
+                if (MetaModel.checkMetaCount(meta) == 0) {
                     logger.info("Single File&New Meta, directly modify current meta.");
-                    logger.warn("toCompareMetaM" + toCompareMetaM.toString());
                     logger.warn("toHandleMetaM" + toHandleMetaM.toString());
                     // no current meta exist for the file & only one file share this Meta, update
                     // check album
@@ -108,8 +151,13 @@ public class DbNavigator {
                     logger.info("Updated MetaModel!");
                     logger.warn("MetaModel Info Now:" + toHandleMetaM.toString());
                 } else {
+                    MetaModel toCompareMetaM = MetaModel.guaranteeMetaModel(meta);
                     logger.info(
                         "Single File& Current Meta: Using current Meta and try to delete old.");
+                    // delete first since new relation will make collection unable to find FileModel
+                    logger.warn("Contains reFileModel?"
+                        + toHandleMetaM.getFileModels().contains(reFileModel));
+                    toHandleMetaM.getFileModels().remove(reFileModel);
                     // only a single file and a current meta exist, attach new meta & delete
                     // set new relation for File
                     reFileModel.attachMetaModel(toCompareMetaM);
@@ -118,8 +166,8 @@ public class DbNavigator {
                     toValidateAlbums.add(toHandleMetaM.getAlbumM());
                     toHandleMetaM.getSongM().getMetaModels().remove(toHandleMetaM);
                     toValidateSongs.add(toHandleMetaM.getSongM());
+
                     // delete if no other files use this meta
-                    toHandleMetaM.getFileModels().remove(reFileModel);
                     if (toHandleMetaM.getFileModels().size() == 0) {
                         Session session = InitSessionFactory.getNewSession();
                         Transaction tx = session.beginTransaction();
@@ -127,18 +175,27 @@ public class DbNavigator {
                         tx.commit();
                         session.close();
                         logger.info("Deleted unattached MetaModel!");
+                    } else {
+                        // debugging
+                        Iterator<FileModel> it = toHandleMetaM.getFileModels().iterator();
+                        while (it.hasNext()) {
+                            FileModel fl = it.next();
+                            logger.warn("FL:" + fl.toString());
+                        }
+
                     }
 
                 }
             } else {
                 // multiple files share same meta.create/retrieve new meta and attach
-
+                logger.warn("Multiple Files use this meta");
                 // delink original Meta
                 toHandleMetaM.getFileModels().remove(reFileModel);
                 // find new meta to attach
                 MetaModel toAttachNewMeta = MetaModel.guaranteeMetaModel(meta);
                 // updated to database
                 reFileModel.attachMetaModel(toAttachNewMeta);
+
 
 
             }
@@ -168,6 +225,7 @@ public class DbNavigator {
             logger.warn("Validating Albums!");
             for (AlbumModel toValidateAlbumM : toValidateAlbums) {
                 if (toValidateAlbumM.getMetaModels().size() == 0) {
+                    logger.warn("Cleaning Album:" + toValidateAlbumM.toString());
                     toValidateAlbumM.getAlbumArtistM().getAlbumModels().remove(toValidateAlbumM);
                     toValidateArtists.add(toValidateAlbumM.getAlbumArtistM());
                     Session session = InitSessionFactory.getNewSession();
@@ -184,6 +242,7 @@ public class DbNavigator {
             logger.warn("Validating Songs!");
             for (SongModel toValidateSongM : toValidateSongs) {
                 if (toValidateSongM.getMetaModels().size() == 0) {
+                    logger.warn("Cleaning Song:" + toValidateSongM.toString());
                     toValidateSongM.getArtistM().getSongModels().remove(toValidateSongM);
                     toValidateArtists.add(toValidateSongM.getArtistM());
                     Session session = InitSessionFactory.getNewSession();
@@ -202,13 +261,16 @@ public class DbNavigator {
                 boolean noArtist = false;
                 boolean noAlbumArtist = false;
                 if (toValidateArtistM.getSongModels().size() == 0) {
+                    logger.warn("No Song use Artist:" + toValidateArtistM.toString());
                     noArtist = true;
                 }
                 if (toValidateArtistM.getAlbumModels().size() == 0) {
+                    logger.warn("No Album use Artist:" + toValidateArtistM.toString());
                     noAlbumArtist = true;
                 }
 
                 if (noArtist && noAlbumArtist) {
+                    logger.warn("Cleaning Artist:" + toValidateArtistM.toString());
                     Session session = InitSessionFactory.getNewSession();
                     Transaction tx = session.beginTransaction();
                     session.delete(toValidateArtistM);

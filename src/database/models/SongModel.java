@@ -40,7 +40,12 @@ public class SongModel extends DatabasePOJO implements Serializable {
     @JoinColumn(name =  "artistid")
     private ArtistModel artistM;
     
+    @ManyToOne
+    @JoinColumn(name = "actualSongId")
+    private SongModel actualSongM;
+    
     private String trackTitle;
+    
     
     public SongModel() {
         
@@ -83,6 +88,14 @@ public class SongModel extends DatabasePOJO implements Serializable {
         this.trackTitle = trackTitle;
     }
     
+    public SongModel getActualSongM() {
+        return actualSongM;
+    }
+
+    public void setActualSongM(SongModel actualSongM) {
+        this.actualSongM = actualSongM;
+    }
+
     public void attachArtistModel(ArtistModel artistModel) {
         Session session = InitSessionFactory.getNewSession();
         Transaction tx = session.beginTransaction();
@@ -103,15 +116,15 @@ public class SongModel extends DatabasePOJO implements Serializable {
     }
     
     public static SongModel createSongModel(MetaSong meta) {
-        SongModel album = new SongModel(meta);
-
+        SongModel song = new SongModel(meta);
+        song.setActualSongM(song);
         Session session = InitSessionFactory.getNewSession();
         Transaction tx = session.beginTransaction();
-        session.save(album);
+        session.save(song);
         tx.commit();
         session.close();
         logger.debug("Created a SongModel!");
-        return album;
+        return song;
     }
 
     public static SongModel guaranteeSongModel(MetaSong meta) {

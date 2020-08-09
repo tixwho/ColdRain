@@ -1,4 +1,4 @@
-package web.utils;
+package hiby.utils;
 
 import java.io.File;
 import java.time.Duration;
@@ -19,10 +19,10 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.FluentWait;
 import exception.ErrorCodes;
 import exception.WebException;
+import hiby.generic.BaseHibyLoggingClass;
 import toolkit.Utf8Normalizer;
-import web.generic.BaseWebLoggingClass;
 
-public class HibyNavigator extends BaseWebLoggingClass {
+public class HibyNavigator extends BaseHibyLoggingClass {
     private String url;
     private String device_name;
     private WebDriver driver;

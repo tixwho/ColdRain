@@ -1,17 +1,21 @@
 package database.generic;
 
+import database.service.AudioDBService;
+import database.service.PlaylistDBService;
 import local.generic.BaseLoggingClass;
 import local.generic.LoggerCtrl;
 
 public abstract class BaseDatabaseLoggingClass extends BaseLoggingClass{
     LoggerCtrl pojoCtrl = new LoggerCtrl(DatabasePOJO.class);
-    LoggerCtrl navigatorCtrl = new LoggerCtrl(DbNavigator.class);
+    LoggerCtrl audioDBServiceCtrl = new LoggerCtrl(AudioDBService.class);
+    LoggerCtrl playlistDBServiceCtrl = new LoggerCtrl(PlaylistDBService.class);
     
     @Override
     public void setAllLevel(String lvl) {
         selfCtrl.setLevel(lvl);
         pojoCtrl.setLevel(lvl);
-        navigatorCtrl.setLevel(lvl);
+        audioDBServiceCtrl.setLevel(lvl);
+        playlistDBServiceCtrl.setLevel(lvl);
     }
 
 }

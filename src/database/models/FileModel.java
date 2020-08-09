@@ -1,7 +1,7 @@
 package database.models;
 
-import java.io.File;
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,7 +16,6 @@ import org.hibernate.query.Query;
 import database.generic.DatabasePOJO;
 import database.utils.DbHelper;
 import database.utils.InitSessionFactory;
-import exception.ColdRainException;
 import exception.DatabaseException;
 import exception.ErrorCodes;
 import local.generic.MetaSong;
@@ -109,16 +108,20 @@ public class FileModel extends DatabasePOJO implements Serializable{
     }
     
     public static FileModel findFileModel(MetaSong meta) throws DatabaseException {
+        return findFileModel(meta.getSrc());
+    }
+    
+    public static FileModel findFileModel(String src) throws DatabaseException {
         FileModel returnFileM;
         // just need to guarantee SongModel, AlbumModel and title,
         // since SongModel includes ArtistModel, AlbumModel includes AlbumArtist
-        logger.debug("Finding FileModel for "+meta.getSrc());
+        logger.debug("Finding FileModel for "+src);
         Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
         @SuppressWarnings("unchecked")
         Query<FileModel> q = (Query<FileModel>) session
             .createQuery("from FileModel f where f.src=?0");
-        q.setParameter(0, meta.getSrc());
+        q.setParameter(0, src);
         FileModel toCheckFileM = q.uniqueResult();
         session.close();
         if (toCheckFileM == null) {
@@ -163,6 +166,27 @@ public class FileModel extends DatabasePOJO implements Serializable{
         session.close();
 
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fileInfoC, fileid, lastModified, metaM, src);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        FileModel other = (FileModel) obj;
+        return Objects.equals(fileInfoC, other.fileInfoC) && Objects.equals(fileid, other.fileid)
+            && Objects.equals(lastModified, other.lastModified)
+            && Objects.equals(metaM, other.metaM) && Objects.equals(src, other.src);
+    }
+    
+    
     
 
 

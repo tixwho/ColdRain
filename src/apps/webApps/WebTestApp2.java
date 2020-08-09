@@ -1,10 +1,10 @@
 package apps.webApps;
 
 import exception.WebException;
-import web.generic.BaseWebTestingClass;
-import web.utils.HibyNavigator;
+import hiby.generic.BaseHibyTestingClass;
+import hiby.utils.HibyNavigator;
 
-public class WebTestApp2 extends BaseWebTestingClass {
+public class WebTestApp2 extends BaseHibyTestingClass {
 
     public static void main(String[] args) throws WebException {
         logger.info("wow!");

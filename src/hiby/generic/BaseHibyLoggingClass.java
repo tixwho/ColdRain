@@ -1,10 +1,10 @@
-package web.generic;
+package hiby.generic;
 
 import local.generic.BaseLoggingClass;
 import local.generic.LoggerCtrl;
 import toolkit.Utf8Normalizer;
 
-public class BaseWebLoggingClass extends BaseLoggingClass {
+public class BaseHibyLoggingClass extends BaseLoggingClass {
     
     public LoggerCtrl utf8SwitcherCtrl = new LoggerCtrl(Utf8Normalizer.class);
     

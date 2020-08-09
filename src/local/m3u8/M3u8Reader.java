@@ -89,12 +89,18 @@ public class M3u8Reader extends AbstractPlaylistReader {
 
     @Override
     public AbstractPlaylistTable getTable() throws PlaylistIOException {
-        return new M3u8Table(songArrList);
+        M3u8Table rtrTable = new M3u8Table(songArrList);
+        rtrTable.setPlaylistSrc(this.playlistSrc);
+        return rtrTable;
     }
 
     private boolean checkAnnotation(String line) {
+        try {
         String first = line.substring(0, 1);
         return first.equals("#");
+        }catch(StringIndexOutOfBoundsException siobe) {
+            return false;
+        }
     }
     
     private boolean startWith(String toCheckPhrase,String toCheckHead) {

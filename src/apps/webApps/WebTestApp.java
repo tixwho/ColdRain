@@ -9,10 +9,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.FluentWait;
-import web.generic.BaseWebTestingClass;
-import web.utils.WebUtils;
+import hiby.generic.BaseHibyTestingClass;
+import hiby.utils.HibyUtils;
 
-public class WebTestApp extends BaseWebTestingClass {
+public class WebTestApp extends BaseHibyTestingClass {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         String url = "http://192.168.1.101:4399/";
@@ -21,7 +21,7 @@ public class WebTestApp extends BaseWebTestingClass {
         String audioLoc2 =
             "E:\\lzx\\Discovery\\ColdRain\\SimpDiscography\\Album1-hires\\eufonius - きみがいた.flac";
         String[] audioLocs = {audioLoc, audioLoc2};
-        String audioLoc3 = WebUtils.packArray(audioLocs);
+        String audioLoc3 = HibyUtils.packArray(audioLocs);
         logger.error("START");
         tim.timerStart();
         System.setProperty("webdriver.chrome.driver", "D:\\WebDrivers\\chromedriver.exe");

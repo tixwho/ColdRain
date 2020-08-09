@@ -32,6 +32,8 @@ public abstract class AbstractPlaylistReader {
     protected InputStreamReader in;
     protected BufferedReader br;
 
+    protected String playlistSrc;
+    
     protected String tempData;
     protected boolean songEndFlag = false;//true when all song readed and call readEnd
 
@@ -63,6 +65,7 @@ public abstract class AbstractPlaylistReader {
      */
     public void read(File f) throws PlaylistIOException, NativeReflectionException {
         logger.info("Start reading playlist " + f.toString());
+        this.playlistSrc=f.getAbsolutePath();
         resetEntity();
         setStream(f);
         readHeading();

@@ -1,6 +1,7 @@
 package database.models;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Embeddable;
 import database.generic.DatabasePOJO;
 import database.utils.DbHelper;
@@ -77,12 +78,35 @@ public class FileInfoComp extends DatabasePOJO implements Serializable{
     public FileInfoComp() {
         
     }
+    
+    
 
 
     @Override
     public String toString() {
         return "FileInfoComp [format=" + format + ", sampleRate=" + sampleRate + ", bitRate="
             + bitRate + ", length=" + length + ", quality=" + quality + "]";
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bitRate, format, length, quality, sampleRate);
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        FileInfoComp other = (FileInfoComp) obj;
+        return Objects.equals(bitRate, other.bitRate) && Objects.equals(format, other.format)
+            && Objects.equals(length, other.length) && Objects.equals(quality, other.quality)
+            && Objects.equals(sampleRate, other.sampleRate);
     }
     
     

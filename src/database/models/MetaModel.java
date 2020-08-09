@@ -2,6 +2,7 @@ package database.models;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -45,6 +47,10 @@ public class MetaModel extends DatabasePOJO implements Serializable {
     @ManyToOne
     @JoinColumn(name = "songid")
     private SongModel songM;
+    
+    @ManyToOne
+    @JoinColumn(name = "actualMetaid")
+    private MetaModel actualMetaM;
 
 
     String trackNo;
@@ -111,6 +117,14 @@ public class MetaModel extends DatabasePOJO implements Serializable {
     }
 
 
+    public MetaModel getActualMetaM() {
+        return actualMetaM;
+    }
+
+    public void setActualMetaM(MetaModel actualMetaM) {
+        this.actualMetaM = actualMetaM;
+    }
+
     public static MetaModel guaranteeMetaModel(MetaSong meta) {
         MetaModel returnMetaM;
         // just need to guarantee SongModel, AlbumModel and title,
@@ -126,7 +140,18 @@ public class MetaModel extends DatabasePOJO implements Serializable {
             .createQuery("from MetaModel m where m.albumM=?0 and m.songM=?1");
         q.setParameter(0, toCheckAlbumM);
         q.setParameter(1, toCheckSongM);
-        MetaModel toCheckMetaM = q.uniqueResult();
+        logger.warn("TEMP:"+toCheckAlbumM.toString()+toCheckSongM.toString());
+        MetaModel toCheckMetaM;
+        try {
+        toCheckMetaM = q.uniqueResult();
+        }catch (NonUniqueResultException nure) {
+            Iterator<MetaModel> it =q.list().iterator();
+            while(it.hasNext()) {
+                MetaModel theModel = it.next();
+                logger.error("Duplicate Model:"+theModel.toString());
+            }
+            throw nure;
+        }
         session.close();
         if (toCheckMetaM == null) {
             logger.debug("Meta NOT FOUND");
@@ -140,11 +165,27 @@ public class MetaModel extends DatabasePOJO implements Serializable {
         return returnMetaM;
 
     }
+    
+    public static int checkMetaCount(MetaSong meta) {
+        int metaCount = -1;
+        AlbumModel toCheckAlbumM = AlbumModel.guaranteeAlbumModel(meta);
+        SongModel toCheckSongM = SongModel.guaranteeSongModel(meta);
+        Session session = InitSessionFactory.getNewSession();
+        session.beginTransaction();
+        @SuppressWarnings("unchecked")
+        Query<MetaModel> q = (Query<MetaModel>) session
+            .createQuery("from MetaModel m where m.albumM=?0 and m.songM=?1");
+        q.setParameter(0, toCheckAlbumM);
+        q.setParameter(1, toCheckSongM);
+        metaCount = q.list().size();
+        session.close();
+        return metaCount;
+    }
 
 
     public static MetaModel createMetaModel(MetaSong meta) {
         MetaModel metaM = new MetaModel(meta);
-
+        metaM.setActualMetaM(metaM);
         Session session = InitSessionFactory.getNewSession();
         Transaction tx = session.beginTransaction();
         session.save(metaM);
