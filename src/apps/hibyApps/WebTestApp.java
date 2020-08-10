@@ -1,4 +1,4 @@
-package apps.webApps;
+package apps.hibyApps;
 
 import java.io.IOException;
 import java.util.function.Function;

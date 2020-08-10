@@ -1,4 +1,4 @@
-package apps.webApps;
+package apps.hibyApps;
 
 import exception.WebException;
 import hiby.generic.BaseHibyTestingClass;
