@@ -1,0 +1,16 @@
+{
+  "name": "tidy-jam-wake-ozk7q",
+  "productName": "tidy-jam-wake-ozk7q",
+  "description": "My Electron application description",
+  "keywords": [],
+  "main": "./main.js",
+  "version": "1.0.0",
+  "author": "ASUS",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^9.0.2"
+  }
+}
