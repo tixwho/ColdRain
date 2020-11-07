@@ -185,6 +185,22 @@ public class MetaSong {
     }
 
 
+    public AudioFile getAof() {
+        return aof;
+    }
+
+    public void setAof(AudioFile aof) {
+        this.aof = aof;
+    }
+
+    public Tag getTag() {
+        return tag;
+    }
+
+    public void setTag(Tag tag) {
+        this.tag = tag;
+    }
+
     // possible enhancement: use reflect and a list to automatically rotate and write
     public void writeMetaToFile() throws MetaIOException {
         try {
