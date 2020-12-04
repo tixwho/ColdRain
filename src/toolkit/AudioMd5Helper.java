@@ -6,7 +6,7 @@ import local.generic.MetaSong;
 
 public class AudioMd5Helper {
     
-    public static String getAudioMd5(MetaSong meta) {
+    public static String getFlacAudioMd5(MetaSong meta) {
         String md5="";
         AudioHeader aoh = meta.getAof().getAudioHeader();
         //now only supports flac.
@@ -16,4 +16,8 @@ public class AudioMd5Helper {
         return md5;
     }
 
+    //regardless of music type, calculate md5 and return.
+    public static String getAudioMd5Force(MetaSong meta) {
+        return "";
+    }
 }

@@ -19,6 +19,7 @@ import database.utils.InitSessionFactory;
 import exception.DatabaseException;
 import exception.ErrorCodes;
 import local.generic.MetaSong;
+import toolkit.AudioMd5Helper;
 
 
 @Entity
@@ -35,7 +36,9 @@ public class FileModel extends DatabasePOJO implements Serializable{
     private Integer fileid;
     private String src;
     private Long lastModified;
-    //notice: use album to test relation first. later it will be replaced by mid.
+    private String md5; //nullable, can be null if not scanned or not supported filetype.
+    
+    //MetaModel mid, key in database. Many to One.
     @ManyToOne
     @JoinColumn(name = "metaid")
     private MetaModel metaM;
@@ -47,9 +50,14 @@ public class FileModel extends DatabasePOJO implements Serializable{
         
     }
     
+    /**
+     * Set src, lastModified, and md5 (flac only, read from header) based on metadata.
+     * @param meta Input Metadata.
+     */
     public FileModel(MetaSong meta) {
         this.src=meta.getSrc();
         this.lastModified = DbHelper.calcLastModTimestamp(meta);
+        this.md5=AudioMd5Helper.getFlacAudioMd5(meta); //if not flac, return "";
     }
     
     
@@ -74,6 +82,14 @@ public class FileModel extends DatabasePOJO implements Serializable{
 
     public void setLastModified(Long lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public String getMd5() {
+        return md5;
+    }
+
+    public void setMd5(String md5) {
+        this.md5 = md5;
     }
 
     public MetaModel getMetaM() {
@@ -169,7 +185,7 @@ public class FileModel extends DatabasePOJO implements Serializable{
 
     @Override
     public int hashCode() {
-        return Objects.hash(fileInfoC, fileid, lastModified, metaM, src);
+        return Objects.hash(fileInfoC, fileid, lastModified, md5, src);
     }
 
     @Override
@@ -182,9 +198,10 @@ public class FileModel extends DatabasePOJO implements Serializable{
             return false;
         FileModel other = (FileModel) obj;
         return Objects.equals(fileInfoC, other.fileInfoC) && Objects.equals(fileid, other.fileid)
-            && Objects.equals(lastModified, other.lastModified)
-            && Objects.equals(metaM, other.metaM) && Objects.equals(src, other.src);
+            && Objects.equals(lastModified, other.lastModified) && Objects.equals(md5, other.md5)
+            && Objects.equals(src, other.src);
     }
+
     
     
     
