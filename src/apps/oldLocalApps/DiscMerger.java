@@ -35,7 +35,7 @@ public class DiscMerger {
         PlaylistUpdater updater = new PlaylistUpdater();
         updater.setDefaultPlaylist();
         ArrayList<String> testArr = new ArrayList<String>();
-        String parentFolder = "E:\\lzx\\etc\\OST\\Discography";
+        String parentFolder = "F:\\Discography";
         /*
          * testArr.add("涼宮ハルヒの消失 オリジナルサウンドトラック Disc1"); //normal type
          * testArr.add("STEINS;GATE VOCAL BEST DISC1"); //capitalized type
@@ -45,7 +45,7 @@ public class DiscMerger {
         for (String folder : subFolders) {
             testArr.add(parentFolder + "\\" + folder);
         }
-        String heading = "Rewrite Original SoundTrack";
+        String heading = "魔法少女まどか☆マギカ Music Collection";
         String regex = "\\s?(?i)disc\\s?"; // (?i)后的字符均无视大小写
         String regex1 = "(?<=(" + heading + ")).+";
         String[] supportedSuffix = {".flac", ".mp3"};
