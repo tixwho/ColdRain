@@ -1,6 +1,7 @@
 package database.models;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,59 +24,63 @@ import toolkit.AudioMd5Helper;
 
 
 @Entity
-@Table(name="File")
-@SequenceGenerator(name = "file_seq", sequenceName = "file_id_seq", initialValue = 1, allocationSize = 1)
-public class FileModel extends DatabasePOJO implements Serializable{
+@Table(name = "File")
+@SequenceGenerator(name = "file_seq", sequenceName = "file_id_seq", initialValue = 1,
+    allocationSize = 1)
+public class FileModel extends DatabasePOJO implements Serializable {
 
     /**
      * 
      */
     private static final long serialVersionUID = -5287801736649202280L;
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="file_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "file_seq")
     private Integer fileid;
     private String src;
     private Long lastModified;
-    private String md5; //nullable, can be null if not scanned or not supported filetype.
-    
-    //MetaModel mid, key in database. Many to One.
+    private String md5; // nullable, can be null if not scanned or not supported filetype.
+
+    // MetaModel mid, key in database. Many to One.
     @ManyToOne
     @JoinColumn(name = "metaid")
     private MetaModel metaM;
-    //fileInfo 1to1, use the same id
- 
+    // fileInfo 1to1, use the same id
+
     private FileInfoComp fileInfoC;
-    
+
     public FileModel() {
-        
+
     }
-    
+
     /**
      * Set src, lastModified, and md5 (flac only, read from header) based on metadata.
      * @param meta Input Metadata.
      */
     public FileModel(MetaSong meta) {
-        this.src=meta.getSrc();
+        this.src = meta.getSrc();
         this.lastModified = DbHelper.calcLastModTimestamp(meta);
-        this.md5=AudioMd5Helper.getFlacAudioMd5(meta); //if not flac, return "";
+        this.md5 = AudioMd5Helper.getFlacAudioMd5(meta); // if not flac, return "";
     }
-    
-    
+
+
     /* Getters & Setters */
     public Integer getFileid() {
         return fileid;
     }
+
     public void setFileid(Integer fid) {
         this.fileid = fid;
     }
+
     public String getSrc() {
         return src;
     }
+
     public void setSrc(String src) {
         this.src = src;
     }
-    
-    
+
+
     public Long getLastModified() {
         return lastModified;
     }
@@ -99,7 +104,7 @@ public class FileModel extends DatabasePOJO implements Serializable{
     public void setMetaM(MetaModel metaM) {
         this.metaM = metaM;
     }
-    
+
 
     public FileInfoComp getFileInfoC() {
         return fileInfoC;
@@ -108,8 +113,8 @@ public class FileModel extends DatabasePOJO implements Serializable{
     public void setFileInfoC(FileInfoComp fileInfoM) {
         this.fileInfoC = fileInfoM;
     }
-    
-    
+
+
     public static FileModel createFileModel(MetaSong meta) {
         FileModel file = new FileModel(meta);
         FileInfoComp fileInfo = new FileInfoComp(meta);
@@ -122,40 +127,98 @@ public class FileModel extends DatabasePOJO implements Serializable{
         System.out.println("Created File");
         return file;
     }
-    
+
+    /**
+     * Use src in MetaSong to find corresponding filemodel in database.
+     * @param meta
+     * @return
+     * @throws DatabaseException
+     */
     public static FileModel findFileModel(MetaSong meta) throws DatabaseException {
-        return findFileModel(meta.getSrc());
+        return findFileModel(meta.getSrc(), true);
     }
-    
-    public static FileModel findFileModel(String src) throws DatabaseException {
-        FileModel returnFileM;
+
+    /**
+     * Find an a FileModel already within database based on src.
+     * @param src
+     * @return
+     * @throws DatabaseException
+     */
+    public static FileModel findFileModel(String src, boolean oughtFlag) throws DatabaseException {
+        FileModel returnFileM = null;
         // just need to guarantee SongModel, AlbumModel and title,
         // since SongModel includes ArtistModel, AlbumModel includes AlbumArtist
-        logger.debug("Finding FileModel for "+src);
+        logger.debug("Finding FileModel for " + src);
         Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
-        @SuppressWarnings("unchecked")
-        Query<FileModel> q = (Query<FileModel>) session
-            .createQuery("from FileModel f where f.src=?0");
+        Query<FileModel> q =
+            session.createQuery("from FileModel f where f.src=?0", FileModel.class);
         q.setParameter(0, src);
         FileModel toCheckFileM = q.uniqueResult();
         session.close();
         if (toCheckFileM == null) {
-            logger.debug("File NOT FOUND");
-            throw new DatabaseException("Does not found corresponding FileModel",ErrorCodes.DATABASE_NOT_FOUND_ERROR);
+
+            if (oughtFlag) {
+                logger.warn("File should found with src but NOT FOUND");
+                throw new DatabaseException("Does not found corresponding FileModel",
+                    ErrorCodes.DATABASE_NOT_FOUND_ERROR);
+            }
+            logger.info("fileModel not found with given src, return null");
         } else {
             logger.debug("File FOUND");
             returnFileM = toCheckFileM;
         }
         return returnFileM;
     }
-    
+
+    public static FileModel findFileModelByMd5(String md5, boolean oughtFlag)
+        throws DatabaseException {
+        FileModel returnFileM = null;
+        // try to find fileModel already within database with md5
+        // possible: 0, or 1, or multiple
+        logger.debug("Finding FIleModel with md5:" + md5);
+        Session session = InitSessionFactory.getNewSession();
+        session.beginTransaction();
+        // query based on md5
+        Query<FileModel> q =
+            session.createQuery("from FileModel f where f.md5=?0", FileModel.class);
+        List<FileModel> md5ResList = q.getResultList();
+        // check: how many FileModels with same md5 are there?
+        switch (md5ResList.size()) {
+            case 0:
+                // no result; throw exception or ignore& return null;
+                if (oughtFlag) {
+                    logger.warn("should've found fileModel but not found! throwing exception");
+                    throw new DatabaseException("Does not found corresponding FileModel",
+                        ErrorCodes.DATABASE_NOT_FOUND_ERROR);
+                }
+                logger.info("fileModel not found in md5, return null");
+                // if not, returnFileM is null and will be returned.
+                break;
+            case 1:
+                // unique result: return that fileModel;
+                returnFileM = md5ResList.get(0);
+                break;
+            default:
+                // not unique result: select fileModel with highest quality
+                int qualityNow = 0;
+                for (FileModel aFileM : md5ResList) {
+                    if (aFileM.getFileInfoC().getQuality() > qualityNow) {
+                        qualityNow = aFileM.getFileInfoC().getQuality();
+                        returnFileM = aFileM;
+                    }
+                }
+        }
+        return returnFileM;
+    }
+
     public void attachMetaModel(MetaModel metaModel) {
         Session session = InitSessionFactory.getNewSession();
         Transaction tx = session.beginTransaction();
         System.out.println("Refreshing...");
         session.refresh(this);
         session.refresh(metaModel);
+
         this.setMetaM(metaModel);
         logger.trace("Meta Model binded to FileModel!");
         metaModel.getFileModels().add(this);
@@ -168,7 +231,7 @@ public class FileModel extends DatabasePOJO implements Serializable{
         logger.debug("All change commited!");
         session.close();
     }
-    
+
     public void updateTimeStamp() {
         Session session = InitSessionFactory.getNewSession();
         Transaction tx = session.beginTransaction();
@@ -202,12 +265,6 @@ public class FileModel extends DatabasePOJO implements Serializable{
             && Objects.equals(src, other.src);
     }
 
-    
-    
-    
 
-
-    
-    
 
 }

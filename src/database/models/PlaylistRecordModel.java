@@ -33,7 +33,7 @@ public class PlaylistRecordModel extends DatabasePOJO implements Serializable {
     public PlaylistRecordModel(int order, AbstractPlaylistSong unknownSong) {
         this.playlistOrder = order;
         try {
-            this.fileM = FileModel.findFileModel(unknownSong.getSrc());
+            this.fileM = FileModel.findFileModel(unknownSong.getSrc(),true);
         } catch (DatabaseException de) {
             // song not presented in database; scan first
             try {

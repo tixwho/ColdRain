@@ -54,9 +54,8 @@ public class AudioDBService {
                 // should not happen if all audiofile is valid
                 continue;
             }
-            try {
-                 FileModel.findFileModel(audioStr);
-            } catch (DatabaseException de) {
+
+            if(FileModel.findFileModel(audioStr, false)==null) {
                 loadNewFile(theMeta);
             }
             //update file

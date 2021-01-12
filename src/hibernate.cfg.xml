@@ -27,7 +27,7 @@
 		<!-- hibernate会帮自己创建数据库表，默认不会创建，需要配置。 值 update： 如果数据库里面不存在表，创建；如果已经存在，更新 -->
 		<property name="hibernate.hbm2ddl.auto">update</property>
 		<!-- 仅供测试用 每次运行都会drop原来的表 慎用 -->
-		<property name="hibernate.hbm2ddl.auto">create</property>
+		<!-- <property name="hibernate.hbm2ddl.auto">create</property>  -->
 
 		<!-- 配置事务自动提交 -->
 		<!-- <property name="hibernate.connection.autocommit">true</property> -->

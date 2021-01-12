@@ -74,7 +74,7 @@ public class PlaylistUpdater {
     }
     
     public void setDefaultPlaylist() throws NoCorrespondingFileTypeFound {
-        loadPlaylistFile("C:\\Users\\ASUS\\Music\\Dopamine\\Playlists");
+        loadPlaylistFile("C:\\Users\\90500\\Music\\Dopamine\\Playlists");
     }
 
 }
