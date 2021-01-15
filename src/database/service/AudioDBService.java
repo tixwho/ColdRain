@@ -1,13 +1,13 @@
 package database.service;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import database.models.AlbumModel;
@@ -29,6 +29,7 @@ public class AudioDBService {
     public static HashSet<AlbumModel> toValidateAlbums;
     public static HashSet<SongModel> toValidateSongs;
 
+    /* Functional Methods Below */
 
     public static void fullScanAudioFiles(File inDir) throws DatabaseException {
 
@@ -56,9 +57,10 @@ public class AudioDBService {
             }
 
             if(FileModel.findFileModel(audioStr, false)==null) {
+                //load a brand new file with possibly existing metadata
                 loadNewFile(theMeta);
             }
-            //update file
+            //update file if timestamp later.
             updateMetaForFile(theMeta);
         }
     }
@@ -69,6 +71,22 @@ public class AudioDBService {
         MetaModel metaM = MetaModel.guaranteeMetaModel(meta);
         fileM.attachMetaModel(metaM);
         return fileM;
+    }
+    
+    
+    public static void fullFileModelCleanse() {
+        Session session = InitSessionFactory.getNewSession();
+        session.beginTransaction();
+        //retrieve all fileModels
+        Query<FileModel> q = session
+            .createQuery("from FileModel f",FileModel.class);
+        List<FileModel> fList = q.getResultList();
+        for(FileModel aFile:fList) {
+            File toCheckFile = new File(aFile.getSrc());
+            if(!toCheckFile.exists()) {
+                
+            }
+        }
     }
 
 
@@ -98,15 +116,9 @@ public class AudioDBService {
                     AlbumModel toCheckAlbumM = AlbumModel.guaranteeAlbumModel(meta);
                     boolean setNewAlbum = false;
                     if (!toHandleMetaM.getAlbumM().equals(toCheckAlbumM)) {
-                        logger.warn("toHandle's AlbumM:" + toHandleMetaM.getAlbumM().toString());
-                        logger.warn("toReplace AlbumM:" + toCheckAlbumM.toString());
-                        logger.warn("current size of metaModels in albumM:"
-                            + toHandleMetaM.getAlbumM().getMetaModels().size());
-                        logger.warn("contains?"
-                            + toHandleMetaM.getAlbumM().getMetaModels().contains(toHandleMetaM));
+
                         toHandleMetaM.getAlbumM().getMetaModels().remove(toHandleMetaM);
-                        logger.warn("current size of metaModels in albumM:"
-                            + toHandleMetaM.getAlbumM().getMetaModels().size());
+                        
                         toValidateAlbums.add(toHandleMetaM.getAlbumM());
                         // set later to avoid different hashcode;
                         setNewAlbum = true;
@@ -114,13 +126,9 @@ public class AudioDBService {
                     SongModel toCheckSongM = SongModel.guaranteeSongModel(meta);
                     boolean setNewSong = false;
                     if (!toHandleMetaM.getSongM().equals(toCheckSongM)) {
-                        logger.warn("current size of metaModels in songM:"
-                            + toHandleMetaM.getSongM().getMetaModels().size());
-                        logger.warn("contains?"
-                            + toHandleMetaM.getSongM().getMetaModels().contains(toHandleMetaM));
+                        
                         toHandleMetaM.getSongM().getMetaModels().remove(toHandleMetaM);
-                        logger.warn("current size of metaModels in songM:"
-                            + toHandleMetaM.getSongM().getMetaModels().size());
+
                         toValidateSongs.add(toHandleMetaM.getSongM());
                         // set later to avoid different hashcode;
                         setNewSong = true;
@@ -154,35 +162,22 @@ public class AudioDBService {
                     logger.info(
                         "Single File& Current Meta: Using current Meta and try to delete old.");
                     // delete first since new relation will make collection unable to find FileModel
-                    logger.warn("Contains reFileModel?"
-                        + toHandleMetaM.getFileModels().contains(reFileModel));
+                    
                     toHandleMetaM.getFileModels().remove(reFileModel);
                     // only a single file and a current meta exist, attach new meta & delete
                     // set new relation for File
                     reFileModel.attachMetaModel(toCompareMetaM);
                     // set artist and album in current MetaModel to deleteTest
+                    /* now use a single method to clean up MetaM safely
                     toHandleMetaM.getAlbumM().getMetaModels().remove(toHandleMetaM);
                     toValidateAlbums.add(toHandleMetaM.getAlbumM());
                     toHandleMetaM.getSongM().getMetaModels().remove(toHandleMetaM);
                     toValidateSongs.add(toHandleMetaM.getSongM());
-
+                    */
                     // delete if no other files use this meta
                     if (toHandleMetaM.getFileModels().size() == 0) {
-                        Session session = InitSessionFactory.getNewSession();
-                        Transaction tx = session.beginTransaction();
-                        session.delete(toHandleMetaM);
-                        tx.commit();
-                        session.close();
-                        logger.info("Deleted unattached MetaModel!");
-                    } else {
-                        // debugging
-                        Iterator<FileModel> it = toHandleMetaM.getFileModels().iterator();
-                        while (it.hasNext()) {
-                            FileModel fl = it.next();
-                            logger.warn("FL:" + fl.toString());
-                        }
-
-                    }
+                        safelyDisposeMetaM(toHandleMetaM);
+                    } 
 
                 }
             } else {
@@ -204,6 +199,27 @@ public class AudioDBService {
             logger.info("No need to update");
         }
         return reFileModel;
+    }
+   
+    
+    /* Support Methods Below*/
+    
+    private static void safelyDisposeMetaM(MetaModel toDisposeMetaM) {
+        toDisposeMetaM.getAlbumM().getMetaModels().remove(toDisposeMetaM);
+        toValidateAlbums.add(toDisposeMetaM.getAlbumM());
+        toDisposeMetaM.getSongM().getMetaModels().remove(toDisposeMetaM);
+        toValidateSongs.add(toDisposeMetaM.getSongM());
+        //double check: no fileM should use this MetaM now.
+        if(toDisposeMetaM.getFileModels().size()!=0) {
+            logger.warn("Disposing MetaModel "+toDisposeMetaM+ "but FileM NOT CLEARED");
+        }
+        Session session = InitSessionFactory.getNewSession();
+        Transaction tx = session.beginTransaction();
+        session.delete(toDisposeMetaM);
+        tx.commit();
+        session.close();
+        logger.info("Deleted MetaM "+toDisposeMetaM);
+        
     }
 
     private static void initializeValidationSets() {
