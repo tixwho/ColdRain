@@ -130,19 +130,21 @@ public class FileModel extends DatabasePOJO implements Serializable {
 
     /**
      * Use src in MetaSong to find corresponding filemodel in database.
-     * @param meta
+     * @param meta 
      * @return
-     * @throws DatabaseException
+     * @throws DatabaseException when cannot find such FileModel in database.
      */
     public static FileModel findFileModel(MetaSong meta) throws DatabaseException {
         return findFileModel(meta.getSrc(), true);
     }
 
+
     /**
      * Find an a FileModel already within database based on src.
      * @param src
-     * @return
-     * @throws DatabaseException
+     * @param oughtFlag if true, empty query will throw an DatabaseException
+     * @return found FileModel or null
+     * @throws DatabaseException when outFlat set to true and empty query
      */
     public static FileModel findFileModel(String src, boolean oughtFlag) throws DatabaseException {
         FileModel returnFileM = null;
