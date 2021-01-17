@@ -59,7 +59,7 @@ public class FileModel extends DatabasePOJO implements Serializable {
     public FileModel(MetaSong meta) {
         this.src = meta.getSrc();
         this.lastModified = DbHelper.calcLastModTimestamp(meta);
-        this.md5 = AudioMd5Helper.getAudioMd5Force(meta); // if not flac, return "";
+        this.md5 = AudioMd5Helper.getAudioMd5Force(meta); // supports mp3 and flac;
     }
 
 

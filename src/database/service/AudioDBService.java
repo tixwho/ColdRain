@@ -22,6 +22,7 @@ import exception.ErrorCodes;
 import exception.MetaIOException;
 import local.generic.MetaSong;
 import local.generic.SupportedAudioFormat;
+import toolkit.AudioMd5Helper;
 
 public class AudioDBService {
     public static Logger logger = LoggerFactory.getLogger(AudioDBService.class);
@@ -42,10 +43,10 @@ public class AudioDBService {
 
         // filter audiofiles with SuffixFileFilter (from commonsIO)
         String[] acceptedAudioFormat = SupportedAudioFormat.getSupportedAudioArray();
-        Collection<File> allAudios= FileUtils.listFiles(inDir, acceptedAudioFormat, true);
+        Collection<File> allAudios = FileUtils.listFiles(inDir, acceptedAudioFormat, true);
 
-        
-        //try find file in database; if not found, insert;
+
+        // try find file in database; if not found, insert;
         for (File audio : allAudios) {
             String audioStr = audio.getAbsolutePath();
             MetaSong theMeta;
@@ -56,11 +57,11 @@ public class AudioDBService {
                 continue;
             }
 
-            if(FileModel.findFileModel(audioStr, false)==null) {
-                //load a brand new file with possibly existing metadata
+            if (FileModel.findFileModel(audioStr, false) == null) {
+                // load a brand new file with possibly existing metadata
                 loadNewFile(theMeta);
             }
-            //update file if timestamp later.
+            // update file if timestamp later.
             updateMetaForFile(theMeta);
         }
     }
@@ -72,21 +73,52 @@ public class AudioDBService {
         fileM.attachMetaModel(metaM);
         return fileM;
     }
-    
-    
+
+
     public static void fullFileModelCleanse() {
+        logger.info("Start FileM Cleansing Process!");
         Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
-        //retrieve all fileModels
-        Query<FileModel> q = session
-            .createQuery("from FileModel f",FileModel.class);
+        // retrieve all fileModels
+        Query<FileModel> q = session.createQuery("from FileModel f", FileModel.class);
         List<FileModel> fList = q.getResultList();
-        for(FileModel aFile:fList) {
+        session.close();
+        logger.info("List Check: "+fList.size()+" FileM in total!");
+        int delCount = 0;
+        int updCount = 0;
+        for (FileModel aFile : fList) {
             File toCheckFile = new File(aFile.getSrc());
-            if(!toCheckFile.exists()) {
-                
+            if (!toCheckFile.exists()) {
+                aFile.getMetaM().getFileModels().remove(aFile);
+                if (aFile.getMetaM().getFileModels().size() == 0) {
+                    safelyDisposeMetaM(aFile.getMetaM());
+                }
+                session = InitSessionFactory.getNewSession();
+                Transaction tx = session.beginTransaction();
+                session.delete(aFile);
+                logger.info("Deleted empty fileM entry:" +aFile);
+                tx.commit();
+                session.close();
+                delCount+=1;
+            }else {
+                if(aFile.getMd5().isBlank()) {
+                    try {
+                        aFile.setMd5(AudioMd5Helper.getAudioMd5Force(new MetaSong(aFile.getSrc())));
+                    } catch (MetaIOException e) {
+                        e.printStackTrace();
+                    }
+                    session = InitSessionFactory.getNewSession();
+                    Transaction tx = session.beginTransaction();
+                    session.update(aFile);
+                    logger.info("UpdatedfileM entry:" +aFile);
+                    tx.commit();
+                    session.close();
+                    updCount+=1;
+                }
             }
         }
+        logger.info("Deleted "+ delCount + " unused FileM in cleansing!");
+        logger.info("Updated "+ updCount +" FileM without Md5 info!");
     }
 
 
@@ -118,7 +150,7 @@ public class AudioDBService {
                     if (!toHandleMetaM.getAlbumM().equals(toCheckAlbumM)) {
 
                         toHandleMetaM.getAlbumM().getMetaModels().remove(toHandleMetaM);
-                        
+
                         toValidateAlbums.add(toHandleMetaM.getAlbumM());
                         // set later to avoid different hashcode;
                         setNewAlbum = true;
@@ -126,7 +158,7 @@ public class AudioDBService {
                     SongModel toCheckSongM = SongModel.guaranteeSongModel(meta);
                     boolean setNewSong = false;
                     if (!toHandleMetaM.getSongM().equals(toCheckSongM)) {
-                        
+
                         toHandleMetaM.getSongM().getMetaModels().remove(toHandleMetaM);
 
                         toValidateSongs.add(toHandleMetaM.getSongM());
@@ -162,22 +194,23 @@ public class AudioDBService {
                     logger.info(
                         "Single File& Current Meta: Using current Meta and try to delete old.");
                     // delete first since new relation will make collection unable to find FileModel
-                    
+
                     toHandleMetaM.getFileModels().remove(reFileModel);
                     // only a single file and a current meta exist, attach new meta & delete
                     // set new relation for File
                     reFileModel.attachMetaModel(toCompareMetaM);
                     // set artist and album in current MetaModel to deleteTest
-                    /* now use a single method to clean up MetaM safely
-                    toHandleMetaM.getAlbumM().getMetaModels().remove(toHandleMetaM);
-                    toValidateAlbums.add(toHandleMetaM.getAlbumM());
-                    toHandleMetaM.getSongM().getMetaModels().remove(toHandleMetaM);
-                    toValidateSongs.add(toHandleMetaM.getSongM());
-                    */
+                    /*
+                     * now use a single method to clean up MetaM safely
+                     * toHandleMetaM.getAlbumM().getMetaModels().remove(toHandleMetaM);
+                     * toValidateAlbums.add(toHandleMetaM.getAlbumM());
+                     * toHandleMetaM.getSongM().getMetaModels().remove(toHandleMetaM);
+                     * toValidateSongs.add(toHandleMetaM.getSongM());
+                     */
                     // delete if no other files use this meta
                     if (toHandleMetaM.getFileModels().size() == 0) {
                         safelyDisposeMetaM(toHandleMetaM);
-                    } 
+                    }
 
                 }
             } else {
@@ -200,26 +233,26 @@ public class AudioDBService {
         }
         return reFileModel;
     }
-   
-    
-    /* Support Methods Below*/
-    
+
+
+    /* Support Methods Below */
+
     private static void safelyDisposeMetaM(MetaModel toDisposeMetaM) {
         toDisposeMetaM.getAlbumM().getMetaModels().remove(toDisposeMetaM);
         toValidateAlbums.add(toDisposeMetaM.getAlbumM());
         toDisposeMetaM.getSongM().getMetaModels().remove(toDisposeMetaM);
         toValidateSongs.add(toDisposeMetaM.getSongM());
-        //double check: no fileM should use this MetaM now.
-        if(toDisposeMetaM.getFileModels().size()!=0) {
-            logger.warn("Disposing MetaModel "+toDisposeMetaM+ "but FileM NOT CLEARED");
+        // double check: no fileM should use this MetaM now.
+        if (toDisposeMetaM.getFileModels().size() != 0) {
+            logger.warn("Disposing MetaModel " + toDisposeMetaM + "but FileM NOT CLEARED");
         }
         Session session = InitSessionFactory.getNewSession();
         Transaction tx = session.beginTransaction();
         session.delete(toDisposeMetaM);
         tx.commit();
         session.close();
-        logger.info("Deleted MetaM "+toDisposeMetaM);
-        
+        logger.info("Deleted MetaM " + toDisposeMetaM);
+
     }
 
     private static void initializeValidationSets() {
