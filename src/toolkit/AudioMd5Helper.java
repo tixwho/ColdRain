@@ -11,6 +11,7 @@ import local.generic.MetaSong;
 
 public class AudioMd5Helper {
 
+    //read flac md5 from flac heading info. not calculating actual media.
     public static String getFlacAudioMd5(MetaSong meta) {
         String md5 = "";
         AudioHeader aoh = meta.getAof().getAudioHeader();
@@ -21,31 +22,42 @@ public class AudioMd5Helper {
         return md5;
     }
 
+    //calculate mp3 md5; if exception occured, return empty string.
+    public static String getMp3AudioMd5(MetaSong meta) {
+
+        StringBuffer buf = new StringBuffer("");
+        byte[] b;
+        try {
+            b = ((MP3File) meta.getAof()).getHash();
+
+            int i;
+            for (int offset = 0; offset < b.length; offset++) {
+                i = b[offset];
+                if (i < 0) {
+                    i += 256;
+                }
+                if (i < 16) {
+                    buf.append("0");
+                } else {
+                    buf.append(Integer.toHexString(i));
+                }
+            }
+            return buf.toString();
+        } catch (NoSuchAlgorithmException | InvalidAudioFrameException | IOException e) {
+
+            e.printStackTrace();
+        }
+        return "";
+
+    }
+
     // regardless of music type, calculate md5 and return.
     public static String getAudioMd5Force(MetaSong meta) {
         // we only handle mp3 and flac now
         String md5 = "";
         AudioFile aof = meta.getAof();
         if (aof instanceof MP3File) {
-            try {
-                StringBuffer buf = new StringBuffer("");
-                byte[] b = ((MP3File) aof).getHash();
-                int i;
-                for (int offset = 0; offset < b.length; offset++) {
-                    i = b[offset];
-                    if (i < 0) {
-                        i += 256;
-                    }
-                    if (i < 16) {
-                        buf.append("0");
-                    } else {
-                        buf.append(Integer.toHexString(i));
-                    }
-                }
-            md5=buf.toString();    
-            } catch (NoSuchAlgorithmException | InvalidAudioFrameException | IOException e) {
-                e.printStackTrace();
-            }
+            md5 = getMp3AudioMd5(meta);
         } else {
             md5 = getFlacAudioMd5(meta);
         }
