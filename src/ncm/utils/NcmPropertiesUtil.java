@@ -7,12 +7,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
+import javax.swing.filechooser.FileSystemView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class NcmPropertiesUtil {
 
-    public static Logger logger = LoggerFactory.getLogger(NcmPropertiesUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(NcmPropertiesUtil.class);
 
     // could be empty. check before use.
     public static String ncmCacheDirPath;
@@ -23,11 +24,13 @@ public class NcmPropertiesUtil {
             InputStream in = new FileInputStream(ncmPropFile);
             Properties prop = new Properties();
             prop.load(in);
+            FileSystemView fsv = javax.swing.filechooser.FileSystemView.getFileSystemView();
+            File defaultDbFile = new File(fsv.getHomeDirectory().getParent(),"/AppData/Local/Netease/CloudMusic/Library");
             ncmCacheDirPath =
-                prop.getProperty("cacheDir", "%localappdata%/Netease/CloudMusic/Library");
+                prop.getProperty("cacheDir", defaultDbFile.getAbsolutePath());
             ncmMusicDirPath = prop.getProperty("musicDir", "");
-            logger.debug("ncmCacheDir:" + ncmCacheDirPath);
-            logger.debug("ncmMusicDir:" + ncmMusicDirPath);
+            logger.info("ncmCacheDir:" + ncmCacheDirPath);
+            logger.info("ncmMusicDir:" + ncmMusicDirPath);
         } catch (IOException ioe) {
             logger.warn("Failed reading ncm properties! Ncm related functions will be disabled.");
             ncmCacheDirPath = "";

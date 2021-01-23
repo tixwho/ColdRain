@@ -25,14 +25,14 @@ import local.generic.SupportedAudioFormat;
 import toolkit.AudioMd5Helper;
 
 public class AudioDBService {
-    public static Logger logger = LoggerFactory.getLogger(AudioDBService.class);
+    private static final Logger logger = LoggerFactory.getLogger(AudioDBService.class);
     public static HashSet<ArtistModel> toValidateArtists;
     public static HashSet<AlbumModel> toValidateAlbums;
     public static HashSet<SongModel> toValidateSongs;
 
     /* Functional Methods Below */
 
-    public static void fullScanAudioFiles(File inDir) throws DatabaseException {
+    public void fullScanAudioFiles(File inDir) throws DatabaseException {
 
 
         // check this is a directory
@@ -75,7 +75,7 @@ public class AudioDBService {
     }
 
 
-    public static void fullFileModelCleanse() {
+    public void fullFileModelCleanse() {
         logger.info("Start FileM Cleansing Process!");
         Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
