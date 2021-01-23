@@ -31,7 +31,7 @@ public abstract class AbstractPlaylistTable {
     /**
      * Universal logger for playlistTable.
      */
-    public static Logger logger = LoggerFactory.getLogger(AbstractPlaylistTable.class);
+    protected static final Logger logger = LoggerFactory.getLogger(AbstractPlaylistTable.class);
 
     /* constructor */
     public AbstractPlaylistTable() {

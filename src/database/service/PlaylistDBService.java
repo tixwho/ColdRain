@@ -3,15 +3,12 @@ package database.service;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
 import org.apache.commons.io.FileUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import database.models.FileModel;
 import database.models.PlaylistModel;
 import database.models.PlaylistRecordModel;
 import database.utils.DbHelper;
@@ -26,9 +23,9 @@ import local.generic.PlaylistFileIO;
 import local.generic.SupportedPlaylistFormat;
 
 public class PlaylistDBService {
-    public static Logger logger = LoggerFactory.getLogger(PlaylistDBService.class);
-    
-    
+    private static final Logger logger = LoggerFactory.getLogger(PlaylistDBService.class);
+
+
     public static void fullScanPlaylistFiles(File inDir) throws DatabaseException {
 
 
@@ -40,48 +37,50 @@ public class PlaylistDBService {
 
         // filter audiofiles with SuffixFileFilter (from commonsIO)
         String[] acceptedPlaylistFormat = SupportedPlaylistFormat.getSupportedPlaylistArray();
-        Collection<File> allPlaylists= FileUtils.listFiles(inDir, acceptedPlaylistFormat, true);
+        Collection<File> allPlaylists = FileUtils.listFiles(inDir, acceptedPlaylistFormat, true);
 
-        
-        //try find file in database; if not found, insert;
+
+        // try find file in database; if not found, insert;
         for (File playlist : allPlaylists) {
             AbstractPlaylistTable theTable;
             try {
-                theTable =PlaylistFileIO.readPlaylist(playlist);
+                theTable = PlaylistFileIO.readPlaylist(playlist);
                 loadOrUpdatePlaylistFile(theTable);
             } catch (PlaylistIOException | NativeReflectionException e) {
-                //should not happen for a fine playlist
+                // should not happen for a fine playlist
                 continue;
             }
-            
-            
+
+
         }
     }
-    
+
 
     public static PlaylistModel loadOrUpdatePlaylistFile(AbstractPlaylistTable unknownTable) {
         PlaylistModel playlistM;
         try {
-            playlistM= PlaylistModel.findPlaylistModel(unknownTable.getPlaylistSrc());
+            playlistM = PlaylistModel.findPlaylistModel(unknownTable.getPlaylistSrc());
         } catch (DatabaseException e) {
             // does not find playlistModel in database
             logger.info("Creating new Playlist Record!");
-            playlistM= PlaylistModel.guaranteePlaylistModel(unknownTable);
-            playlistM = createAllRecords(playlistM,unknownTable);
+            playlistM = PlaylistModel.guaranteePlaylistModel(unknownTable);
+            playlistM = createAllRecords(playlistM, unknownTable);
             return playlistM;
         }
-        //update if timestamp is different
-        if(playlistM.getLastModified()!=DbHelper.calcLastModTimestamp(unknownTable.getPlaylistSrc())) {
-            playlistM= createAllRecords(playlistM,unknownTable);
+        // update if timestamp is different
+        if (playlistM.getLastModified() != DbHelper
+            .calcLastModTimestamp(unknownTable.getPlaylistSrc())) {
+            playlistM = createAllRecords(playlistM, unknownTable);
             playlistM.updateTimeStamp();
-        }else {
+        } else {
             logger.info("No need to update Playlist Record");
         }
         return playlistM;
-        
+
     }
-    
-    private static PlaylistModel createAllRecords(PlaylistModel playlistM, AbstractPlaylistTable unknownTable) {
+
+    private static PlaylistModel createAllRecords(PlaylistModel playlistM,
+        AbstractPlaylistTable unknownTable) {
         logger.info("Rescanning Playlist Records");
         deleteAllRecordForPlaylist(playlistM);
         ArrayList<AbstractPlaylistSong> songArrList = unknownTable.getSongArrList();
@@ -94,14 +93,13 @@ public class PlaylistDBService {
         }
         return playlistM;
     }
-    
-    
+
+
     public static PlaylistModel deleteAllRecordForPlaylist(PlaylistModel playlistModel) {
         Session session = InitSessionFactory.getNewSession();
         Transaction tx = session.beginTransaction();
         @SuppressWarnings({"rawtypes"})
-        Query q =  session
-            .createQuery("delete from PlaylistRecordModel p where p.playlistM=?0");
+        Query q = session.createQuery("delete from PlaylistRecordModel p where p.playlistM=?0");
         q.setParameter(0, playlistModel);
         q.executeUpdate();
         playlistModel.getPlaylistRecordModels().clear();

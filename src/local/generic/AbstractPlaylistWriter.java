@@ -23,7 +23,7 @@ public abstract class AbstractPlaylistWriter {
     /**
      * Universal logger for playlistWriter.
      */
-    public static Logger logger = LoggerFactory.getLogger(AbstractPlaylistWriter.class);
+    protected static final Logger logger = LoggerFactory.getLogger(AbstractPlaylistWriter.class);
 
     /**
      * See toolkit.NewFileWriter for basic strucuture.

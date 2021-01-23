@@ -45,7 +45,7 @@ public abstract class AbstractPlaylistReader {
     /**
      * Universal logger for playlistReader.
      */
-    public static Logger logger = LoggerFactory.getLogger(AbstractPlaylistReader.class);
+    protected static final Logger logger = LoggerFactory.getLogger(AbstractPlaylistReader.class);
 
     // constructor: call initializeMeta()
     public AbstractPlaylistReader() {
