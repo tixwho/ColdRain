@@ -4,7 +4,7 @@ import java.io.Serializable;
 import javax.persistence.Embeddable;
 import org.apache.commons.io.FilenameUtils;
 import database.generic.DatabasePOJO;
-import local.generic.AbstractPlaylistTable;
+import playlist.generic.AbstractPlaylistTable;
 
 @Embeddable
 public class PlaylistInfoComp extends DatabasePOJO implements Serializable {

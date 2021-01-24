@@ -1,9 +1,9 @@
-package local.m3u;
+package playlist.m3u;
 
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
-import local.generic.AbstractPlaylistReader;
-import local.generic.AbstractPlaylistTable;
+import playlist.generic.AbstractPlaylistReader;
+import playlist.generic.AbstractPlaylistTable;
 
 public class M3uReader extends AbstractPlaylistReader {
     String src=null;

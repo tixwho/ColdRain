@@ -17,10 +17,10 @@ import exception.DatabaseException;
 import exception.ErrorCodes;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
-import local.generic.AbstractPlaylistSong;
-import local.generic.AbstractPlaylistTable;
-import local.generic.PlaylistFileIO;
-import local.generic.SupportedPlaylistFormat;
+import playlist.generic.AbstractPlaylistSong;
+import playlist.generic.AbstractPlaylistTable;
+import playlist.generic.PlaylistFileIO;
+import playlist.generic.SupportedPlaylistFormat;
 
 public class PlaylistDBService {
     private static final Logger logger = LoggerFactory.getLogger(PlaylistDBService.class);

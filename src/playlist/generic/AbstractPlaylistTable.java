@@ -1,4 +1,4 @@
-package local.generic;
+package playlist.generic;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -65,7 +65,7 @@ public abstract class AbstractPlaylistTable {
     /**
      * A Universal Table Converter for different tables
      * @param clazz class instance of playlistSong TO SET
-     * @param localMeta supported meta info in local table
+     * @param localMeta supported meta info in playlist table
      * @param foreignMeta supported meta info in foreign table
      * @param foreignArrList  foreign arrList to set
      * @throws NativeReflectionException

@@ -2,7 +2,7 @@ package database.testDatabaseModels2;
 
 import java.util.HashSet;
 import java.util.Set;
-import local.generic.MetaSong;
+import playlist.generic.MetaSong;
 
 public class Meta1 {
     private int mid;

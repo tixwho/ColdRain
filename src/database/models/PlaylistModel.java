@@ -20,7 +20,7 @@ import database.utils.DbHelper;
 import database.utils.InitSessionFactory;
 import exception.DatabaseException;
 import exception.ErrorCodes;
-import local.generic.AbstractPlaylistTable;
+import playlist.generic.AbstractPlaylistTable;
 
 @Entity
 @Table(name="Playlist")

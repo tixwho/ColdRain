@@ -20,8 +20,8 @@ import database.utils.InitSessionFactory;
 import exception.DatabaseException;
 import exception.ErrorCodes;
 import exception.MetaIOException;
-import local.generic.MetaSong;
-import local.generic.SupportedAudioFormat;
+import playlist.generic.MetaSong;
+import playlist.generic.SupportedAudioFormat;
 import toolkit.AudioMd5Helper;
 
 public class AudioDBService {

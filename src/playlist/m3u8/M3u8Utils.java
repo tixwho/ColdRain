@@ -1,6 +1,6 @@
-package local.m3u8;
+package playlist.m3u8;
 
-import local.generic.SupportedMeta;
+import playlist.generic.SupportedMeta;
 
 public class M3u8Utils {
     

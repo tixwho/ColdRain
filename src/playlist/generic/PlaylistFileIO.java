@@ -1,4 +1,4 @@
-package local.generic;
+package playlist.generic;
 
 import java.io.File;
 import java.util.HashMap;
@@ -9,10 +9,10 @@ import exception.ErrorCodes;
 import exception.MetaIOException;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
-import local.m3u.M3uReader;
-import local.m3u.M3uWriter;
-import local.m3u8.M3u8Reader;
-import local.m3u8.M3u8Writer;
+import playlist.m3u.M3uReader;
+import playlist.m3u.M3uWriter;
+import playlist.m3u8.M3u8Reader;
+import playlist.m3u8.M3u8Writer;
 
 public class PlaylistFileIO {
 

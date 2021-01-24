@@ -1,4 +1,4 @@
-package local.generic;
+package playlist.generic;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

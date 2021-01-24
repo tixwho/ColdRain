@@ -7,11 +7,11 @@ import org.apache.commons.io.FileUtils;
 import exception.MetaIOException;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
-import local.generic.AbstractPlaylistSong;
-import local.generic.AbstractPlaylistTable;
-import local.generic.BaseLocalTestingClass;
-import local.generic.PlaylistFileIO;
-import local.generic.SupportedPlaylistFormat;
+import playlist.generic.AbstractPlaylistSong;
+import playlist.generic.AbstractPlaylistTable;
+import playlist.generic.BaseLocalTestingClass;
+import playlist.generic.PlaylistFileIO;
+import playlist.generic.SupportedPlaylistFormat;
 
 public class PlaylistIOTest extends BaseLocalTestingClass {
 

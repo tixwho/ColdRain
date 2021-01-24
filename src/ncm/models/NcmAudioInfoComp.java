@@ -19,7 +19,7 @@ public class NcmAudioInfoComp {
 
     private boolean downloaded_flag;
 
-    // if local(existed in web_offline_track), then the following will not be null;
+    // if playlist(existed in web_offline_track), then the following will not be null;
 
     @Override
     public String toString() {

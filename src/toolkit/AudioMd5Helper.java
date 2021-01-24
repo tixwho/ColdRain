@@ -7,7 +7,7 @@ import org.jaudiotagger.audio.AudioHeader;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.flac.FlacAudioHeader;
 import org.jaudiotagger.audio.mp3.MP3File;
-import local.generic.MetaSong;
+import playlist.generic.MetaSong;
 
 public class AudioMd5Helper {
 

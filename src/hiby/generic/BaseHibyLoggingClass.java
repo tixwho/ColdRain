@@ -1,7 +1,7 @@
 package hiby.generic;
 
-import local.generic.BaseLoggingClass;
-import local.generic.LoggerCtrl;
+import playlist.generic.BaseLoggingClass;
+import playlist.generic.LoggerCtrl;
 import toolkit.Utf8Normalizer;
 
 public class BaseHibyLoggingClass extends BaseLoggingClass {

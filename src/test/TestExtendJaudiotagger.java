@@ -3,7 +3,7 @@ package test;
 import org.jaudiotagger.audio.AudioHeader;
 import org.jaudiotagger.audio.flac.FlacAudioHeader;
 import exception.MetaIOException;
-import local.generic.MetaSong;
+import playlist.generic.MetaSong;
 
 public class TestExtendJaudiotagger {
 

@@ -19,7 +19,7 @@ import database.utils.DbHelper;
 import database.utils.InitSessionFactory;
 import exception.DatabaseException;
 import exception.ErrorCodes;
-import local.generic.MetaSong;
+import playlist.generic.MetaSong;
 import toolkit.AudioMd5Helper;
 
 

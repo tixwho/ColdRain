@@ -3,7 +3,7 @@ package database.testDatabaseModels2;
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
-import local.generic.MetaSong;
+import playlist.generic.MetaSong;
 
 public class Album1 {
     private int aid;

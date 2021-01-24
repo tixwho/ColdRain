@@ -11,11 +11,11 @@ import exception.DatabaseException;
 import exception.MetaIOException;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
-import local.generic.AbstractPlaylistSong;
-import local.generic.AbstractPlaylistTable;
-import local.generic.BaseLocalTestingClass;
-import local.generic.MetaSong;
-import local.generic.PlaylistFileIO;
+import playlist.generic.AbstractPlaylistSong;
+import playlist.generic.AbstractPlaylistTable;
+import playlist.generic.BaseLocalTestingClass;
+import playlist.generic.MetaSong;
+import playlist.generic.PlaylistFileIO;
 
 public class T_Initial extends BaseDatabaseTestingClass {
 

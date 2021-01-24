@@ -1,6 +1,6 @@
 package database.testDatabaseModels2;
 
-import local.generic.MetaSong;
+import playlist.generic.MetaSong;
 
 public class File1 {
     

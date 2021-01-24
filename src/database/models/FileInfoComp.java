@@ -5,7 +5,7 @@ import java.util.Objects;
 import javax.persistence.Embeddable;
 import database.generic.DatabasePOJO;
 import database.utils.DbHelper;
-import local.generic.MetaSong;
+import playlist.generic.MetaSong;
 
 @Embeddable
 public class FileInfoComp extends DatabasePOJO implements Serializable{

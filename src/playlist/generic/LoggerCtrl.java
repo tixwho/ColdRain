@@ -1,4 +1,4 @@
-package local.generic;
+package playlist.generic;
 
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;

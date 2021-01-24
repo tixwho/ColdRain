@@ -1,13 +1,13 @@
-package local.m3u;
+package playlist.m3u;
 
 import java.util.ArrayList;
 import exception.MetaIOException;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
-import local.generic.AbstractPlaylistSong;
-import local.generic.AbstractPlaylistTable;
-import local.generic.SupportedMeta;
-import local.generic.SupportedPlaylistFormat;
+import playlist.generic.AbstractPlaylistSong;
+import playlist.generic.AbstractPlaylistTable;
+import playlist.generic.SupportedMeta;
+import playlist.generic.SupportedPlaylistFormat;
 
 public class M3uTable extends AbstractPlaylistTable {
 

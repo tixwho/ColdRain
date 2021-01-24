@@ -1,10 +1,10 @@
-package local.m3u8;
+package playlist.m3u8;
 
 import java.io.IOException;
 import exception.ErrorCodes;
 import exception.PlaylistIOException;
-import local.generic.AbstractPlaylistSong;
-import local.generic.AbstractPlaylistWriter;
+import playlist.generic.AbstractPlaylistSong;
+import playlist.generic.AbstractPlaylistWriter;
 
 public class M3u8Writer extends AbstractPlaylistWriter {
 

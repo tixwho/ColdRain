@@ -1,4 +1,4 @@
-package local.generic;
+package playlist.generic;
 
 public abstract class BaseLocalLoggingClass extends BaseLoggingClass{
     

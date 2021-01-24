@@ -1,7 +1,7 @@
-package local.m3u;
+package playlist.m3u;
 
 import java.text.MessageFormat;
-import local.generic.AbstractPlaylistSong;
+import playlist.generic.AbstractPlaylistSong;
 
 public class M3uSong extends AbstractPlaylistSong {
 

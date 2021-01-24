@@ -1,4 +1,4 @@
-package local.generic;
+package playlist.generic;
 
 import java.lang.reflect.Method;
 import java.util.EnumMap;

@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import local.generic.MetaSong;
+import playlist.generic.MetaSong;
 
 @Entity
 @Table(name="Album2")

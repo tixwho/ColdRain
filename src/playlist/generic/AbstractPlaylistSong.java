@@ -1,4 +1,4 @@
-package local.generic;
+package playlist.generic;
 
 /**
  * Most basic function of SongInstance: contains src info. M3U song might be just an extension of

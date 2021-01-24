@@ -92,7 +92,7 @@ public class TestTestingMethod {
                 if(albumCount.compareTo(sqlMap.get(albumHere))==0) {
                     LogMaker.logs(albumHere + " OK!");
                 }else {
-                    LogMaker.logs(albumHere + " sql has "+sqlMap.get(albumHere) + " while local count has "+albumCount);
+                    LogMaker.logs(albumHere + " sql has "+sqlMap.get(albumHere) + " while playlist count has "+albumCount);
                 }
             }else {
                 LogMaker.logs("Can't find album "+ albumHere + " from sql!");

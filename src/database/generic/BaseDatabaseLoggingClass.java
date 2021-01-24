@@ -2,8 +2,8 @@ package database.generic;
 
 import database.service.AudioDBService;
 import database.service.PlaylistDBService;
-import local.generic.BaseLoggingClass;
-import local.generic.LoggerCtrl;
+import playlist.generic.BaseLoggingClass;
+import playlist.generic.LoggerCtrl;
 
 public abstract class BaseDatabaseLoggingClass extends BaseLoggingClass{
     LoggerCtrl pojoCtrl = new LoggerCtrl(DatabasePOJO.class);

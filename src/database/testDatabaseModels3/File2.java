@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import local.generic.MetaSong;
+import playlist.generic.MetaSong;
 
 
 @Entity

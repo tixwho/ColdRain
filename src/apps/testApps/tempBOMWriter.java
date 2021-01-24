@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import exception.MetaIOException;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
-import local.generic.AbstractPlaylistReader;
-import local.generic.AbstractPlaylistWriter;
-import local.generic.BaseLocalTestingClass;
-import local.m3u.M3uReader;
-import local.m3u.M3uTable;
-import local.m3u.M3uWriter;
+import playlist.generic.AbstractPlaylistReader;
+import playlist.generic.AbstractPlaylistWriter;
+import playlist.generic.BaseLocalTestingClass;
+import playlist.m3u.M3uReader;
+import playlist.m3u.M3uTable;
+import playlist.m3u.M3uWriter;
 import toolkit.MethodInvoker;
 
 public class tempBOMWriter extends BaseLocalTestingClass {

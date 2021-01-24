@@ -15,7 +15,7 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import database.generic.DatabasePOJO;
 import database.utils.InitSessionFactory;
-import local.generic.MetaSong;
+import playlist.generic.MetaSong;
 
 @Entity
 @Table(name="Artist")

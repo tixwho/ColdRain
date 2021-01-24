@@ -39,11 +39,6 @@ public class NcmService {
                 System.out.println(
                     "PlaylistName:" + aComp.getPlaylistName() + ";id:" + aComp.getPlaylist_id());
                 System.out.println("size:" + aComp.getPlaylistRecordList().size());
-                if(aComp.getPlaylistName().contentEquals("Secondary")) {
-                    for(NcmAudioInfoComp audioComp:aComp.getPlaylistRecordList()) {
-                        System.out.println(audioComp);
-                    }
-                }
             }
         } finally {
             closeDB();
@@ -52,7 +47,7 @@ public class NcmService {
     }
 
     // todo
-    // also join web_track first, and if not found in local table, try to concat old files in search
+    // also join web_track first, and if not found in playlist table, try to concat old files in search
     // of original (not copyrighted) files.
 
     private NcmPlaylistComp collectAPlaylistInfo_webTrack(PlayListBean plBean) {

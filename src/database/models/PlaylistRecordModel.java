@@ -16,8 +16,8 @@ import database.service.AudioDBService;
 import database.utils.InitSessionFactory;
 import exception.DatabaseException;
 import exception.MetaIOException;
-import local.generic.AbstractPlaylistSong;
-import local.generic.MetaSong;
+import playlist.generic.AbstractPlaylistSong;
+import playlist.generic.MetaSong;
 
 @Entity
 @Table(name = "PlaylistRecord")

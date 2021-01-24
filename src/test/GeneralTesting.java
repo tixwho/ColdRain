@@ -2,8 +2,8 @@ package test;
 
 import javax.swing.filechooser.FileSystemView;
 import exception.ColdRainException;
-import local.generic.BaseLocalTestingClass;
 import ncm.NcmService;
+import playlist.generic.BaseLocalTestingClass;
 
 public class GeneralTesting extends BaseLocalTestingClass{
     // 用后既删

@@ -1,7 +1,7 @@
-package local.generic;
+package playlist.generic;
 
-import local.m3u.M3uTable;
-import local.m3u8.M3u8Table;
+import playlist.m3u.M3uTable;
+import playlist.m3u8.M3u8Table;
 
 public enum SupportedPlaylistFormat {
     M3U("m3u", "M3u"), M3U8("m3u8", "M3u8"), ZPL("zpl", "Zpl");

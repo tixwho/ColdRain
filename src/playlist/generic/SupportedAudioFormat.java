@@ -1,4 +1,4 @@
-package local.generic;
+package playlist.generic;
 
 public enum SupportedAudioFormat {
     MP3("mp3", "Mp3"), FLAC("flac", "Flac");

@@ -1,4 +1,4 @@
-package local.generic;
+package playlist.generic;
 
 import java.io.DataOutputStream;
 import java.io.File;
