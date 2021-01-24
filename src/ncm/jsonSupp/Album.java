@@ -1,71 +1,64 @@
 /**
- * Copyright 2020 bejson.com
- */
+  * Copyright 2021 bejson.com 
+  */
 package ncm.jsonSupp;
-
 import java.util.List;
 
 /**
- * Auto-generated: 2020-03-24 19:34:2
+ * Auto-generated: 2021-01-24 6:43:28
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
  */
+//note: for DJ tracks, only name and id will present.
 public class Album {
 
-    private int id;
+    private long id;
     private String name;
-    private long picId;
+    private String picId;
     private String picUrl;
     private List<String> alias;
     private List<String> transNames;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
+    public void setId(long id) {
+         this.id = id;
+     }
+     public long getId() {
+         return id;
+     }
 
     public void setName(String name) {
-        this.name = name;
-    }
+         this.name = name;
+     }
+     public String getName() {
+         return name;
+     }
 
-    public long getPicId() {
-        return picId;
-    }
-
-    public void setPicId(long picId) {
-        this.picId = picId;
-    }
-
-    public String getPicUrl() {
-        return picUrl;
-    }
+    public void setPicId(String picId) {
+         this.picId = picId;
+     }
+     public String getPicId() {
+         return picId;
+     }
 
     public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
-    }
-
-    public List<String> getAlias() {
-        return alias;
-    }
+         this.picUrl = picUrl;
+     }
+     public String getPicUrl() {
+         return picUrl;
+     }
 
     public void setAlias(List<String> alias) {
-        this.alias = alias;
-    }
-
-    public List<String> getTransNames() {
-        return transNames;
-    }
+         this.alias = alias;
+     }
+     public List<String> getAlias() {
+         return alias;
+     }
 
     public void setTransNames(List<String> transNames) {
-        this.transNames = transNames;
-    }
+         this.transNames = transNames;
+     }
+     public List<String> getTransNames() {
+         return transNames;
+     }
 
 }

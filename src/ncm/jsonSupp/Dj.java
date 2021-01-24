@@ -3,15 +3,13 @@
   */
 package ncm.jsonSupp;
 
-import java.util.List;
-
 /**
- * Auto-generated: 2021-01-24 6:52:12
+ * Auto-generated: 2021-01-24 7:19:10
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
  */
-public class Creator {
+public class Dj {
 
     private boolean defaultAvatar;
     private long province;
@@ -33,17 +31,19 @@ public class Creator {
     private String backgroundUrl;
     private int authority;
     private boolean mutual;
-    private List<String> expertTags;
-    private Experts experts;
+    private String expertTags;
+    private String experts;
     private int djStatus;
     private int vipType;
     private String remarkName;
     private int authenticationTypes;
     private String avatarDetail;
-    private String avatarImgIdStr;
-    private String backgroundImgIdStr;
     private boolean anchor;
+    private String backgroundImgIdStr;
+    private String avatarImgIdStr;
+    private int rewardCount;
     private String avatarImgId_str;
+    private boolean canReward;
     public void setDefaultAvatar(boolean defaultAvatar) {
          this.defaultAvatar = defaultAvatar;
      }
@@ -184,17 +184,17 @@ public class Creator {
          return mutual;
      }
 
-    public void setExpertTags(List<String> expertTags) {
+    public void setExpertTags(String expertTags) {
          this.expertTags = expertTags;
      }
-     public List<String> getExpertTags() {
+     public String getExpertTags() {
          return expertTags;
      }
 
-    public void setExperts(Experts experts) {
+    public void setExperts(String experts) {
          this.experts = experts;
      }
-     public Experts getExperts() {
+     public String getExperts() {
          return experts;
      }
 
@@ -233,11 +233,11 @@ public class Creator {
          return avatarDetail;
      }
 
-    public void setAvatarImgIdStr(String avatarImgIdStr) {
-         this.avatarImgIdStr = avatarImgIdStr;
+    public void setAnchor(boolean anchor) {
+         this.anchor = anchor;
      }
-     public String getAvatarImgIdStr() {
-         return avatarImgIdStr;
+     public boolean getAnchor() {
+         return anchor;
      }
 
     public void setBackgroundImgIdStr(String backgroundImgIdStr) {
@@ -247,11 +247,18 @@ public class Creator {
          return backgroundImgIdStr;
      }
 
-    public void setAnchor(boolean anchor) {
-         this.anchor = anchor;
+    public void setAvatarImgIdStr(String avatarImgIdStr) {
+         this.avatarImgIdStr = avatarImgIdStr;
      }
-     public boolean getAnchor() {
-         return anchor;
+     public String getAvatarImgIdStr() {
+         return avatarImgIdStr;
+     }
+
+    public void setRewardCount(int rewardCount) {
+         this.rewardCount = rewardCount;
+     }
+     public int getRewardCount() {
+         return rewardCount;
      }
 
     public void setAvatarImgId_str(String avatarImgId_str) {
@@ -259,6 +266,13 @@ public class Creator {
      }
      public String getAvatarImgId_str() {
          return avatarImgId_str;
+     }
+
+    public void setCanReward(boolean canReward) {
+         this.canReward = canReward;
+     }
+     public boolean getCanReward() {
+         return canReward;
      }
 
 }

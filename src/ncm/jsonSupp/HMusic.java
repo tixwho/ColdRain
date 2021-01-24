@@ -1,10 +1,10 @@
 /**
- * Copyright 2020 bejson.com
- */
+  * Copyright 2021 bejson.com 
+  */
 package ncm.jsonSupp;
 
 /**
- * Auto-generated: 2020-03-24 19:34:2
+ * Auto-generated: 2021-01-24 6:43:28
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
@@ -12,40 +12,35 @@ package ncm.jsonSupp;
 public class HMusic {
 
     private long bitrate;
-    private long dfsId;
+    private int dfsId;
     private long size;
     private double volumeDelta;
-
-    public long getBitrate() {
-        return bitrate;
-    }
-
     public void setBitrate(long bitrate) {
-        this.bitrate = bitrate;
-    }
+         this.bitrate = bitrate;
+     }
+     public long getBitrate() {
+         return bitrate;
+     }
 
-    public long getDfsId() {
-        return dfsId;
-    }
-
-    public void setDfsId(long dfsId) {
-        this.dfsId = dfsId;
-    }
-
-    public long getSize() {
-        return size;
-    }
+    public void setDfsId(int dfsId) {
+         this.dfsId = dfsId;
+     }
+     public int getDfsId() {
+         return dfsId;
+     }
 
     public void setSize(long size) {
-        this.size = size;
-    }
-
-    public double getVolumeDelta() {
-        return volumeDelta;
-    }
+         this.size = size;
+     }
+     public long getSize() {
+         return size;
+     }
 
     public void setVolumeDelta(double volumeDelta) {
-        this.volumeDelta = volumeDelta;
-    }
+         this.volumeDelta = volumeDelta;
+     }
+     public double getVolumeDelta() {
+         return volumeDelta;
+     }
 
 }

@@ -5,12 +5,12 @@ package ncm.jsonSupp;
 import java.util.List;
 
 /**
- * Auto-generated: 2021-01-24 6:43:28
+ * Auto-generated: 2021-01-24 7:15:35
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
  */
-public class JsonRootBean {
+public class OfflineRootBean {
 
     private String name;
     private long id;
@@ -52,11 +52,7 @@ public class JsonRootBean {
     private int mvid;
     private BMusic bMusic;
     private String mp3Url;
-    private HMusic hMusic;
-    private MMusic mMusic;
-    private LMusic lMusic;
     private String reason;
-    private Privilege privilege;
     private String alg;
     private int commentCount;
     private String cd;
@@ -64,7 +60,13 @@ public class JsonRootBean {
     private int version;
     private int songType;
     private int mst;
-    private YunSong yunSong;
+    private String yunSong;
+    private int downloadQuality;
+    
+    //following is for DJ sets only (mark:web_offline_track:type_extra not null)
+    private long programId;
+    private Program program;
+    
     public void setName(String name) {
          this.name = name;
      }
@@ -345,39 +347,11 @@ public class JsonRootBean {
          return mp3Url;
      }
 
-    public void setHMusic(HMusic hMusic) {
-         this.hMusic = hMusic;
-     }
-     public HMusic getHMusic() {
-         return hMusic;
-     }
-
-    public void setMMusic(MMusic mMusic) {
-         this.mMusic = mMusic;
-     }
-     public MMusic getMMusic() {
-         return mMusic;
-     }
-
-    public void setLMusic(LMusic lMusic) {
-         this.lMusic = lMusic;
-     }
-     public LMusic getLMusic() {
-         return lMusic;
-     }
-
     public void setReason(String reason) {
          this.reason = reason;
      }
      public String getReason() {
          return reason;
-     }
-
-    public void setPrivilege(Privilege privilege) {
-         this.privilege = privilege;
-     }
-     public Privilege getPrivilege() {
-         return privilege;
      }
 
     public void setAlg(String alg) {
@@ -429,11 +403,30 @@ public class JsonRootBean {
          return mst;
      }
 
-    public void setYunSong(YunSong yunSong) {
+    public void setYunSong(String yunSong) {
          this.yunSong = yunSong;
      }
-     public YunSong getYunSong() {
+     public String getYunSong() {
          return yunSong;
      }
+
+    public void setDownloadQuality(int downloadQuality) {
+         this.downloadQuality = downloadQuality;
+     }
+     public int getDownloadQuality() {
+         return downloadQuality;
+     }
+    public long getProgramId() {
+        return programId;
+    }
+    public void setProgramId(long programId) {
+        this.programId = programId;
+    }
+    public Program getProgram() {
+        return program;
+    }
+    public void setProgram(Program program) {
+        this.program = program;
+    }
 
 }

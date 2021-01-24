@@ -1,12 +1,11 @@
 /**
- * Copyright 2020 bejson.com
- */
+  * Copyright 2021 bejson.com 
+  */
 package ncm.jsonSupp;
-
 import java.util.List;
 
 /**
- * Auto-generated: 2020-03-24 19:34:2
+ * Auto-generated: 2021-01-24 6:43:28
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
@@ -17,37 +16,42 @@ public class Artists {
     private String name;
     private List<String> tns;
     private List<String> alias;
-
-    public int getId() {
-        return id;
-    }
-
+    
+    //for DJ tracks only
+    private long userId;
+    
     public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
+         this.id = id;
+     }
+     public int getId() {
+         return id;
+     }
 
     public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<String> getTns() {
-        return tns;
-    }
+         this.name = name;
+     }
+     public String getName() {
+         return name;
+     }
 
     public void setTns(List<String> tns) {
-        this.tns = tns;
-    }
-
-    public List<String> getAlias() {
-        return alias;
-    }
+         this.tns = tns;
+     }
+     public List<String> getTns() {
+         return tns;
+     }
 
     public void setAlias(List<String> alias) {
-        this.alias = alias;
+         this.alias = alias;
+     }
+     public long getUserId() {
+        return userId;
     }
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+    public List<String> getAlias() {
+         return alias;
+     }
 
 }
