@@ -26,12 +26,18 @@ import toolkit.AudioMd5Helper;
 
 public class AudioDBService {
     private static final Logger logger = LoggerFactory.getLogger(AudioDBService.class);
-    public static HashSet<ArtistModel> toValidateArtists;
-    public static HashSet<AlbumModel> toValidateAlbums;
-    public static HashSet<SongModel> toValidateSongs;
+    public static HashSet<ArtistModel> toValidateArtists = new HashSet<ArtistModel>();
+    public static HashSet<AlbumModel> toValidateAlbums = new HashSet<AlbumModel>();
+    public static HashSet<SongModel> toValidateSongs = new HashSet<SongModel>();
 
     /* Functional Methods Below */
 
+    // Called Once ColdRain Launched. Requires considerable database I/O resource.
+    /**
+     *  Load new file, modify any changed, and delete missing. 
+     * @param inDir Directory to be scanned for audioFiles.
+     * @throws DatabaseException When it is not a directory
+     */
     public void fullScanAudioFiles(File inDir) throws DatabaseException {
 
 
@@ -64,9 +70,20 @@ public class AudioDBService {
             // update file if timestamp later.
             updateMetaForFile(theMeta);
         }
+
+        // finally delete unused fileM once
+        fullFileModelCleanse();
+        //validation service-level clean up
+        cleanValidationSets(); 
     }
 
 
+    /**
+     * Standard Procedure for loading a new audioFile.
+     * Create a FileM and guarantee a MetaM for it, attached.
+     * @param meta MetaSong instance to be loaded.
+     * @return fileM, attached with functional MetaM.
+     */
     public static FileModel loadNewFile(MetaSong meta) {
         FileModel fileM = FileModel.createFileModel(meta);
         MetaModel metaM = MetaModel.guaranteeMetaModel(meta);
@@ -74,17 +91,41 @@ public class AudioDBService {
         return fileM;
     }
 
-    public static void deleteFile(MetaSong meta) {
+    /**
+     * Standard Procedure for Deleting a fileM from database. Automatic clean-up.
+     * If it's the only file that shares corresponding metaM, metaM will also be disposed.
+     * @param meta MetaSong instance to be disposed.
+     * @return status
+     */
+    public static boolean deleteFileFromDB(MetaSong meta) {
         try {
             FileModel fileM = FileModel.findFileModel(meta);
-            deleteFile(fileM);
+            return deleteFileFromDB(fileM,true);
         } catch (DatabaseException de) {
             // try to delete a fileM not within database, ignore
-            logger.warn("Tried to discard an fileM not within databse!",de);
+            logger.warn("Tried to discard an fileM not within databse!", de);
         }
+        return false;
+    }
+    
+    /**
+     * Standard Procedure for Deleting a fileM from database. Automatic clean-up.
+     * If it's the only file that shares corresponding metaM, metaM will also be disposed.
+     * @param fileM fileM to be disposed
+     * @return  status. always true in this case.
+     */
+    public static boolean deleteFileFromDB(FileModel fileM) {
+        return deleteFileFromDB(fileM,true);
     }
 
-    public static boolean deleteFile(FileModel fileM) {
+    /**
+     * Standard Procedure for Deleting a fileM from database.
+     * If it's the only file that shares corresponding metaM, metaM will also be disposed.
+     * @param fileM fileM to be disposed
+     * @param autoCleanFlag in-class, service level use can set false for performance
+     * @return  status. always true in this case.
+     */
+    private static boolean deleteFileFromDB(FileModel fileM, boolean autoCleanFlag) {
         fileM.getMetaM().getFileModels().remove(fileM);
         if (fileM.getMetaM().getFileModels().size() == 0) {
             safelyDisposeMetaM(fileM.getMetaM());
@@ -95,10 +136,17 @@ public class AudioDBService {
         logger.info("Deleted empty fileM entry:" + fileM);
         tx.commit();
         session.close();
+        if(autoCleanFlag) {
+            cleanValidationSets();
+        }
         return true;
     }
 
-
+    // logic: query:all fileM -> check if File valid -> delete any invalid fileM (heavy work)
+    /**
+     * Cleanup the whole database and delete any unused fileM
+     * Any unattached metaM will also be disposed. Requires considerable database I/O resource.
+     */
     public void fullFileModelCleanse() {
         logger.info("Start FileM Cleansing Process!");
         Session session = InitSessionFactory.getNewSession();
@@ -113,7 +161,7 @@ public class AudioDBService {
         for (FileModel aFile : fList) {
             File toCheckFile = new File(aFile.getSrc());
             if (!toCheckFile.exists()) {
-                deleteFile(aFile);
+                deleteFileFromDB(aFile,false);
                 delCount += 1;
             } else {
                 if (aFile.getMd5().isBlank()) {
@@ -132,13 +180,34 @@ public class AudioDBService {
                 }
             }
         }
+        //cleanup
+        cleanValidationSets();
         logger.info("Deleted " + delCount + " unused FileM in cleansing!");
         logger.info("Updated " + updCount + " FileM without Md5 info!");
     }
 
-
+    /**
+     * Stantard procedure for undating a metaM for file.
+     * @param meta MetaSong instance that *might* need to be updated. automatically clean-up
+     * @return An always up-to-date FileM
+     * @throws DatabaseException When unable to find FileM in database.
+     */
     public static FileModel updateMetaForFile(MetaSong meta) throws DatabaseException {
-        initializeValidationSets();
+        return updateMetaForFile(meta, true);
+    }
+
+    // logic: check timestamp first, if local files newer, modify(fileM=1)/(fileM>1)initiate
+    // metadata
+    /**
+     * Stantard procedure for undating a metaM for file.
+     * @param meta MetaSong instance that *might* need to be updated.
+     * @param autoCleanFlag automatic cleanup validation set. could be disabled for private use
+     * but BE SURE TO CLEAN in service level.
+     * @return An always up-to-date FileM
+     * @throws DatabaseException When unable to find FileM in database.
+     */
+    private static FileModel updateMetaForFile(MetaSong meta, boolean autoCleanFlag)
+        throws DatabaseException {
         FileModel reFileModel = FileModel.findFileModel(meta);
         // check timeStamp
         long timestampNow = DbHelper.calcLastModTimestamp(meta);
@@ -214,14 +283,7 @@ public class AudioDBService {
                     // only a single file and a current meta exist, attach new meta & delete
                     // set new relation for File
                     reFileModel.attachMetaModel(toCompareMetaM);
-                    // set artist and album in current MetaModel to deleteTest
-                    /*
-                     * now use a single method to clean up MetaM safely
-                     * toHandleMetaM.getAlbumM().getMetaModels().remove(toHandleMetaM);
-                     * toValidateAlbums.add(toHandleMetaM.getAlbumM());
-                     * toHandleMetaM.getSongM().getMetaModels().remove(toHandleMetaM);
-                     * toValidateSongs.add(toHandleMetaM.getSongM());
-                     */
+
                     // delete if no other files use this meta
                     if (toHandleMetaM.getFileModels().size() == 0) {
                         safelyDisposeMetaM(toHandleMetaM);
@@ -246,12 +308,20 @@ public class AudioDBService {
         } else {
             logger.info("No need to update");
         }
+        if (autoCleanFlag) {
+            cleanValidationSets(); // could repeat for multiple times if called many times
+            // but since this is a static method, place it here for safe.
+        }
         return reFileModel;
     }
 
 
     /* Support Methods Below */
 
+    /**
+     * Delete albumM, songM relation with target metaM (delete when necessary), dispose metaM.
+     * @param toDisposeMetaM metaM to be safely disposed.
+     */
     private static void safelyDisposeMetaM(MetaModel toDisposeMetaM) {
         toDisposeMetaM.getAlbumM().getMetaModels().remove(toDisposeMetaM);
         toValidateAlbums.add(toDisposeMetaM.getAlbumM());
@@ -270,25 +340,15 @@ public class AudioDBService {
 
     }
 
-    private static void initializeValidationSets() {
-        if (toValidateAlbums == null) {
-            toValidateAlbums = new HashSet<AlbumModel>();
-        }
-        if (toValidateSongs == null) {
-            toValidateSongs = new HashSet<SongModel>();
-        }
-        if (toValidateArtists == null) {
-            toValidateArtists = new HashSet<ArtistModel>();
-        }
-    }
 
+    // REMEMBER TO CALL IT ON EVERY SERVICE LEVEL DELETION!!!
     public static void cleanValidationSets() {
-        logger.warn("Start Cleaning up!");
+        logger.debug("Start Cleaning up!");
         if (toValidateAlbums != null) {
-            logger.warn("Validating Albums!");
+            logger.debug("Validating Albums!");
             for (AlbumModel toValidateAlbumM : toValidateAlbums) {
                 if (toValidateAlbumM.getMetaModels().size() == 0) {
-                    logger.warn("Cleaning Album:" + toValidateAlbumM.toString());
+                    logger.debug("Cleaning Album:" + toValidateAlbumM.toString());
                     toValidateAlbumM.getAlbumArtistM().getAlbumModels().remove(toValidateAlbumM);
                     toValidateArtists.add(toValidateAlbumM.getAlbumArtistM());
                     Session session = InitSessionFactory.getNewSession();
@@ -302,10 +362,10 @@ public class AudioDBService {
             toValidateAlbums.clear();
         }
         if (toValidateSongs != null) {
-            logger.warn("Validating Songs!");
+            logger.debug("Validating Songs!");
             for (SongModel toValidateSongM : toValidateSongs) {
                 if (toValidateSongM.getMetaModels().size() == 0) {
-                    logger.warn("Cleaning Song:" + toValidateSongM.toString());
+                    logger.debug("Cleaning Song:" + toValidateSongM.toString());
                     toValidateSongM.getArtistM().getSongModels().remove(toValidateSongM);
                     toValidateArtists.add(toValidateSongM.getArtistM());
                     Session session = InitSessionFactory.getNewSession();
@@ -319,21 +379,21 @@ public class AudioDBService {
             toValidateSongs.clear();
         }
         if (toValidateArtists != null) {
-            logger.warn("Validating Artists!");
+            logger.debug("Validating Artists!");
             for (ArtistModel toValidateArtistM : toValidateArtists) {
                 boolean noArtist = false;
                 boolean noAlbumArtist = false;
                 if (toValidateArtistM.getSongModels().size() == 0) {
-                    logger.warn("No Song use Artist:" + toValidateArtistM.toString());
+                    logger.debug("No Song use Artist:" + toValidateArtistM.toString());
                     noArtist = true;
                 }
                 if (toValidateArtistM.getAlbumModels().size() == 0) {
-                    logger.warn("No Album use Artist:" + toValidateArtistM.toString());
+                    logger.debug("No Album use Artist:" + toValidateArtistM.toString());
                     noAlbumArtist = true;
                 }
 
                 if (noArtist && noAlbumArtist) {
-                    logger.warn("Cleaning Artist:" + toValidateArtistM.toString());
+                    logger.info("Cleaning Artist:" + toValidateArtistM.toString());
                     Session session = InitSessionFactory.getNewSession();
                     Transaction tx = session.beginTransaction();
                     session.delete(toValidateArtistM);
