@@ -1,8 +1,0 @@
-1. switch all generator class to "native"
-2. fix <column name="xxx"> in many-to-one relationships into corresponding column
-3. set inverse from many side to false
-4. fix things like "album" to "aid"
-5. fetch: use select or join? use join only when highly correlated (in our case, file-file_property)
-
-tips:
-1. save one-side in one-to-many first if you want "inverse=true" to simplify your query.
