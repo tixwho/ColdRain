@@ -163,7 +163,7 @@ public class FileModel extends DatabasePOJO implements Serializable {
             if (oughtFlag) {
                 logger.warn("File should found with src but NOT FOUND");
                 throw new DatabaseException("Does not found corresponding FileModel",
-                    ErrorCodes.DATABASE_NOT_FOUND_ERROR);
+                    ErrorCodes.DATABASE_NOT_FOUND);
             }
             logger.info("fileModel not found with given src, return null");
         } else {
@@ -192,7 +192,7 @@ public class FileModel extends DatabasePOJO implements Serializable {
                 if (oughtFlag) {
                     logger.warn("should've found fileModel but not found! throwing exception");
                     throw new DatabaseException("Does not found corresponding FileModel",
-                        ErrorCodes.DATABASE_NOT_FOUND_ERROR);
+                        ErrorCodes.DATABASE_NOT_FOUND);
                 }
                 logger.info("fileModel not found in md5, return null");
                 // if not, returnFileM is null and will be returned.

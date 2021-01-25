@@ -28,8 +28,12 @@ public class PlaylistFileIO {
     public static Logger logger = LoggerFactory.getLogger(PlaylistFileIO.class);
     private static PlaylistFileIO defaultIOInstane;
 
+    //used in subclass
+    @SuppressWarnings("unused")
     private AbstractPlaylistWriter writer;
+    @SuppressWarnings("unused")
     private AbstractPlaylistTable table;
+    @SuppressWarnings("unused")
     private AbstractPlaylistReader reader;
     private HashMap<String, AbstractPlaylistReader> readersMap =
         new HashMap<String, AbstractPlaylistReader>();
@@ -62,12 +66,14 @@ public class PlaylistFileIO {
         logger.trace("extension:" + ext);
         if (apr == null) {
             throw new PlaylistIOException("Unsupported playlist file suffix!",
-                ErrorCodes.UNSUPPORTED_PLAYLIST_ERROR);
+                ErrorCodes.UNSUPPORTED_PLAYLIST_SUFFIX);
         }
         apr.read(f);
         return apr.getTable();
     }
 
+    @SuppressWarnings("deprecation")
+    //is deprecated since Java9
     public void writePlaylistFileAs(AbstractPlaylistTable table, File f,
         SupportedPlaylistFormat format, boolean bomToggle)
         throws NativeReflectionException, MetaIOException, PlaylistIOException {
@@ -86,7 +92,7 @@ public class PlaylistFileIO {
         AbstractPlaylistWriter apw = writersMap.get(unknownTable.getSuppFormat().getFileSuffix());
         if (apw == null) {
             throw new PlaylistIOException("Unsupported playlist file suffix!",
-                ErrorCodes.UNSUPPORTED_PLAYLIST_ERROR);
+                ErrorCodes.UNSUPPORTED_PLAYLIST_SUFFIX);
         }
         apw.write(f, unknownTable, bomToggle);
     }

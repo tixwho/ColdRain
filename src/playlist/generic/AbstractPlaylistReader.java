@@ -173,7 +173,7 @@ public abstract class AbstractPlaylistReader {
                 ErrorCodes.BASE_IO_ERROR);
         } catch (UnsupportedEncodingException uee) {
             throw new PlaylistIOException("Error in reading", uee,
-                ErrorCodes.UNSUPPORTED_ENCODING_ERROR);
+                ErrorCodes.UNSUPPORTED_ENCODING);
         } catch (IOException ioe) {
             throw new PlaylistIOException("Error in reading BOM status", ioe,
                 ErrorCodes.BASE_IO_ERROR);

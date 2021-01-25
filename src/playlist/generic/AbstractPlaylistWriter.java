@@ -100,7 +100,7 @@ public abstract class AbstractPlaylistWriter {
                 ErrorCodes.BASE_IO_ERROR);
         } catch (UnsupportedEncodingException uee) {
             throw new PlaylistIOException("Error in creating new Playlist File", uee,
-                ErrorCodes.UNSUPPORTED_ENCODING_ERROR);
+                ErrorCodes.UNSUPPORTED_ENCODING);
         }
         logger.debug("Stream created!");
     }

@@ -145,7 +145,7 @@ public class PlaylistModel extends DatabasePOJO implements Serializable{
         session.close();
         if (returnPlaylistM == null) {
             logger.debug("Playlist NOT FOUND");
-            throw new DatabaseException("Does not found corresponding PlaylistModel",ErrorCodes.DATABASE_NOT_FOUND_ERROR);
+            throw new DatabaseException("Does not found corresponding PlaylistModel",ErrorCodes.DATABASE_NOT_FOUND);
         } else {
             logger.debug("Playlist FOUND");
         }

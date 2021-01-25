@@ -74,6 +74,30 @@ public class AudioDBService {
         return fileM;
     }
 
+    public static void deleteFile(MetaSong meta) {
+        try {
+            FileModel fileM = FileModel.findFileModel(meta);
+            deleteFile(fileM);
+        } catch (DatabaseException de) {
+            // try to delete a fileM not within database, ignore
+            logger.warn("Tried to discard an fileM not within databse!",de);
+        }
+    }
+
+    public static boolean deleteFile(FileModel fileM) {
+        fileM.getMetaM().getFileModels().remove(fileM);
+        if (fileM.getMetaM().getFileModels().size() == 0) {
+            safelyDisposeMetaM(fileM.getMetaM());
+        }
+        Session session = InitSessionFactory.getNewSession();
+        Transaction tx = session.beginTransaction();
+        session.delete(fileM);
+        logger.info("Deleted empty fileM entry:" + fileM);
+        tx.commit();
+        session.close();
+        return true;
+    }
+
 
     public void fullFileModelCleanse() {
         logger.info("Start FileM Cleansing Process!");
@@ -83,25 +107,16 @@ public class AudioDBService {
         Query<FileModel> q = session.createQuery("from FileModel f", FileModel.class);
         List<FileModel> fList = q.getResultList();
         session.close();
-        logger.info("List Check: "+fList.size()+" FileM in total!");
+        logger.info("List Check: " + fList.size() + " FileM in total!");
         int delCount = 0;
         int updCount = 0;
         for (FileModel aFile : fList) {
             File toCheckFile = new File(aFile.getSrc());
             if (!toCheckFile.exists()) {
-                aFile.getMetaM().getFileModels().remove(aFile);
-                if (aFile.getMetaM().getFileModels().size() == 0) {
-                    safelyDisposeMetaM(aFile.getMetaM());
-                }
-                session = InitSessionFactory.getNewSession();
-                Transaction tx = session.beginTransaction();
-                session.delete(aFile);
-                logger.info("Deleted empty fileM entry:" +aFile);
-                tx.commit();
-                session.close();
-                delCount+=1;
-            }else {
-                if(aFile.getMd5().isBlank()) {
+                deleteFile(aFile);
+                delCount += 1;
+            } else {
+                if (aFile.getMd5().isBlank()) {
                     try {
                         aFile.setMd5(AudioMd5Helper.getAudioMd5Force(new MetaSong(aFile.getSrc())));
                     } catch (MetaIOException e) {
@@ -110,15 +125,15 @@ public class AudioDBService {
                     session = InitSessionFactory.getNewSession();
                     Transaction tx = session.beginTransaction();
                     session.update(aFile);
-                    logger.info("UpdatedfileM entry:" +aFile);
+                    logger.info("UpdatedfileM entry:" + aFile);
                     tx.commit();
                     session.close();
-                    updCount+=1;
+                    updCount += 1;
                 }
             }
         }
-        logger.info("Deleted "+ delCount + " unused FileM in cleansing!");
-        logger.info("Updated "+ updCount +" FileM without Md5 info!");
+        logger.info("Deleted " + delCount + " unused FileM in cleansing!");
+        logger.info("Updated " + updCount + " FileM without Md5 info!");
     }
 
 

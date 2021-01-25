@@ -346,7 +346,7 @@ public class HibyNavigator extends BaseHibyLoggingClass {
             } catch (InterruptedException ie) {
                 logger.error("InterruptedException when entering random folder!");
                 throw new WebException("InterruptedException", ie,
-                    ErrorCodes.WEB_INTERRUPTED_ERROR);
+                    ErrorCodes.WEB_INTERRUPTED);
             }
         }
 
@@ -367,7 +367,7 @@ public class HibyNavigator extends BaseHibyLoggingClass {
             }
         } catch (InterruptedException ie) {
             logger.error("InterruptedException when switching back home(refresh)!");
-            throw new WebException("InterruptedException", ie, ErrorCodes.WEB_INTERRUPTED_ERROR);
+            throw new WebException("InterruptedException", ie, ErrorCodes.WEB_INTERRUPTED);
         }
     }
 
@@ -601,7 +601,7 @@ public class HibyNavigator extends BaseHibyLoggingClass {
         if (!foundFlag) {
             logger.warn("Looped thorough refPaths but unable to find a corresponding base path!");
             throw new WebException("Does not found corresponding reference base folder!",
-                ErrorCodes.WEB_REFERENCE_PATH_NOTFOUND_ERROR);
+                ErrorCodes.WEB_REFERENCE_PATH_NOTFOUND);
         }
         logger.info("CUT TO BASE PATH:" + modifiedPath);
         return modifiedPath;
