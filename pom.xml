@@ -27,8 +27,8 @@
     <repositories>
         <repository>
             <id>jaudiotagger-repository</id>
-            <!-- <url>https://dl.bintray.com/ijabz/maven</url> -->
-            <url>https://dl.bintray.com/pathrik/PathriK</url>
+            <url>https://dl.bintray.com/ijabz/maven</url>
+            <!-- <url>https://dl.bintray.com/pathrik/PathriK</url> -->
         </repository>
     </repositories>
     <dependencies>
@@ -70,7 +70,7 @@
         <dependency>
           <groupId>net.jthink</groupId>
           <artifactId>jaudiotagger</artifactId>
-          <version>2.2.6-PATHRIK</version>
+          <version>2.2.5</version>
         </dependency>
         
         <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
