@@ -153,6 +153,7 @@ public class FileModel extends DatabasePOJO implements Serializable {
         logger.debug("Finding FileModel for " + src);
         Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
+        // Query: src @ fileModel
         Query<FileModel> q =
             session.createQuery("from FileModel f where f.src=?0", FileModel.class);
         q.setParameter(0, src);
@@ -181,7 +182,7 @@ public class FileModel extends DatabasePOJO implements Serializable {
         logger.debug("Finding FIleModel with md5:" + md5);
         Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
-        // query based on md5
+        // Query: md5 @ fileModel
         Query<FileModel> q =
             session.createQuery("from FileModel f where f.md5=?0", FileModel.class);
         List<FileModel> md5ResList = q.getResultList();

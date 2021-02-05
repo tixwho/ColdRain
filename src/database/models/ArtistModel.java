@@ -18,35 +18,36 @@ import database.utils.InitSessionFactory;
 import playlist.generic.MetaSong;
 
 @Entity
-@Table(name="Artist")
-@SequenceGenerator(name = "artist_seq", sequenceName = "artist_id_seq", initialValue = 1, allocationSize = 1)
+@Table(name = "Artist")
+@SequenceGenerator(name = "artist_seq", sequenceName = "artist_id_seq", initialValue = 1,
+    allocationSize = 1)
 public class ArtistModel extends DatabasePOJO implements Serializable {
 
     /**
      * 
      */
     private static final long serialVersionUID = -1634806897634166804L;
-    
+
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="artist_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "artist_seq")
     private Integer artistid;
-    
-    @OneToMany(mappedBy="albumArtistM")
+
+    @OneToMany(mappedBy = "albumArtistM")
     private Set<AlbumModel> albumModels = new HashSet<AlbumModel>();
-    
-    @OneToMany(mappedBy="artistM")
+
+    @OneToMany(mappedBy = "artistM")
     private Set<SongModel> songModels = new HashSet<SongModel>();
-    
+
     private String artist;
-    
+
     public ArtistModel() {
-        
+
     }
-    
+
     public ArtistModel(MetaSong meta) {
         this.artist = meta.getArtist();
     }
-    
+
 
     public Integer getArtistid() {
         return artistid;
@@ -81,7 +82,7 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
     public void setArtist(String artist) {
         this.artist = artist;
     }
-    
+
     public static ArtistModel createArtistModel(MetaSong meta) {
         ArtistModel artist = new ArtistModel(meta);
 
@@ -93,7 +94,7 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
         logger.debug("Created an artist!");
         return artist;
     }
-    
+
     public static ArtistModel createArtistModel(String artistName) {
 
         ArtistModel artist = new ArtistModel();
@@ -106,44 +107,46 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
         logger.debug("Created an artist!");
         return artist;
     }
-    
+
     public static ArtistModel guaranteeArtistModel(MetaSong meta) {
 
         ArtistModel returnArtistM;
         String artist = meta.getArtist();
-        logger.debug("Checking artist:"+artist);
-        Session session=InitSessionFactory.getNewSession();
+        logger.debug("Checking artist:" + artist);
+        Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
-        @SuppressWarnings("unchecked")
-        Query<ArtistModel> q= (Query<ArtistModel>) session.createQuery("from ArtistModel a where a.artist=?0");
+        // query: artist @ artistModel
+        Query<ArtistModel> q = (Query<ArtistModel>) session
+            .createQuery("from ArtistModel a where a.artist=?0", ArtistModel.class);
         q.setParameter(0, artist);
         ArtistModel toCheckArtistM = q.uniqueResult();
         session.close();
-        if (toCheckArtistM == null){
+        if (toCheckArtistM == null) {
             logger.debug("Artist NOT FOUND");
-            returnArtistM=createArtistModel(meta);
-        }else {
+            returnArtistM = createArtistModel(meta);
+        } else {
             logger.debug("Artist FOUND");
             returnArtistM = toCheckArtistM;
         }
         return returnArtistM;
     }
-    
+
     public static ArtistModel guaranteeArtistModel_album(MetaSong meta) {
         ArtistModel returnArtistM;
         String artist = meta.getAlbumArtist();
-        logger.debug("Checking album artist:"+artist);
-        Session session=InitSessionFactory.getNewSession();
+        logger.debug("Checking album artist:" + artist);
+        Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
-        @SuppressWarnings("unchecked")
-        Query<ArtistModel> q= (Query<ArtistModel>) session.createQuery("from ArtistModel a where a.artist=?0");
+        // query albumArtist @ artistModel
+        Query<ArtistModel> q = (Query<ArtistModel>) session
+            .createQuery("from ArtistModel a where a.artist=?0", ArtistModel.class);
         q.setParameter(0, artist);
         ArtistModel toCheckArtistM = q.uniqueResult();
         session.close();
-        if (toCheckArtistM == null){
+        if (toCheckArtistM == null) {
             logger.debug("Album Artist NOT FOUND");
-            returnArtistM=createArtistModel(artist);
-        }else {
+            returnArtistM = createArtistModel(artist);
+        } else {
             returnArtistM = toCheckArtistM;
             logger.debug("Album Artist FOUND");
         }
@@ -185,10 +188,7 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
     public String toString() {
         return "ArtistModel [artistid=" + artistid + ", artist=" + artist + "]";
     }
-    
-    
 
-    
-    
+
 
 }

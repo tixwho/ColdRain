@@ -24,7 +24,8 @@ import playlist.generic.MetaSong;
 
 @Entity
 @Table(name = "Meta")
-@SequenceGenerator(name = "meta_seq", sequenceName = "meta_id_seq", initialValue = 1, allocationSize = 1)
+@SequenceGenerator(name = "meta_seq", sequenceName = "meta_id_seq", initialValue = 1,
+    allocationSize = 1)
 public class MetaModel extends DatabasePOJO implements Serializable {
 
     /**
@@ -47,7 +48,7 @@ public class MetaModel extends DatabasePOJO implements Serializable {
     @ManyToOne
     @JoinColumn(name = "songid")
     private SongModel songM;
-    
+
     @ManyToOne
     @JoinColumn(name = "actualMetaid")
     private MetaModel actualMetaM;
@@ -135,20 +136,20 @@ public class MetaModel extends DatabasePOJO implements Serializable {
             + toCheckSongM.getTrackTitle() + " by: " + toCheckSongM.getArtistM().getArtist());
         Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
-        @SuppressWarnings("unchecked")
-        Query<MetaModel> q = (Query<MetaModel>) session
-            .createQuery("from MetaModel m where m.albumM=?0 and m.songM=?1");
+        // Query: albumM, songM @ metaModel
+        Query<MetaModel> q = session
+            .createQuery("from MetaModel m where m.albumM=?0 and m.songM=?1", MetaModel.class);
         q.setParameter(0, toCheckAlbumM);
         q.setParameter(1, toCheckSongM);
-        logger.warn("TEMP:"+toCheckAlbumM.toString()+toCheckSongM.toString());
+        logger.warn("TEMP:" + toCheckAlbumM.toString() + toCheckSongM.toString());
         MetaModel toCheckMetaM;
         try {
-        toCheckMetaM = q.uniqueResult();
-        }catch (NonUniqueResultException nure) {
-            Iterator<MetaModel> it =q.list().iterator();
-            while(it.hasNext()) {
+            toCheckMetaM = q.uniqueResult();
+        } catch (NonUniqueResultException nure) {
+            Iterator<MetaModel> it = q.list().iterator();
+            while (it.hasNext()) {
                 MetaModel theModel = it.next();
-                logger.error("Duplicate Model:"+theModel.toString());
+                logger.error("Duplicate Model:" + theModel.toString());
             }
             throw nure;
         }
@@ -165,16 +166,16 @@ public class MetaModel extends DatabasePOJO implements Serializable {
         return returnMetaM;
 
     }
-    
+
     public static int checkMetaCount(MetaSong meta) {
         int metaCount = -1;
         AlbumModel toCheckAlbumM = AlbumModel.guaranteeAlbumModel(meta);
         SongModel toCheckSongM = SongModel.guaranteeSongModel(meta);
         Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
-        @SuppressWarnings("unchecked")
+        // Query: albumM, songM @ metaModel
         Query<MetaModel> q = (Query<MetaModel>) session
-            .createQuery("from MetaModel m where m.albumM=?0 and m.songM=?1");
+            .createQuery("from MetaModel m where m.albumM=?0 and m.songM=?1", MetaModel.class);
         q.setParameter(0, toCheckAlbumM);
         q.setParameter(1, toCheckSongM);
         metaCount = q.list().size();
@@ -288,12 +289,6 @@ public class MetaModel extends DatabasePOJO implements Serializable {
         return "MetaModel [metaid=" + metaid + ", albumM=" + albumM + ", songM=" + songM
             + ", trackNo=" + trackNo + ", discNo=" + discNo + "]";
     }
-    
-    
-
-
-    
-    
 
 
 

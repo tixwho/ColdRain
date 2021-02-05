@@ -198,6 +198,7 @@ public class AudioDBService {
 
     // logic: check timestamp first, if local files newer, modify(fileM=1)/(fileM>1)initiate
     // metadata
+    // todo: separate checking of timestamp (use src string only to save MetaSong resource)
     /**
      * Stantard procedure for undating a metaM for file.
      * @param meta MetaSong instance that *might* need to be updated.

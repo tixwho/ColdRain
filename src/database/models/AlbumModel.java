@@ -22,7 +22,9 @@ import playlist.generic.MetaSong;
 
 @Entity
 @Table(name = "Album")
-@SequenceGenerator(name = "album_seq", sequenceName = "album_id_seq", initialValue = 1, allocationSize = 1)
+@SequenceGenerator(name = "album_seq", sequenceName = "album_id_seq", initialValue = 1,
+    allocationSize = 1)
+// todo: add index
 public class AlbumModel extends DatabasePOJO implements Serializable {
 
     /**
@@ -106,7 +108,7 @@ public class AlbumModel extends DatabasePOJO implements Serializable {
     public void setAlbumDate(String albumDate) {
         this.albumDate = albumDate;
     }
-    
+
     public static AlbumModel createAlbumModel(MetaSong meta) {
         AlbumModel album = new AlbumModel(meta);
 
@@ -118,27 +120,28 @@ public class AlbumModel extends DatabasePOJO implements Serializable {
         logger.debug("Created an album!");
         return album;
     }
-    
-    
+
+
     public static AlbumModel guaranteeAlbumModel(MetaSong meta) {
 
         AlbumModel returnAlbumM;
         String albumName = meta.getAlbum();
         ArtistModel toCheckArtistM = ArtistModel.guaranteeArtistModel_album(meta);
-        logger.debug("Checking album:"+albumName +" by "+toCheckArtistM.getArtist());
-        Session session=InitSessionFactory.getNewSession();
+        logger.debug("Checking album:" + albumName + " by " + toCheckArtistM.getArtist());
+        Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
-        @SuppressWarnings("unchecked")
-        Query<AlbumModel> q= (Query<AlbumModel>) session.createQuery("from AlbumModel a where a.album=?0 and a.albumArtistM=?1");
+        // Query: album,albumArtistM @ album
+        Query<AlbumModel> q = (Query<AlbumModel>) session.createQuery(
+            "from AlbumModel a where a.album=?0 and a.albumArtistM=?1", AlbumModel.class);
         q.setParameter(0, albumName);
         q.setParameter(1, toCheckArtistM);
         AlbumModel toCheckAlbumM = q.uniqueResult();
         session.close();
-        if (toCheckAlbumM == null){
+        if (toCheckAlbumM == null) {
             logger.debug("Album NOT FOUND");
-            returnAlbumM=createAlbumModel(meta);
+            returnAlbumM = createAlbumModel(meta);
             returnAlbumM.attachArtistModel_album(toCheckArtistM);
-        }else {
+        } else {
             logger.debug("Album FOUND");
             returnAlbumM = toCheckAlbumM;
         }
@@ -228,11 +231,6 @@ public class AlbumModel extends DatabasePOJO implements Serializable {
         return "AlbumModel [albumid=" + albumid + ", albumArtistM=" + albumArtistM + ", album="
             + album + ", totalDiscNo=" + totalDiscNo + ", albumDate=" + albumDate + "]";
     }
-    
-    
-    
-    
-
 
 
 

@@ -21,38 +21,39 @@ import playlist.generic.MetaSong;
 
 @Entity
 @Table(name = "Song")
-@SequenceGenerator(name = "song_seq", sequenceName = "song_id_seq", initialValue = 1, allocationSize = 1)
+@SequenceGenerator(name = "song_seq", sequenceName = "song_id_seq", initialValue = 1,
+    allocationSize = 1)
 public class SongModel extends DatabasePOJO implements Serializable {
 
     /**
      * 
      */
     private static final long serialVersionUID = 6385688097272219913L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "song_seq")
     private Integer songid;
-    
+
     @OneToMany(mappedBy = "songM")
     private Set<MetaModel> metaModels = new HashSet<MetaModel>();
-    
+
     @ManyToOne
-    @JoinColumn(name =  "artistid")
+    @JoinColumn(name = "artistid")
     private ArtistModel artistM;
-    
+
     @ManyToOne
     @JoinColumn(name = "actualSongId")
     private SongModel actualSongM;
-    
+
     private String trackTitle;
-    
-    
+
+
     public SongModel() {
-        
+
     }
-    
+
     public SongModel(MetaSong meta) {
-        this.trackTitle=meta.getTrackTitle();
+        this.trackTitle = meta.getTrackTitle();
     }
 
     public Integer getSongid() {
@@ -78,8 +79,8 @@ public class SongModel extends DatabasePOJO implements Serializable {
     public void setArtistM(ArtistModel artistM) {
         this.artistM = artistM;
     }
-    
-    
+
+
     public String getTrackTitle() {
         return trackTitle;
     }
@@ -87,7 +88,7 @@ public class SongModel extends DatabasePOJO implements Serializable {
     public void setTrackTitle(String trackTitle) {
         this.trackTitle = trackTitle;
     }
-    
+
     public SongModel getActualSongM() {
         return actualSongM;
     }
@@ -114,7 +115,7 @@ public class SongModel extends DatabasePOJO implements Serializable {
         logger.debug("All change commited! Attached ArtistModel to SongModel.");
         session.close();
     }
-    
+
     public static SongModel createSongModel(MetaSong meta) {
         SongModel song = new SongModel(meta);
         song.setActualSongM(song);
@@ -132,20 +133,21 @@ public class SongModel extends DatabasePOJO implements Serializable {
         SongModel returnSongM;
         String trackTitle = meta.getTrackTitle();
         ArtistModel toCheckArtistM = ArtistModel.guaranteeArtistModel(meta);
-        logger.debug("Checking title:"+trackTitle +" by "+toCheckArtistM.getArtist());
-        Session session=InitSessionFactory.getNewSession();
+        logger.debug("Checking title:" + trackTitle + " by " + toCheckArtistM.getArtist());
+        Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
-        @SuppressWarnings("unchecked")
-        Query<SongModel> q= (Query<SongModel>) session.createQuery("from SongModel s where s.trackTitle=?0 and s.artistM=?1");
+        // Query: trackTitle, artistM @ songModel
+        Query<SongModel> q = (Query<SongModel>) session.createQuery(
+            "from SongModel s where s.trackTitle=?0 and s.artistM=?1", SongModel.class);
         q.setParameter(0, trackTitle);
         q.setParameter(1, toCheckArtistM);
         SongModel toCheckSongM = q.uniqueResult();
         session.close();
-        if (toCheckSongM == null){
+        if (toCheckSongM == null) {
             logger.debug("Song NOT FOUND");
-            returnSongM=createSongModel(meta);
+            returnSongM = createSongModel(meta);
             returnSongM.attachArtistModel(toCheckArtistM);
-        }else {
+        } else {
             logger.debug("Song FOUND");
             returnSongM = toCheckSongM;
         }
@@ -194,9 +196,7 @@ public class SongModel extends DatabasePOJO implements Serializable {
         return "SongModel [songid=" + songid + ", artistM=" + artistM + ", trackTitle=" + trackTitle
             + "]";
     }
-    
-    
 
-    
+
 
 }
