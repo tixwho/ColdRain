@@ -22,6 +22,7 @@ public class FileInfoComp extends DatabasePOJO implements Serializable{
     private String sampleRate;
     private String bitRate;
     private String length;
+    private Boolean is_loseless;
     private Integer quality;
     
     public Integer getQuality() {
@@ -34,6 +35,7 @@ public class FileInfoComp extends DatabasePOJO implements Serializable{
         this.sampleRate= meta.getSAMPLERATE();
         this.bitRate=meta.getBITRATE();
         this.length=meta.getLENGTH();
+        this.is_loseless=meta.isLOSELESS_STATUS();
         this.quality=DbHelper.calcAudioQuality(meta);
     }
 
@@ -70,6 +72,16 @@ public class FileInfoComp extends DatabasePOJO implements Serializable{
         this.length = length;
     }
     
+
+    public Boolean getIs_loseless() {
+        return is_loseless;
+    }
+
+
+    public void setIs_loseless(Boolean is_loseless) {
+        this.is_loseless = is_loseless;
+    }
+
 
     public void setQuality(Integer quality) {
         this.quality = quality;

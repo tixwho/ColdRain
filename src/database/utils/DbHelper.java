@@ -6,8 +6,7 @@ import playlist.generic.MetaSong;
 public class DbHelper {
     
     public static long calcLastModTimestamp(MetaSong meta) {
-        File f = new File(meta.getSrc());
-        return f.lastModified();
+        return calcLastModTimestamp(meta.getSrc());
     }
     
     public static long calcLastModTimestamp(String src) {
