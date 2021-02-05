@@ -39,6 +39,7 @@ public class MetaSong {
     private final String SAMPLERATE;
     private final String BITRATE;
     private final String LENGTH;
+    private final boolean LOSELESS_STATUS;
 
     public MetaSong(String addr) throws MetaIOException {
         try {
@@ -59,6 +60,7 @@ public class MetaSong {
             this.SAMPLERATE = aoh.getSampleRate();
             this.BITRATE = String.valueOf(aoh.getBitRateAsNumber());
             this.LENGTH = String.valueOf(aoh.getTrackLength());
+            this.LOSELESS_STATUS=aoh.isLossless();
             // debug start
             /*
              * LogMaker.logs("format::"+this.FORMAT); LogMaker.logs("SampleRate::"+this.SAMPLERATE);
@@ -184,6 +186,10 @@ public class MetaSong {
         return LENGTH;
     }
 
+
+    public boolean isLOSELESS_STATUS() {
+        return LOSELESS_STATUS;
+    }
 
     public AudioFile getAof() {
         return aof;

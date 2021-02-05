@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
@@ -24,7 +25,7 @@ import toolkit.AudioMd5Helper;
 
 
 @Entity
-@Table(name = "File")
+@Table(name = "File", indexes = {@Index(name = "index_fileSrc",columnList = "src ASC")})
 @SequenceGenerator(name = "file_seq", sequenceName = "file_id_seq", initialValue = 1,
     allocationSize = 1)
 public class FileModel extends DatabasePOJO implements Serializable {

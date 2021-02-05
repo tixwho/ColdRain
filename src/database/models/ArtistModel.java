@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -18,7 +19,7 @@ import database.utils.InitSessionFactory;
 import playlist.generic.MetaSong;
 
 @Entity
-@Table(name = "Artist")
+@Table(name = "Artist", indexes = {@Index(name = "index_artist",columnList = "artist ASC")})
 @SequenceGenerator(name = "artist_seq", sequenceName = "artist_id_seq", initialValue = 1,
     allocationSize = 1)
 public class ArtistModel extends DatabasePOJO implements Serializable {
@@ -137,7 +138,7 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
         logger.debug("Checking album artist:" + artist);
         Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
-        // query albumArtist @ artistModel
+        // query artist @ artistModel
         Query<ArtistModel> q = (Query<ArtistModel>) session
             .createQuery("from ArtistModel a where a.artist=?0", ArtistModel.class);
         q.setParameter(0, artist);

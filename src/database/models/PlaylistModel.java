@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -23,7 +24,7 @@ import exception.ErrorCodes;
 import playlist.generic.AbstractPlaylistTable;
 
 @Entity
-@Table(name = "Playlist")
+@Table(name = "Playlist", indexes = {@Index(name = "index_playlistFileSrc",columnList = "src ASC")})
 @SequenceGenerator(name = "playlist_seq", sequenceName = "playlist_id_seq", initialValue = 1,
     allocationSize = 1)
 public class PlaylistModel extends DatabasePOJO implements Serializable {

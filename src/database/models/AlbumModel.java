@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -21,7 +22,7 @@ import database.utils.InitSessionFactory;
 import playlist.generic.MetaSong;
 
 @Entity
-@Table(name = "Album")
+@Table(name = "Album", indexes = {@Index(name = "index_album",columnList = "album ASC")})
 @SequenceGenerator(name = "album_seq", sequenceName = "album_id_seq", initialValue = 1,
     allocationSize = 1)
 // todo: add index

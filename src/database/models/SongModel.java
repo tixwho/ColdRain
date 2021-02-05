@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -20,7 +21,7 @@ import database.utils.InitSessionFactory;
 import playlist.generic.MetaSong;
 
 @Entity
-@Table(name = "Song")
+@Table(name = "Song", indexes = {@Index(name = "index_trackTitle",columnList = "trackTitle ASC")})
 @SequenceGenerator(name = "song_seq", sequenceName = "song_id_seq", initialValue = 1,
     allocationSize = 1)
 public class SongModel extends DatabasePOJO implements Serializable {
