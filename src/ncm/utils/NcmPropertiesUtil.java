@@ -18,23 +18,27 @@ public class NcmPropertiesUtil {
     // could be empty. check before use.
     public static String ncmCacheDirPath;
     public static String ncmMusicDirPath;
+    public static String ncmDumpExecutablePath;
 
     public static void readNcmProperties(File ncmPropFile) {
         try {
             InputStream in = new FileInputStream(ncmPropFile);
             Properties prop = new Properties();
             prop.load(in);
-            FileSystemView fsv = javax.swing.filechooser.FileSystemView.getFileSystemView();
+            FileSystemView fsv = FileSystemView.getFileSystemView();
             File defaultDbFile = new File(fsv.getHomeDirectory().getParent(),"/AppData/Local/Netease/CloudMusic/Library");
             ncmCacheDirPath =
                 prop.getProperty("cacheDir", defaultDbFile.getAbsolutePath());
             ncmMusicDirPath = prop.getProperty("musicDir", "");
+            ncmDumpExecutablePath = prop.getProperty("dumpExecutablePath","");
             logger.info("ncmCacheDir:" + ncmCacheDirPath);
             logger.info("ncmMusicDir:" + ncmMusicDirPath);
+            logger.info("ncmDumpExecutablePath:"+ncmDumpExecutablePath);
         } catch (IOException ioe) {
             logger.warn("Failed reading ncm properties! Ncm related functions will be disabled.");
             ncmCacheDirPath = "";
             ncmMusicDirPath = "";
+            ncmDumpExecutablePath = "";
         }
 
     }
