@@ -1,27 +1,34 @@
 package backend.test;
 
-public class TestSingleJson {
-    String name;
-    Long aLong;
-    String[] args;
+import java.util.List;
+import backend.prototype.JsonPrototype;
+
+public class TestSingleJson extends JsonPrototype{
+
+   private String name;
+   private long aLong;
+   private List<String> args;
+   public void setName(String name) {
+        this.name = name;
+    }
     public String getName() {
         return name;
     }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public Long getaLong() {
-        return aLong;
-    }
-    public void setaLong(Long aLong) {
+
+   public void setALong(long aLong) {
         this.aLong = aLong;
     }
-    public String[] getArgs() {
-        return args;
+    public long getALong() {
+        return aLong;
     }
-    public void setArgs(String[] args) {
+
+   public void setArgs(List<String> args) {
         this.args = args;
     }
+    public List<String> getArgs() {
+        return args;
+    }
+
     
     
 

@@ -3,14 +3,15 @@
  */
 package backend.annotation;
 
-import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import backend.prototype.JsonPrototype;
 
 @Retention(RUNTIME)
-@Target(TYPE)
+@Target({ElementType.TYPE})
 @Documented
 /**
  * @author tixwho
@@ -18,7 +19,6 @@ import java.lang.annotation.Target;
  */
 public @interface InputJson {
     
-    Class<?> jsonClass() default Object.class;
-    //will be changed later to InputJson.class extend will be updated then.
+    Class<?> jsonClass() default JsonPrototype.class;
 
 }

@@ -1,11 +1,14 @@
 package backend.test;
 
 import java.util.Date;
+import backend.prototype.JsonPrototype;
 
-public class TestNestedJson {
+public class TestNestedJson extends JsonPrototype{
     
     int order;
     Date date;
+    TestSingleJson thatJson;
+    String miscellaneous;
     public int getOrder() {
         return order;
     }
@@ -24,7 +27,16 @@ public class TestNestedJson {
     public void setThatJson(TestSingleJson thatJson) {
         this.thatJson = thatJson;
     }
-    TestSingleJson thatJson;
+    
+    public String getMiscellaneous() {
+        return miscellaneous;
+    }
+    public void setMiscellaneous(String miscellaneous) {
+        this.miscellaneous = miscellaneous;
+    }
+    
+    
+    
     
 
 }
