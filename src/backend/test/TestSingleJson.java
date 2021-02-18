@@ -1,9 +1,9 @@
 package backend.test;
 
 import java.util.List;
-import backend.prototype.JsonPrototype;
+import backend.jsonMapping.JsonIn;
 
-public class TestSingleJson extends JsonPrototype{
+public class TestSingleJson extends JsonIn{
 
    private String name;
    private long aLong;

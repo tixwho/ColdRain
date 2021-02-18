@@ -8,17 +8,19 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import backend.prototype.JsonPrototype;
+import backend.jsonMapping.JsonIn;
+import backend.jsonMapping.JsonOut;
 
 @Retention(RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Documented
 /**
  * @author tixwho
  *
  */
-public @interface InputJson {
+public @interface JsonClass {
     
-    Class<?> jsonClass() default JsonPrototype.class;
+    Class<? extends JsonIn> jsonIn() default JsonIn.class;
+    Class<? extends JsonOut> jsonOut() default JsonOut.class;
 
 }

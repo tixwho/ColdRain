@@ -1,7 +1,7 @@
 package backend.test;
 
 import java.util.Date;
-import backend.prototype.JsonPrototype;
+import backend.jsonMapping.JsonPrototype;
 
 public class TestNestedJson extends JsonPrototype{
     

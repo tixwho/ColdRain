@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
-import backend.annotation.InputJson;
-import backend.prototype.JsonPrototype;
+import backend.annotation.JsonClass;
+import backend.jsonMapping.JsonPrototype;
 
 @WebServlet(name="servletNo1", urlPatterns={"/one"})
-@InputJson(jsonClass=TestSingleJson.class)
+@JsonClass(jsonIn=TestSingleJson.class)
 public class TestServletNo1 extends HttpServlet{
 
     /**
@@ -47,7 +47,7 @@ public class TestServletNo1 extends HttpServlet{
         br.close();
         String params = sb.toString();
         System.out.println(params);
-        jsonInst = (JsonPrototype) gson.fromJson(params,this.getClass().getAnnotation(InputJson.class).jsonClass());
+        jsonInst = (JsonPrototype) gson.fromJson(params,this.getClass().getAnnotation(JsonClass.class).jsonIn());
         System.out.println(jsonInst);
         }catch(Exception e) {
             e.printStackTrace();

@@ -26,9 +26,9 @@ import toolkit.AudioMd5Helper;
 
 public class AudioDBService {
     private static final Logger logger = LoggerFactory.getLogger(AudioDBService.class);
-    public static HashSet<ArtistModel> toValidateArtists = new HashSet<ArtistModel>();
-    public static HashSet<AlbumModel> toValidateAlbums = new HashSet<AlbumModel>();
-    public static HashSet<SongModel> toValidateSongs = new HashSet<SongModel>();
+    private static HashSet<ArtistModel> toValidateArtists = new HashSet<ArtistModel>();
+    private static HashSet<AlbumModel> toValidateAlbums = new HashSet<AlbumModel>();
+    private static HashSet<SongModel> toValidateSongs = new HashSet<SongModel>();
 
     /* Functional Methods Below */
 

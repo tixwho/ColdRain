@@ -1,4 +1,4 @@
-package backend.prototype;
+package backend.jsonMapping;
 
 import java.lang.reflect.Field;
 
