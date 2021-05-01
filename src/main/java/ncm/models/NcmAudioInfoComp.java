@@ -2,18 +2,23 @@ package ncm.models;
 
 import ncm.jsonSupp.Album;
 import ncm.jsonSupp.JsonRootBean;
+import ncm.jsonSupp.OfflineRootBean;
 
 public class NcmAudioInfoComp {
 
     // JsonRootBean, should include a complete Json decompiled info from web_track:track
 
     private JsonRootBean track_json_complete;
+    
+    // OfflineRootBean, should include a complete Json decompiled info from web_offline_track:detail
+    
+    private OfflineRootBean offline_detail_json_complete;
 
     // the following will present in every track, regardless of download state
     private long track_id; // called tid in web_track
     private String title; // called name in web_track
     // for alias info plz check jsonBean info.
-    private Album album; // directly retrieved from jsonBean
+    private Album album; // directly retrieved from jsonBean; may not be accurate for DJ_program
 
 
 
@@ -35,7 +40,9 @@ public class NcmAudioInfoComp {
 
     // this is telled from web_offline_track:extra_type not null, so DJ tracks must be downloaded.
     // if dj program, then "program" is activated in OfflineRootBean
+    // for dj program, cover art is not accurate, so we need to record the actual cover url
     private boolean is_DJ;
+    private String dj_coverUrl;
 
     public NcmAudioInfoComp() {
 
@@ -46,11 +53,39 @@ public class NcmAudioInfoComp {
      * @param jsonBean input jsonBean from web_track
      */
     public NcmAudioInfoComp(JsonRootBean jsonBean) {
-        // first setup Bean
+        initFromTrackJson(jsonBean);
+    }
+    
+    /**
+     * Set up offline_detail_json_complete, track_id, title, album(may not be accurate)
+     * @param jsonBean
+     */
+    public NcmAudioInfoComp(OfflineRootBean jsonBean) {
+        initFromOfflineDetailJson(jsonBean);
+    }
+    
+    public void initFromTrackJson(JsonRootBean jsonBean) {
+     // first setup Bean
         setTrack_json_complete(jsonBean);
         setTrack_id(jsonBean.getId());
         setTitle(jsonBean.getName());
         setAlbum(jsonBean.getAlbum());
+    }
+    
+    public void initFromOfflineDetailJson(OfflineRootBean jsonBean) {
+        setOffline_detail_json_complete(jsonBean);
+        setTrack_id(jsonBean.getId());
+        setTitle(jsonBean.getName());
+        setAlbum(jsonBean.getAlbum());//could be inaccurate for program!
+        //tell if this is a DJ program
+        if(jsonBean.getProgram()==null) {
+            setIs_DJ(false);
+            
+        }else {
+            setIs_DJ(true);
+            setDj_coverUrl(jsonBean.getProgram().getCoverUrl());
+        }
+        
     }
 
 
@@ -125,6 +160,22 @@ public class NcmAudioInfoComp {
 
     public void setIs_DJ(boolean is_DJ) {
         this.is_DJ = is_DJ;
+    }
+
+    public String getDj_coverUrl() {
+        return dj_coverUrl;
+    }
+
+    public void setDj_coverUrl(String dj_coverUrl) {
+        this.dj_coverUrl = dj_coverUrl;
+    }
+
+    public OfflineRootBean getOffline_detail_json_complete() {
+        return offline_detail_json_complete;
+    }
+
+    public void setOffline_detail_json_complete(OfflineRootBean offline_detail_json_complete) {
+        this.offline_detail_json_complete = offline_detail_json_complete;
     }
 
 }
