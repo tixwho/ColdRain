@@ -131,6 +131,26 @@ public class NcmService {
         }
         return rtComp;
     }
+    
+    private List<NcmAudioInfoComp> collectAllDJProgram_offlineOnly(){
+        
+        String queryStr = "SELECT track_name, relative_path, detail\r\n"
+            + "FROM web_offline_track\r\n"
+            + "WHERE type_extra NOT NULL";
+        ResultSet rs = null;
+        Gson gson = new Gson();
+        try {
+            rs = stmt.executeQuery(queryStr);
+            while(rs.next()) {
+                NcmAudioInfoComp aComp = new NcmAudioInfoComp();
+            }
+        } catch (SQLException se) {
+            // should not happen if ncm does not change its database structure
+            logger.warn("NCM query failed in selecting offline DJ program.");
+            return null;
+        }
+        return null;
+    }
 
     private List<PlayListBean> getPlaylists() {
         ResultSet rs = null;

@@ -13,6 +13,8 @@ public class NcmAudioInfoComp {
     // OfflineRootBean, should include a complete Json decompiled info from web_offline_track:detail
     
     private OfflineRootBean offline_detail_json_complete;
+    
+    private Dj dj;
 
     // the following will present in every track, regardless of download state
     private long track_id; // called tid in web_track
@@ -74,6 +76,7 @@ public class NcmAudioInfoComp {
     
     public void initFromOfflineDetailJson(OfflineRootBean jsonBean) {
         setOffline_detail_json_complete(jsonBean);
+        setDownloaded_flag(true); // since it comes fron web_offline_track, must be downloaded
         setTrack_id(jsonBean.getId());
         setTitle(jsonBean.getName());
         setAlbum(jsonBean.getAlbum());//could be inaccurate for program!
