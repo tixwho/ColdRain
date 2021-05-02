@@ -1,13 +1,14 @@
 package apps.oldLocalApps;
 
+import old.localModels.M3UTable;
+import old.localModels.ZplTable;
+import org.dom4j.DocumentException;
+import toolkit.DirMaker;
+import toolkit.NewFileWriter;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import org.dom4j.DocumentException;
-import old.localModels.M3UTable;
-import old.localModels.ZplTable;
-import toolkit.DirMaker;
-import toolkit.NewFileWriter;
 
 //极早期作品，为了把groove音乐的歌单拷出来；根本就没人用zpl吧喂
 public class ZPL_2_M3U {
@@ -31,7 +32,7 @@ public class ZPL_2_M3U {
         String addr = args[0];
         File checkAddr = new File(addr);
         if (checkAddr.isDirectory()) {
-            String s[] = checkAddr.list();
+            String[] s = checkAddr.list();
             for (int i = 0; i < s.length; i++) {
                 File f = new File(addr, s[i]);
                 if (f.isDirectory()) {

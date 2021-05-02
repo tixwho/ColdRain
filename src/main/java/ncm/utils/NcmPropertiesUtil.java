@@ -1,15 +1,12 @@
 package ncm.utils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
-import java.util.Properties;
-import javax.swing.filechooser.FileSystemView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.swing.filechooser.FileSystemView;
+import java.io.*;
+import java.util.Map;
+import java.util.Properties;
 
 public class NcmPropertiesUtil {
 

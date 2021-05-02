@@ -1,10 +1,11 @@
 package old.localModels;
 
+import old.readers.M3U8Reader;
+import old.readers.SongReader;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import old.readers.M3U8Reader;
-import old.readers.SongReader;
 
 public class M3U8Table {
     

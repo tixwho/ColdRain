@@ -1,27 +1,20 @@
 package database.models;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import database.generic.DatabasePOJO;
 import database.utils.DbHelper;
 import database.utils.InitSessionFactory;
 import exception.DatabaseException;
 import exception.ErrorCodes;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import playlist.generic.MetaSong;
 import toolkit.AudioMd5Helper;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Objects;
 
 
 @Entity
@@ -156,8 +149,8 @@ public class FileModel extends DatabasePOJO implements Serializable {
         session.beginTransaction();
         // Query: src @ fileModel
         Query<FileModel> q =
-            session.createQuery("from FileModel f where f.src=?0", FileModel.class);
-        q.setParameter(0, src);
+            session.createQuery("from FileModel f where f.src=?1", FileModel.class);
+        q.setParameter(1, src);
         FileModel toCheckFileM = q.uniqueResult();
         session.close();
         if (toCheckFileM == null) {
@@ -185,7 +178,8 @@ public class FileModel extends DatabasePOJO implements Serializable {
         session.beginTransaction();
         // Query: md5 @ fileModel
         Query<FileModel> q =
-            session.createQuery("from FileModel f where f.md5=?0", FileModel.class);
+            session.createQuery("from FileModel f where f.md5=?1", FileModel.class);
+        q.setParameter(1,md5);
         List<FileModel> md5ResList = q.getResultList();
         // check: how many FileModels with same md5 are there?
         switch (md5ResList.size()) {

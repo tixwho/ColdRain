@@ -24,7 +24,7 @@ public class MethodInvoker {
         ArrayList<String> rtrSrcList = new ArrayList<String>();
         File checkAddr = new File(checkingAddr);
         if (checkAddr.isDirectory()) {
-            String s[] = checkAddr.list();
+            String[] s = checkAddr.list();
             for (int i = 0; i < s.length; i++) {
                 File f = new File(checkingAddr, s[i]);
                 if (f.isDirectory()) {
@@ -50,7 +50,7 @@ public class MethodInvoker {
         ArrayList<String> rtrSrcList = new ArrayList<String>();
         File checkAddr = new File(checkingAddr);
         if (checkAddr.isDirectory()) {
-            String s[] = checkAddr.list();
+            String[] s = checkAddr.list();
             for (int i = 0; i < s.length; i++) {
                 File f = new File(checkingAddr, s[i]);
                 if (f.isDirectory()) {
@@ -76,7 +76,7 @@ public class MethodInvoker {
         ArrayList<String> storeList) {
         File checkAddr = new File(checkingAddr);
         if (checkAddr.isDirectory()) {
-            String s[] = checkAddr.list();
+            String[] s = checkAddr.list();
             for (String singlef: s){
                 singlizeInputR(new File(checkingAddr,singlef).toString(),suffixlist,storeList);
             }

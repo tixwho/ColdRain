@@ -1,10 +1,11 @@
 package toolkit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Utf8Normalizer {
 

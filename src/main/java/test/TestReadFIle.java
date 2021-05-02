@@ -4,7 +4,7 @@ import java.io.*;
 
 //初次尝试fileInput与fileOutput
 public class TestReadFIle {
-    public static void main(String args[]) throws IOException {
+    public static void main(String[] args) throws IOException {
         DataInputStream in = new DataInputStream(
             new FileInputStream("F:\\ASUS\\Music\\Playlists\\ORBIS TERRARVM.zpl"));
         // 创建dataInputStream, 并用FileInputStream读取文件

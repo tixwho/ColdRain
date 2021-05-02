@@ -1,14 +1,16 @@
 package toolkit;
 
-import java.io.DataOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import old.localModels.M3U8Song;
 import old.localModels.M3U8Table;
 import old.localModels.M3USong;
 import old.localModels.M3UTable;
+
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 public class NewFileWriter {
 
@@ -18,7 +20,7 @@ public class NewFileWriter {
         ArrayList<M3USong> songArrlist = table.getSongArrrayList();
         DataOutputStream dataOut = new DataOutputStream(new FileOutputStream(outputAddr));
         // 把OutputStream再转成StreamWriter是为了从流式输入变为字符输入，同时指定utf8避免非英文字符乱码
-        OutputStreamWriter oStreamWriter = new OutputStreamWriter(dataOut, "utf-8");
+        OutputStreamWriter oStreamWriter = new OutputStreamWriter(dataOut, StandardCharsets.UTF_8);
         for (M3USong song : songArrlist) {
             oStreamWriter.append(song.getSrc() + "\r\n");
         }
@@ -32,7 +34,7 @@ public class NewFileWriter {
         ArrayList<M3USong> songArrlist = table.getSongArrrayList();
         DataOutputStream dataOut = new DataOutputStream(new FileOutputStream(outputAddr));
         // 把OutputStream再转成StreamWriter是为了从流式输入变为字符输入，同时指定utf8避免非英文字符乱码
-        OutputStreamWriter oStreamWriter = new OutputStreamWriter(dataOut, "utf-8");
+        OutputStreamWriter oStreamWriter = new OutputStreamWriter(dataOut, StandardCharsets.UTF_8);
         for (M3USong song : songArrlist) {
             String toWrite = song.getSrc().replaceAll(".*?.Discography?", "../Discography");
             toWrite = toWrite.replaceAll("\\\\","/");
@@ -49,7 +51,7 @@ public class NewFileWriter {
         ArrayList<M3U8Song> songArrlist = table.getSongArrrayList();
         DataOutputStream dataOut = new DataOutputStream(new FileOutputStream(outputAddr));
         // 把OutputStream再转成StreamWriter是为了从流式输入变为字符输入，同时指定utf8避免非英文字符乱码
-        OutputStreamWriter oStreamWriter = new OutputStreamWriter(dataOut, "utf-8");
+        OutputStreamWriter oStreamWriter = new OutputStreamWriter(dataOut, StandardCharsets.UTF_8);
         String magicBytes = "#EXTINF:";
         for (M3U8Song song : songArrlist) {
             oStreamWriter.append(magicBytes);

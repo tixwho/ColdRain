@@ -1,8 +1,8 @@
 package test;
 
+import exception.MetaIOException;
 import org.jaudiotagger.audio.AudioHeader;
 import org.jaudiotagger.audio.flac.FlacAudioHeader;
-import exception.MetaIOException;
 import playlist.generic.MetaSong;
 
 public class TestExtendJaudiotagger {

@@ -1,25 +1,18 @@
 package database.models;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import database.generic.DatabasePOJO;
+import database.utils.InitSessionFactory;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import database.generic.DatabasePOJO;
-import database.utils.InitSessionFactory;
 import playlist.generic.MetaSong;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 
 @Entity
@@ -138,10 +131,10 @@ public class MetaModel extends DatabasePOJO implements Serializable {
         session.beginTransaction();
         // Query: albumM, songM @ metaModel
         Query<MetaModel> q = session
-            .createQuery("from MetaModel m where m.albumM=?0 and m.songM=?1", MetaModel.class);
-        q.setParameter(0, toCheckAlbumM);
-        q.setParameter(1, toCheckSongM);
-        logger.warn("TEMP:" + toCheckAlbumM.toString() + toCheckSongM.toString());
+            .createQuery("from MetaModel m where m.albumM=?1 and m.songM=?2", MetaModel.class);
+        q.setParameter(1, toCheckAlbumM);
+        q.setParameter(2, toCheckSongM);
+        logger.warn("TEMP:" + toCheckAlbumM + toCheckSongM);
         MetaModel toCheckMetaM;
         try {
             toCheckMetaM = q.uniqueResult();
@@ -174,10 +167,10 @@ public class MetaModel extends DatabasePOJO implements Serializable {
         Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
         // Query: albumM, songM @ metaModel
-        Query<MetaModel> q = (Query<MetaModel>) session
-            .createQuery("from MetaModel m where m.albumM=?0 and m.songM=?1", MetaModel.class);
-        q.setParameter(0, toCheckAlbumM);
-        q.setParameter(1, toCheckSongM);
+        Query<MetaModel> q = session
+            .createQuery("from MetaModel m where m.albumM=?1 and m.songM=?2", MetaModel.class);
+        q.setParameter(1, toCheckAlbumM);
+        q.setParameter(2, toCheckSongM);
         metaCount = q.list().size();
         session.close();
         return metaCount;
@@ -277,11 +270,8 @@ public class MetaModel extends DatabasePOJO implements Serializable {
         } else if (!songM.equals(other.songM))
             return false;
         if (trackNo == null) {
-            if (other.trackNo != null)
-                return false;
-        } else if (!trackNo.equals(other.trackNo))
-            return false;
-        return true;
+            return other.trackNo == null;
+        } else return trackNo.equals(other.trackNo);
     }
 
     @Override

@@ -1,25 +1,18 @@
 package database.models;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import database.generic.DatabasePOJO;
+import database.utils.InitSessionFactory;
+import playlist.generic.MetaSong;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import database.generic.DatabasePOJO;
-import database.utils.InitSessionFactory;
-import playlist.generic.MetaSong;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Entity
 @Table(name = "Album", indexes = {@Index(name = "index_album",columnList = "album ASC")})
@@ -130,12 +123,12 @@ public class AlbumModel extends DatabasePOJO implements Serializable {
         ArtistModel toCheckArtistM = ArtistModel.guaranteeArtistModel_album(meta);
         logger.debug("Checking album:" + albumName + " by " + toCheckArtistM.getArtist());
         Session session = InitSessionFactory.getNewSession();
-        session.beginTransaction();
+        Transaction transaction = session.beginTransaction();
         // Query: album,albumArtistM @ album
-        Query<AlbumModel> q = (Query<AlbumModel>) session.createQuery(
-            "from AlbumModel a where a.album=?0 and a.albumArtistM=?1", AlbumModel.class);
-        q.setParameter(0, albumName);
-        q.setParameter(1, toCheckArtistM);
+        Query<AlbumModel> q = session.createQuery(
+            "from AlbumModel a where a.album=?1 and a.albumArtistM=?2", AlbumModel.class);
+        q.setParameter(1, albumName);
+        q.setParameter(2, toCheckArtistM);
         AlbumModel toCheckAlbumM = q.uniqueResult();
         session.close();
         if (toCheckAlbumM == null) {
@@ -220,11 +213,8 @@ public class AlbumModel extends DatabasePOJO implements Serializable {
         } else if (!albumid.equals(other.albumid))
             return false;
         if (totalDiscNo == null) {
-            if (other.totalDiscNo != null)
-                return false;
-        } else if (!totalDiscNo.equals(other.totalDiscNo))
-            return false;
-        return true;
+            return other.totalDiscNo == null;
+        } else return totalDiscNo.equals(other.totalDiscNo);
     }
 
     @Override

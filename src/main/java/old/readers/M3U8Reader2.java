@@ -1,11 +1,13 @@
 package old.readers;
 
+import test.TestAA;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import test.TestAA;
 
 public class M3U8Reader2 extends TestAA {
 
@@ -14,7 +16,7 @@ public class M3U8Reader2 extends TestAA {
     public M3U8Reader2(String addr) throws IOException {
         // read as a file, then divide into songParts and pack into ArrayList
         int lineDivideNum = 3;
-        InputStreamReader in = new InputStreamReader(new FileInputStream(addr), "utf-8");
+        InputStreamReader in = new InputStreamReader(new FileInputStream(addr), StandardCharsets.UTF_8);
         BufferedReader br = new BufferedReader(in);
         String str = "";
         String tempData;

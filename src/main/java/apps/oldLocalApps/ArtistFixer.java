@@ -1,12 +1,7 @@
 package apps.oldLocalApps;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
+import exception.NormalE.NoCorrespondingFileTypeFound;
+import old.localModels.MetaSong_old;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -17,13 +12,15 @@ import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.TagException;
-import exception.NormalE.NoCorrespondingFileTypeFound;
-import old.localModels.MetaSong_old;
-import toolkit.LogMaker;
-import toolkit.MethodInvoker;
-import toolkit.MisUtils;
-import toolkit.PlaylistUpdater;
-import toolkit.Timer;
+import toolkit.*;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
 
 //最新力作，虽然有的地方还是不堪入目但是至少比以前好了
 public class ArtistFixer {
@@ -127,7 +124,7 @@ public class ArtistFixer {
         // rename file
         Iterator<Entry<String, String>> iterMap = renameMap.entrySet().iterator();
         while (iterMap.hasNext()) {
-            HashMap.Entry<String, String> entry = (HashMap.Entry<String, String>) iterMap.next();
+            HashMap.Entry<String, String> entry = iterMap.next();
             MisUtils.renameFile(entry.getKey(), entry.getValue());
         }
         tim.timerEnd();

@@ -2,7 +2,7 @@ package hiby.generic;
 
 import toolkit.Timer;
 
-public class BaseHibyTestingClass extends BaseHibyLoggingClass {
+public class BaseHibyTestingClass extends hiby.generic.BaseHibyLoggingClass {
 
     public static Timer tim = new Timer();
     public BaseHibyTestingClass() {

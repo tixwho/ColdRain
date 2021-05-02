@@ -1,13 +1,14 @@
 package apps.testApps;
 
-import java.util.List;
+import exception.MetaIOException;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.images.Artwork;
-import exception.MetaIOException;
 import playlist.generic.MetaSong;
+
+import java.util.List;
 
 public class Mp3ArtFixer {
 

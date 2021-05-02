@@ -1,18 +1,19 @@
 package apps.testApps;
 
+import exception.MetaIOException;
+import exception.NativeReflectionException;
+import exception.PlaylistIOException;
+import org.apache.commons.io.FileUtils;
+import playlist.generic.AbstractPlaylistSong;
+import playlist.generic.AbstractPlaylistTable;
+import playlist.generic.PlaylistFileIO;
+import playlist.generic.SupportedPlaylistFormat;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.io.FileUtils;
-import exception.MetaIOException;
-import exception.NativeReflectionException;
-import exception.PlaylistIOException;
-import playlist.generic.AbstractPlaylistSong;
-import playlist.generic.AbstractPlaylistTable;
-import playlist.generic.PlaylistFileIO;
-import playlist.generic.SupportedPlaylistFormat;
 
 public class TempLocFixer {
     //rewrite!!

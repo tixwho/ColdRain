@@ -1,22 +1,16 @@
 package database.models;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import database.generic.DatabasePOJO;
+import database.utils.InitSessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import database.generic.DatabasePOJO;
-import database.utils.InitSessionFactory;
 import playlist.generic.MetaSong;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Artist", indexes = {@Index(name = "index_artist",columnList = "artist ASC")})
@@ -117,9 +111,9 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
         Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
         // query: artist @ artistModel
-        Query<ArtistModel> q = (Query<ArtistModel>) session
-            .createQuery("from ArtistModel a where a.artist=?0", ArtistModel.class);
-        q.setParameter(0, artist);
+        Query<ArtistModel> q = session
+            .createQuery("from ArtistModel a where a.artist=?1", ArtistModel.class);
+        q.setParameter(1, artist);
         ArtistModel toCheckArtistM = q.uniqueResult();
         session.close();
         if (toCheckArtistM == null) {
@@ -139,9 +133,9 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
         Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
         // query artist @ artistModel
-        Query<ArtistModel> q = (Query<ArtistModel>) session
-            .createQuery("from ArtistModel a where a.artist=?0", ArtistModel.class);
-        q.setParameter(0, artist);
+        Query<ArtistModel> q = session
+            .createQuery("from ArtistModel a where a.artist=?1", ArtistModel.class);
+        q.setParameter(1, artist);
         ArtistModel toCheckArtistM = q.uniqueResult();
         session.close();
         if (toCheckArtistM == null) {
@@ -178,11 +172,8 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
         } else if (!artist.equals(other.artist))
             return false;
         if (artistid == null) {
-            if (other.artistid != null)
-                return false;
-        } else if (!artistid.equals(other.artistid))
-            return false;
-        return true;
+            return other.artistid == null;
+        } else return artistid.equals(other.artistid);
     }
 
     @Override

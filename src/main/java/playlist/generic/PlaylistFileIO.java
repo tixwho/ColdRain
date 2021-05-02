@@ -1,18 +1,19 @@
 package playlist.generic;
 
-import java.io.File;
-import java.util.HashMap;
-import org.apache.commons.io.FilenameUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import exception.ErrorCodes;
 import exception.MetaIOException;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
+import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import playlist.m3u.M3uReader;
 import playlist.m3u.M3uWriter;
 import playlist.m3u8.M3u8Reader;
 import playlist.m3u8.M3u8Writer;
+
+import java.io.File;
+import java.util.HashMap;
 
 public class PlaylistFileIO {
 
@@ -35,9 +36,9 @@ public class PlaylistFileIO {
     private AbstractPlaylistTable table;
     @SuppressWarnings("unused")
     private AbstractPlaylistReader reader;
-    private HashMap<String, AbstractPlaylistReader> readersMap =
+    private final HashMap<String, AbstractPlaylistReader> readersMap =
         new HashMap<String, AbstractPlaylistReader>();
-    private HashMap<String, AbstractPlaylistWriter> writersMap =
+    private final HashMap<String, AbstractPlaylistWriter> writersMap =
         new HashMap<String, AbstractPlaylistWriter>();
 
 
@@ -61,7 +62,7 @@ public class PlaylistFileIO {
     public AbstractPlaylistTable readPlaylistFile(File f)
         throws PlaylistIOException, NativeReflectionException {
         String ext = FilenameUtils.getExtension(f.getAbsolutePath());
-        logger.debug("Reading playlist file:" + f.toString());
+        logger.debug("Reading playlist file:" + f);
         AbstractPlaylistReader apr = readersMap.get(ext);
         logger.trace("extension:" + ext);
         if (apr == null) {

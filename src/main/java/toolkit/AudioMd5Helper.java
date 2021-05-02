@@ -1,13 +1,14 @@
 package toolkit;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioHeader;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.flac.FlacAudioHeader;
 import org.jaudiotagger.audio.mp3.MP3File;
 import playlist.generic.MetaSong;
+
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 public class AudioMd5Helper {
 
@@ -25,7 +26,7 @@ public class AudioMd5Helper {
     //calculate mp3 md5; if exception occured, return empty string.
     public static String getMp3AudioMd5(MetaSong meta) {
 
-        StringBuffer buf = new StringBuffer("");
+        StringBuffer buf = new StringBuffer();
         byte[] b;
         try {
             b = ((MP3File) meta.getAof()).getHash();

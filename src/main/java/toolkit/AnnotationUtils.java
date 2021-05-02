@@ -3,15 +3,8 @@ package toolkit;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
-import javax.servlet.DispatcherType;
-import javax.servlet.Filter;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import org.eclipse.jetty.servlet.ServletContextHandler;
 
 public class AnnotationUtils {
 

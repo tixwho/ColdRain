@@ -1,14 +1,5 @@
 package database.service;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import org.apache.commons.io.FileUtils;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import database.models.PlaylistModel;
 import database.models.PlaylistRecordModel;
 import database.utils.DbHelper;
@@ -17,10 +8,20 @@ import exception.DatabaseException;
 import exception.ErrorCodes;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
+import org.apache.commons.io.FileUtils;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import playlist.generic.AbstractPlaylistSong;
 import playlist.generic.AbstractPlaylistTable;
 import playlist.generic.PlaylistFileIO;
 import playlist.generic.SupportedPlaylistFormat;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class PlaylistDBService {
     private static final Logger logger = LoggerFactory.getLogger(PlaylistDBService.class);
@@ -99,8 +100,8 @@ public class PlaylistDBService {
         Session session = InitSessionFactory.getNewSession();
         Transaction tx = session.beginTransaction();
         @SuppressWarnings({"rawtypes"})
-        Query q = session.createQuery("delete from PlaylistRecordModel p where p.playlistM=?0");
-        q.setParameter(0, playlistModel);
+        Query q = session.createQuery("delete from PlaylistRecordModel p where p.playlistM=?1");
+        q.setParameter(1, playlistModel);
         q.executeUpdate();
         playlistModel.getPlaylistRecordModels().clear();
         session.saveOrUpdate(playlistModel);

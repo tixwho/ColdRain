@@ -1,8 +1,8 @@
 package playlist.generic;
 
-import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
+import org.slf4j.LoggerFactory;
 import toolkit.LogMaker;
 
 public class LoggerCtrl {

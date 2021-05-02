@@ -1,8 +1,7 @@
 package playlist.generic;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.MessageFormat;
+import exception.ErrorCodes;
+import exception.MetaIOException;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.AudioHeader;
@@ -10,14 +9,12 @@ import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.FieldDataInvalidException;
-import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.KeyNotFoundException;
-import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.TagException;
-import exception.ErrorCodes;
-import exception.MetaIOException;
+import org.jaudiotagger.tag.*;
 import toolkit.LogMaker;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.MessageFormat;
 
 public class MetaSong {
 
@@ -251,8 +248,7 @@ public class MetaSong {
     
     @Override
     public String toString() {
-        return MessageFormat.format("{0}[src={1}, title={2},  artist={3}, album={4}]", new Object[] {
-            getClass().getSimpleName(), src, trackTitle, artist, album});
+        return MessageFormat.format("{0}[src={1}, title={2},  artist={3}, album={4}]", getClass().getSimpleName(), src, trackTitle, artist, album);
     }
 
 

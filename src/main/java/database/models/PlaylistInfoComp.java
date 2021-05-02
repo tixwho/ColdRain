@@ -1,10 +1,11 @@
 package database.models;
 
-import java.io.Serializable;
-import javax.persistence.Embeddable;
-import org.apache.commons.io.FilenameUtils;
 import database.generic.DatabasePOJO;
+import org.apache.commons.io.FilenameUtils;
 import playlist.generic.AbstractPlaylistTable;
+
+import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 @Embeddable
 public class PlaylistInfoComp extends DatabasePOJO implements Serializable {

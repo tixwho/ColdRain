@@ -1,10 +1,11 @@
 package playlist.m3u8;
 
-import java.io.IOException;
 import exception.ErrorCodes;
 import exception.PlaylistIOException;
 import playlist.generic.AbstractPlaylistSong;
 import playlist.generic.AbstractPlaylistWriter;
+
+import java.io.IOException;
 
 public class M3u8Writer extends AbstractPlaylistWriter {
 
@@ -15,7 +16,7 @@ public class M3u8Writer extends AbstractPlaylistWriter {
         } catch (IOException ioe) {
             throw new PlaylistIOException("M3UWriter IO Exception", ioe, ErrorCodes.BASE_IO_ERROR);
         }
-        logger.trace("heading written: EXTM3U");;
+        logger.trace("heading written: EXTM3U");
 
     }
 

@@ -10,7 +10,7 @@ public class TestCmd {
     public static void main(String[] args) {
         try {
             Runtime rt = Runtime.getRuntime();
-            String cmdStrings[] =
+            String[] cmdStrings =
                 {"cmd", "/c", "main.exe", "E:\\lzx\\Discovery\\ColdRain\\Ncm\\水瀬いのり - クリスタライズ.ncm",
                     "E:\\lzx\\Discovery\\ColdRain\\Ncm\\Luciano Pavarotti - Nessun Dorma.ncm"};
             String cmdString =
@@ -26,7 +26,7 @@ public class TestCmd {
             System.out.println("<error></error>");
             while ((line = br.readLine()) != null)
                 System.out.println(line);
-            System.out.println("");
+            System.out.println();
             int exitVal = proc.waitFor();
             System.out.println("Process exitValue: " + exitVal);
         } catch (Throwable t) {

@@ -1,11 +1,12 @@
 package database.models;
 
-import java.io.Serializable;
-import java.util.Objects;
-import javax.persistence.Embeddable;
 import database.generic.DatabasePOJO;
 import database.utils.DbHelper;
 import playlist.generic.MetaSong;
+
+import javax.persistence.Embeddable;
+import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 public class FileInfoComp extends DatabasePOJO implements Serializable{

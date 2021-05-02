@@ -9,7 +9,7 @@ public enum SupportedMeta {
             "album"), ALBUMARTIST("albumArtist"), FORMAT(
                 "FORMAT"), SAMPLERATE("SAMPLERATE"), BITRATE("BITRATE"), LENGTH("LENGTH");
 
-    private String property;
+    private final String property;
 
     SupportedMeta(String property) {
         this.property = property;

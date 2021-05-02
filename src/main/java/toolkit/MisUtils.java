@@ -1,5 +1,14 @@
 package toolkit;
 
+import exception.RuntimeE.EmptyListException;
+import old.localModels.M3USong;
+import old.localModels.M3UTable;
+import old.localModels.MetaSong_old;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.TagException;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -9,14 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.TagException;
-import exception.RuntimeE.EmptyListException;
-import old.localModels.M3USong;
-import old.localModels.M3UTable;
-import old.localModels.MetaSong_old;
 
 public class MisUtils {
 
@@ -32,10 +33,7 @@ public class MisUtils {
         }
         List<String> list = Arrays.asList(allowedSuffix);
         String fileSuffix = MisUtils.getSuffix(fileSrc);
-        if (list.contains(fileSuffix)) {
-            return true;
-        }
-        return false;
+        return list.contains(fileSuffix);
     }
 
     // return file suffix as a string.
@@ -69,7 +67,7 @@ public class MisUtils {
         }
         File origFolderFile = new File(origFolder);
         origFolderFile.delete();
-        LogMaker.logs("Deleted Directory: " + origFolder.toString());
+        LogMaker.logs("Deleted Directory: " + origFolder);
     }
 
     // rename a file

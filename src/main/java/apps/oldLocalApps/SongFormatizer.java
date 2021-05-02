@@ -1,5 +1,14 @@
 package apps.oldLocalApps;
 
+import old.localModels.M3USong;
+import old.localModels.M3UTable;
+import old.localModels.MetaSong_old;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.TagException;
+import toolkit.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -7,18 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.TagException;
-import old.localModels.M3USong;
-import old.localModels.M3UTable;
-import old.localModels.MetaSong_old;
-import toolkit.LogMaker;
-import toolkit.MethodInvoker;
-import toolkit.MisUtils;
-import toolkit.NewFileWriter;
-import toolkit.Timer;
 
 //用metadata写新文件名并更新m3u 格式为 歌手-歌名
 //也是第一次让我意识到了windows路径还有不支持某些字符这回事，当时可让我一顿debug，debug了整整两天
@@ -105,7 +102,7 @@ public class SongFormatizer {
         
         Iterator<Entry<String, String>> iterMap = toModHashAudLoc.entrySet().iterator();
         while(iterMap.hasNext()) {
-            HashMap.Entry<String,String> entry = (HashMap.Entry<String,String>)iterMap.next();
+            HashMap.Entry<String,String> entry = iterMap.next();
             MisUtils.renameFile(entry.getKey(), entry.getValue());
         }
         tim.timerEnd();

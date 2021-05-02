@@ -1,14 +1,11 @@
 package scriptrunner;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Arrays;
+import com.google.common.collect.ObjectArrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.google.common.collect.ObjectArrays;
+
+import java.io.*;
+import java.util.Arrays;
 
 public class ScriptRunner {
     private static final Logger logger = LoggerFactory.getLogger(ScriptRunner.class);
@@ -48,7 +45,7 @@ public class ScriptRunner {
     }
     
     private static String[] addStrArray(String[] origArray, String[] toAddArray) {
-        String rtrArray[] = ObjectArrays.concat(origArray, toAddArray, String.class);
+        String[] rtrArray = ObjectArrays.concat(origArray, toAddArray, String.class);
         return rtrArray;
     }
 

@@ -1,13 +1,14 @@
 package apps.oldLocalApps;
 
+import old.localModels.M3U8Song;
+import old.localModels.M3U8Table;
+import org.dom4j.DocumentException;
+import toolkit.NewFileWriter;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import org.dom4j.DocumentException;
-import old.localModels.M3U8Song;
-import old.localModels.M3U8Table;
-import toolkit.NewFileWriter;
 
 //网易云导出来的歌单是从/Cloudmusic开始的相对路径，这玩意儿能帮忙补成绝对路径
 //其实还应该写个程序把.ncm结尾的路径改成.flac或者.mp3的...但是有的解出来是flac有的是mp3,不好说。
@@ -59,7 +60,7 @@ public class M3U8_LocationFixer {
         String cloudMusicAddr = args[1];
         File checkAddr = new File(addr);
         if (checkAddr.isDirectory()) {
-            String s[] = checkAddr.list();
+            String[] s = checkAddr.list();
             for (int i = 0; i < s.length; i++) {
                 File f = new File(addr, s[i]);
                 String fileName = f.getName();            
@@ -71,7 +72,7 @@ public class M3U8_LocationFixer {
                     if (".m3u8".compareTo(fileSuffix)==0) {
                         System.out.println("test: " + fileName +"-" + fileSuffix);
                         fixALocation(String.valueOf(f), cloudMusicAddr);
-                        System.out.println("fixed: " + String.valueOf(f));
+                        System.out.println("fixed: " + f);
                     }else {
                         System.out.println("Not a m3u8 File!");
                     }

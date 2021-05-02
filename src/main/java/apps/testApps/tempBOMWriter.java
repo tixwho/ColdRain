@@ -1,7 +1,5 @@
 package apps.testApps;
 
-import java.io.File;
-import java.util.ArrayList;
 import exception.MetaIOException;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
@@ -12,6 +10,9 @@ import playlist.m3u.M3uReader;
 import playlist.m3u.M3uTable;
 import playlist.m3u.M3uWriter;
 import toolkit.MethodInvoker;
+
+import java.io.File;
+import java.util.ArrayList;
 
 public class tempBOMWriter extends BaseLocalTestingClass {
     

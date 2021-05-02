@@ -3,9 +3,10 @@
  */
 package toolkit;
 
+import org.apache.commons.io.filefilter.SuffixFileFilter;
+
 import java.io.File;
 import java.util.ArrayList;
-import org.apache.commons.io.filefilter.SuffixFileFilter;
 
 /**
  * @author ASUS

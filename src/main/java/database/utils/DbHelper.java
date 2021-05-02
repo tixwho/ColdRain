@@ -1,7 +1,8 @@
 package database.utils;
 
-import java.io.File;
 import playlist.generic.MetaSong;
+
+import java.io.File;
 
 public class DbHelper {
     

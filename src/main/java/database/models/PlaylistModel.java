@@ -1,27 +1,21 @@
 package database.models;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import org.hibernate.NonUniqueResultException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import database.generic.DatabasePOJO;
 import database.utils.DbHelper;
 import database.utils.InitSessionFactory;
 import exception.DatabaseException;
 import exception.ErrorCodes;
+import org.hibernate.NonUniqueResultException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import playlist.generic.AbstractPlaylistTable;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 @Entity
 @Table(name = "Playlist", indexes = {@Index(name = "index_playlistFileSrc",columnList = "src ASC")})
@@ -117,9 +111,9 @@ public class PlaylistModel extends DatabasePOJO implements Serializable {
         Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
         // Query: src @ playlistModel
-        Query<PlaylistModel> q = (Query<PlaylistModel>) session
-            .createQuery("from PlaylistModel p where p.src=?0", PlaylistModel.class);
-        q.setParameter(0, unknownTable.getPlaylistSrc());
+        Query<PlaylistModel> q = session
+            .createQuery("from PlaylistModel p where p.src=?1", PlaylistModel.class);
+        q.setParameter(1, unknownTable.getPlaylistSrc());
         PlaylistModel toCheckPlaylistM;
         try {
             toCheckPlaylistM = q.uniqueResult();
@@ -149,9 +143,9 @@ public class PlaylistModel extends DatabasePOJO implements Serializable {
         Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
         // Query: src @ playlistModel
-        Query<PlaylistModel> q = (Query<PlaylistModel>) session
-            .createQuery("from PlaylistModel p where p.src=?0", PlaylistModel.class);
-        q.setParameter(0, src);
+        Query<PlaylistModel> q = session
+            .createQuery("from PlaylistModel p where p.src=?1", PlaylistModel.class);
+        q.setParameter(1, src);
         returnPlaylistM = q.uniqueResult();
         session.close();
         if (returnPlaylistM == null) {

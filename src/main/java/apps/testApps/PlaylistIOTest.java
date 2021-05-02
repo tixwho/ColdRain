@@ -1,17 +1,14 @@
 package apps.testApps;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import org.apache.commons.io.FileUtils;
 import exception.MetaIOException;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
-import playlist.generic.AbstractPlaylistSong;
-import playlist.generic.AbstractPlaylistTable;
-import playlist.generic.BaseLocalTestingClass;
-import playlist.generic.PlaylistFileIO;
-import playlist.generic.SupportedPlaylistFormat;
+import org.apache.commons.io.FileUtils;
+import playlist.generic.*;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class PlaylistIOTest extends BaseLocalTestingClass {
 
