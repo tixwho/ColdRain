@@ -4,16 +4,21 @@ import com.google.gson.Gson;
 import exception.ColdRainException;
 import exception.DatabaseException;
 import exception.ErrorCodes;
+import exception.MetaIOException;
 import ncm.jsonSupp.JsonRootBean;
+import ncm.jsonSupp.OfflineRootBean;
 import ncm.jsonSupp.PlayListBean;
 import ncm.models.NcmAudioInfoComp;
 import ncm.models.NcmNegatedAudioInfo;
 import ncm.models.NcmPlaylistComp;
 import ncm.utils.NcmPropertiesUtil;
+import ncm.utils.NcmTempFileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import playlist.generic.MetaSong;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +40,33 @@ public class NcmService {
         initDB();
         try {
             List<PlayListBean> plListBeans = getPlaylists();
+            assert plListBeans != null;
             for (PlayListBean bean : plListBeans) {
                 NcmPlaylistComp aComp = collectAPlaylistInfo_webTrack(bean);
+                assert aComp != null;
                 System.out.println(
                     "PlaylistName:" + aComp.getPlaylistName() + ";id:" + aComp.getPlaylist_id());
                 System.out.println("size:" + aComp.getPlaylistRecordList().size());
             }
         } finally {
             closeDB();
+        }
+
+    }
+
+    public void optimizeOfflineDJCoverArts() throws ColdRainException {
+        List<NcmAudioInfoComp> offlineDjProgramList;
+        try {
+            initDB();
+            offlineDjProgramList = collectAllDJProgram_offlineOnly();
+        }finally{
+            closeDB();
+        }
+        for (NcmAudioInfoComp aComp : offlineDjProgramList) {
+            if (aComp.getDj_coverUrl() == null) {
+                continue;
+            }
+            updateDJAlbumArt(aComp);
         }
 
     }
@@ -61,7 +85,7 @@ public class NcmService {
                 + "LEFT OUTER JOIN web_track AS w_track ON w_pl_track.tid = w_track.tid\r\n"
                 + "LEFT OUTER JOIN web_offline_track AS w_off_track ON w_pl_track.tid = w_off_track.track_id\r\n"
                 + "WHERE w_pl_track.pid=\"" + plBean.getId() + "\"";
-        ResultSet rs = null;
+        ResultSet rs;
         Gson gson = new Gson();
         try {
             rs = stmt.executeQuery(queryStr);
@@ -140,17 +164,20 @@ public class NcmService {
             + "WHERE type_extra NOT NULL";
         ResultSet rs = null;
         Gson gson = new Gson();
+        List<NcmAudioInfoComp> offlineDJList = new ArrayList<>();
         try {
             rs = stmt.executeQuery(queryStr);
             while(rs.next()) {
-                NcmAudioInfoComp aComp = new NcmAudioInfoComp();
+                NcmAudioInfoComp aComp = new NcmAudioInfoComp(gson.fromJson(rs.getString("detail"), OfflineRootBean.class));
+                aComp.setRelative_path(rs.getString("relative_path"));
+                offlineDJList.add(aComp);
             }
         } catch (SQLException se) {
             // should not happen if ncm does not change its database structure
             logger.warn("NCM query failed in selecting offline DJ program.");
             return null;
         }
-        return null;
+        return offlineDJList;
     }
 
     private List<PlayListBean> getPlaylists() {
@@ -169,6 +196,34 @@ public class NcmService {
             logger.warn("NCM query failed in selecting playlist.");
             return null;
         }
+    }
+
+    private void updateDJAlbumArt(NcmAudioInfoComp toModifyDJProgram){
+        if(!toModifyDJProgram.isIs_DJ()||toModifyDJProgram.getDj_coverUrl()==null){
+            //not a DJ program or no coverUrl
+            return;
+        }
+        try {
+            File tempImgFile = NcmTempFileUtil.cacheDJImg(toModifyDJProgram);
+
+            //if no image detected, skip
+            if(tempImgFile==null){
+                return;
+            }
+            logger.info("Cached DJImg for "+toModifyDJProgram.getTitle()+"("+toModifyDJProgram.getTrack_id()+")");
+            MetaSong djProgramAudioFileMeta = new MetaSong(new File(ncmMusicDirPath,toModifyDJProgram.getRelative_path()));
+            djProgramAudioFileMeta.forceUpdateAlbumArt(tempImgFile);
+            logger.info("Updated DJImg for "+toModifyDJProgram.getTitle()+"("+toModifyDJProgram.getTrack_id()+")");
+            tempImgFile.delete(); //clean up tempFile
+
+        } catch (IOException e) {
+            logger.warn("Failure caching DJProgram imageUrl:"+toModifyDJProgram.getRelative_path());
+
+        } catch (MetaIOException e) {
+            logger.warn("Unable to create MetaSong for DJProgram:"+toModifyDJProgram.getRelative_path());
+        }
+
+
     }
 
     private void initDB() throws ColdRainException {

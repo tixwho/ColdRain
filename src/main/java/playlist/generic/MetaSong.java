@@ -10,6 +10,8 @@ import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.*;
+import org.jaudiotagger.tag.images.Artwork;
+import org.jaudiotagger.tag.images.ArtworkFactory;
 import toolkit.LogMaker;
 
 import java.io.File;
@@ -39,11 +41,15 @@ public class MetaSong {
     private final boolean LOSELESS_STATUS;
 
     public MetaSong(String addr) throws MetaIOException {
+        this(new File(addr));
+    }
+
+    public MetaSong(File audioFile) throws MetaIOException {
         try {
-            aof = AudioFileIO.read(new File(addr));
+            aof = AudioFileIO.read(audioFile);
             tag = aof.getTag();
-            setSrc(addr);
-            setFileName(AudioFile.getBaseFilename(new File(addr)));
+            setSrc(audioFile.getAbsolutePath());
+            setFileName(AudioFile.getBaseFilename(audioFile));
             setTrackTitle(tag.getFirst(FieldKey.TITLE));
             setTrackNo(tag.getFirst(FieldKey.TRACK));
             setDiscNo(tag.getFirst(FieldKey.DISC_NO));
@@ -242,6 +248,23 @@ public class MetaSong {
         } catch (CannotWriteException cwe) {
             throw new MetaIOException("AudioFile Writing Exception", cwe,
                 ErrorCodes.CANNOTWRITE_ERROR);
+        }
+
+    }
+
+    public void forceUpdateAlbumArt(File albumArtFile) throws MetaIOException {
+        Artwork coverArt = null;
+        try {
+            coverArt = ArtworkFactory.createArtworkFromFile(albumArtFile);
+            tag.deleteArtworkField(); //force delete!
+            tag.setField(coverArt);
+            AudioFileIO.write(aof);
+        } catch (IOException ioe) {
+            throw new MetaIOException("Failed Loading CoverArt File",ioe,ErrorCodes.BASE_IO_ERROR);
+        } catch (CannotWriteException cwe) {
+            throw new MetaIOException("Failed Writing Modified AudioFile Back",cwe,ErrorCodes.CANNOTWRITE_ERROR);
+        } catch (FieldDataInvalidException fdie) {
+            throw new MetaIOException("Failed Setting CoverArt to Tag",fdie,ErrorCodes.AUDIOFILE_TAG_ERROR);
         }
 
     }
