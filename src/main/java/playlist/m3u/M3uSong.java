@@ -1,7 +1,8 @@
 package playlist.m3u;
 
-import java.text.MessageFormat;
 import playlist.generic.AbstractPlaylistSong;
+
+import java.text.MessageFormat;
 
 public class M3uSong extends AbstractPlaylistSong {
 
@@ -9,8 +10,7 @@ public class M3uSong extends AbstractPlaylistSong {
     
     @Override
     public String toString() {
-        return MessageFormat.format("{0}[src={1}]", new Object[] {
-            getClass().getSimpleName(), src});
+        return MessageFormat.format("{0}[src={1}]", getClass().getSimpleName(), src);
         
     }
 

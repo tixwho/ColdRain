@@ -25,7 +25,7 @@ public class M3uReader extends AbstractPlaylistReader {
     protected void readASong() throws NativeReflectionException {
         M3uSong aSong = new M3uSong();
         src = tempData;
-        // move everything beneath to generic
+        // move everything beneath to playlist.generic
         super.setAllProperties(this, aSong);
         super.songArrList.add(aSong);
         //universal reader can be used in child class

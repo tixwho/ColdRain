@@ -1,17 +1,13 @@
 package playlist.generic;
 
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import exception.ErrorCodes;
 import exception.PlaylistIOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 public abstract class AbstractPlaylistWriter {
 
@@ -40,7 +36,7 @@ public abstract class AbstractPlaylistWriter {
         }
         writeEnding();
         closeStream();
-        logger.debug("Writing playlist complete!" + f.toString());
+        logger.debug("Writing playlist complete!" + f);
 
 
     }
@@ -61,7 +57,7 @@ public abstract class AbstractPlaylistWriter {
             }
             writeEnding();
             closeStream();
-            logger.debug("Writing playlist complete!" + f.toString());
+            logger.debug("Writing playlist complete!" + f);
 
         } else {
             write(f);
@@ -93,14 +89,11 @@ public abstract class AbstractPlaylistWriter {
     protected void setStream(File f) throws PlaylistIOException {
         try {
             dataOut = new DataOutputStream(new FileOutputStream(f));
-            oStreamWriter = new OutputStreamWriter(dataOut, "utf-8");
+            oStreamWriter = new OutputStreamWriter(dataOut, StandardCharsets.UTF_8);
 
         } catch (FileNotFoundException fnfe) {
             throw new PlaylistIOException("Error in creating new Playlist File", fnfe,
                 ErrorCodes.BASE_IO_ERROR);
-        } catch (UnsupportedEncodingException uee) {
-            throw new PlaylistIOException("Error in creating new Playlist File", uee,
-                ErrorCodes.UNSUPPORTED_ENCODING);
         }
         logger.debug("Stream created!");
     }

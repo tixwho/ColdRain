@@ -1,34 +1,31 @@
 package database.service;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import database.models.*;
+import database.utils.DbHelper;
+import database.utils.InitSessionFactory;
+import exception.DatabaseException;
+import exception.ErrorCodes;
+import exception.MetaIOException;
 import org.apache.commons.io.FileUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import database.models.AlbumModel;
-import database.models.ArtistModel;
-import database.models.FileModel;
-import database.models.MetaModel;
-import database.models.SongModel;
-import database.utils.DbHelper;
-import database.utils.InitSessionFactory;
-import exception.DatabaseException;
-import exception.ErrorCodes;
-import exception.MetaIOException;
 import playlist.generic.MetaSong;
 import playlist.generic.SupportedAudioFormat;
 import toolkit.AudioMd5Helper;
 
+import java.io.File;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+
 public class AudioDBService {
     private static final Logger logger = LoggerFactory.getLogger(AudioDBService.class);
-    private static HashSet<ArtistModel> toValidateArtists = new HashSet<ArtistModel>();
-    private static HashSet<AlbumModel> toValidateAlbums = new HashSet<AlbumModel>();
-    private static HashSet<SongModel> toValidateSongs = new HashSet<SongModel>();
+    private static final HashSet<ArtistModel> toValidateArtists = new HashSet<ArtistModel>();
+    private static final HashSet<AlbumModel> toValidateAlbums = new HashSet<AlbumModel>();
+    private static final HashSet<SongModel> toValidateSongs = new HashSet<SongModel>();
 
     /* Functional Methods Below */
 
@@ -164,7 +161,7 @@ public class AudioDBService {
                 deleteFileFromDB(aFile,false);
                 delCount += 1;
             } else {
-                if (aFile.getMd5().isBlank()) {
+                if (aFile.getMd5()==null || aFile.getMd5().isEmpty()) {
                     try {
                         aFile.setMd5(AudioMd5Helper.getAudioMd5Force(new MetaSong(aFile.getSrc())));
                     } catch (MetaIOException e) {
@@ -227,7 +224,7 @@ public class AudioDBService {
 
                 if (MetaModel.checkMetaCount(meta) == 0) {
                     logger.info("Single File&New Meta, directly modify current meta.");
-                    logger.warn("toHandleMetaM" + toHandleMetaM.toString());
+                    logger.warn("toHandleMetaM" + toHandleMetaM);
                     // no current meta exist for the file & only one file share this Meta, update
                     // check album
                     AlbumModel toCheckAlbumM = AlbumModel.guaranteeAlbumModel(meta);
@@ -273,7 +270,7 @@ public class AudioDBService {
                     tx.commit();
                     session.close();
                     logger.info("Updated MetaModel!");
-                    logger.warn("MetaModel Info Now:" + toHandleMetaM.toString());
+                    logger.warn("MetaModel Info Now:" + toHandleMetaM);
                 } else {
                     MetaModel toCompareMetaM = MetaModel.guaranteeMetaModel(meta);
                     logger.info(
@@ -349,7 +346,7 @@ public class AudioDBService {
             logger.debug("Validating Albums!");
             for (AlbumModel toValidateAlbumM : toValidateAlbums) {
                 if (toValidateAlbumM.getMetaModels().size() == 0) {
-                    logger.debug("Cleaning Album:" + toValidateAlbumM.toString());
+                    logger.debug("Cleaning Album:" + toValidateAlbumM);
                     toValidateAlbumM.getAlbumArtistM().getAlbumModels().remove(toValidateAlbumM);
                     toValidateArtists.add(toValidateAlbumM.getAlbumArtistM());
                     Session session = InitSessionFactory.getNewSession();
@@ -366,7 +363,7 @@ public class AudioDBService {
             logger.debug("Validating Songs!");
             for (SongModel toValidateSongM : toValidateSongs) {
                 if (toValidateSongM.getMetaModels().size() == 0) {
-                    logger.debug("Cleaning Song:" + toValidateSongM.toString());
+                    logger.debug("Cleaning Song:" + toValidateSongM);
                     toValidateSongM.getArtistM().getSongModels().remove(toValidateSongM);
                     toValidateArtists.add(toValidateSongM.getArtistM());
                     Session session = InitSessionFactory.getNewSession();
@@ -385,16 +382,16 @@ public class AudioDBService {
                 boolean noArtist = false;
                 boolean noAlbumArtist = false;
                 if (toValidateArtistM.getSongModels().size() == 0) {
-                    logger.debug("No Song use Artist:" + toValidateArtistM.toString());
+                    logger.debug("No Song use Artist:" + toValidateArtistM);
                     noArtist = true;
                 }
                 if (toValidateArtistM.getAlbumModels().size() == 0) {
-                    logger.debug("No Album use Artist:" + toValidateArtistM.toString());
+                    logger.debug("No Album use Artist:" + toValidateArtistM);
                     noAlbumArtist = true;
                 }
 
                 if (noArtist && noAlbumArtist) {
-                    logger.info("Cleaning Artist:" + toValidateArtistM.toString());
+                    logger.info("Cleaning Artist:" + toValidateArtistM);
                     Session session = InitSessionFactory.getNewSession();
                     Transaction tx = session.beginTransaction();
                     session.delete(toValidateArtistM);

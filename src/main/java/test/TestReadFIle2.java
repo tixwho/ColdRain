@@ -1,11 +1,14 @@
 package test;
 
-import java.io.*;
-import toolkit.*;
+import toolkit.SourceReader;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 // 尝试调用toolkit内方法
 public class TestReadFIle2 {
-    public static void main(String args[]) throws IOException {
+    public static void main(String[] args) throws IOException {
 
         SourceReader source = new SourceReader("F:\\ASUS\\Music\\Playlists\\ORBIS TERRARVM.zpl",
             "F:\\ASUS\\Music\\TestOutput\\test.zpl");

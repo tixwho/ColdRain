@@ -1,7 +1,8 @@
 package test;
 
-import java.util.ArrayList;
 import toolkit.LogMaker;
+
+import java.util.ArrayList;
 
 public class TestAbsClass {
     

@@ -1,7 +1,5 @@
 package old.localModels;
 
-import java.io.File;
-import java.io.IOException;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.AudioHeader;
@@ -9,17 +7,16 @@ import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.FieldDataInvalidException;
-import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.KeyNotFoundException;
-import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.TagException;
+import org.jaudiotagger.tag.*;
 import toolkit.LogMaker;
+
+import java.io.File;
+import java.io.IOException;
 
 public class MetaSong_old {
 
-    private AudioFile aof;
-    private Tag tag;
+    private final AudioFile aof;
+    private final Tag tag;
     private String src;
     private String fileName;
     private String trackTitle;

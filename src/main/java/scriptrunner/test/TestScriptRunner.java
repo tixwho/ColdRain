@@ -1,7 +1,8 @@
 package scriptrunner.test;
 
-import java.io.File;
 import scriptrunner.ScriptRunner;
+
+import java.io.File;
 
 public class TestScriptRunner {
 

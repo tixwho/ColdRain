@@ -1,24 +1,16 @@
 package database.models;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import database.generic.DatabasePOJO;
+import database.utils.InitSessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import database.generic.DatabasePOJO;
-import database.utils.InitSessionFactory;
 import playlist.generic.MetaSong;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Song", indexes = {@Index(name = "index_trackTitle",columnList = "trackTitle ASC")})
@@ -138,10 +130,10 @@ public class SongModel extends DatabasePOJO implements Serializable {
         Session session = InitSessionFactory.getNewSession();
         session.beginTransaction();
         // Query: trackTitle, artistM @ songModel
-        Query<SongModel> q = (Query<SongModel>) session.createQuery(
-            "from SongModel s where s.trackTitle=?0 and s.artistM=?1", SongModel.class);
-        q.setParameter(0, trackTitle);
-        q.setParameter(1, toCheckArtistM);
+        Query<SongModel> q = session.createQuery(
+            "from SongModel s where s.trackTitle=?1 and s.artistM=?2", SongModel.class);
+        q.setParameter(1, trackTitle);
+        q.setParameter(2, toCheckArtistM);
         SongModel toCheckSongM = q.uniqueResult();
         session.close();
         if (toCheckSongM == null) {
@@ -185,11 +177,8 @@ public class SongModel extends DatabasePOJO implements Serializable {
         } else if (!songid.equals(other.songid))
             return false;
         if (trackTitle == null) {
-            if (other.trackTitle != null)
-                return false;
-        } else if (!trackTitle.equals(other.trackTitle))
-            return false;
-        return true;
+            return other.trackTitle == null;
+        } else return trackTitle.equals(other.trackTitle);
     }
 
     @Override

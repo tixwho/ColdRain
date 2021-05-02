@@ -1,5 +1,15 @@
 package apps.oldLocalApps;
 
+import old.localModels.MetaSong_old;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.TagException;
+import toolkit.DirMaker;
+import toolkit.LogMaker;
+import toolkit.MethodInvoker;
+import toolkit.MisUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -7,15 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.TagException;
-import old.localModels.MetaSong_old;
-import toolkit.DirMaker;
-import toolkit.LogMaker;
-import toolkit.MethodInvoker;
-import toolkit.MisUtils;
 
 
 //黑历史系列，等删
@@ -30,7 +31,7 @@ public class DiscSplitter {
         File possibleNewFolder = new File(parentFolderLoc, MisUtils.replaceIlligalFilename(album));
         boolean splitFlag = DirMaker.mkRawDirIfNotExist(possibleNewFolder.toString());
         if (splitFlag) {
-            LogMaker.logs("New Disc Folder at: " + possibleNewFolder.toString());
+            LogMaker.logs("New Disc Folder at: " + possibleNewFolder);
 
         }
         File audioFile = new File(audioLoc);
@@ -102,7 +103,7 @@ public class DiscSplitter {
         // test printing files added.
         Iterator<Entry<String, String>> iterMap = toRenameAudioMap.entrySet().iterator();
         while (iterMap.hasNext()) {
-            HashMap.Entry<String, String> entry = (HashMap.Entry<String, String>) iterMap.next();
+            HashMap.Entry<String, String> entry = iterMap.next();
             MisUtils.renameFile(entry.getKey(), entry.getValue());
         }
         // test ended.

@@ -1,22 +1,18 @@
 package playlist.generic;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import org.apache.commons.io.input.BOMInputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import exception.ErrorCodes;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
+import org.apache.commons.io.input.BOMInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 /**
  * General Format of PlaylistReader
@@ -83,7 +79,7 @@ public abstract class AbstractPlaylistReader {
         }
         readEnding();
         closeStream();
-        logger.debug("Reading playlist complete!" + f.toString());
+        logger.debug("Reading playlist complete!" + f);
 
     }
 
@@ -164,7 +160,7 @@ public abstract class AbstractPlaylistReader {
     protected void setStream(File f) throws PlaylistIOException {
         try {
             BOMInputStream bomIn = new BOMInputStream(new FileInputStream(f));
-            in = new InputStreamReader(bomIn, "utf-8");
+            in = new InputStreamReader(bomIn, StandardCharsets.UTF_8);
             br = new BufferedReader(in);
             logger.info("BOM Status: " + bomIn.hasBOM());
 

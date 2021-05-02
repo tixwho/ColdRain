@@ -1,6 +1,5 @@
 package playlist.m3u8;
 
-import java.util.ArrayList;
 import exception.MetaIOException;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
@@ -8,6 +7,8 @@ import playlist.generic.AbstractPlaylistSong;
 import playlist.generic.AbstractPlaylistTable;
 import playlist.generic.SupportedMeta;
 import playlist.generic.SupportedPlaylistFormat;
+
+import java.util.ArrayList;
 
 public class M3u8Table extends AbstractPlaylistTable {
     

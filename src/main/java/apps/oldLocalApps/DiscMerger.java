@@ -1,16 +1,17 @@
 package apps.oldLocalApps;
 
+import exception.NormalE.NoCorrespondingFileTypeFound;
+import toolkit.DirMaker;
+import toolkit.MethodInvoker;
+import toolkit.MisUtils;
+import toolkit.PlaylistUpdater;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import exception.NormalE.NoCorrespondingFileTypeFound;
-import toolkit.DirMaker;
-import toolkit.MethodInvoker;
-import toolkit.MisUtils;
-import toolkit.PlaylistUpdater;
 
 /*
  * Algorithm Prework:Split different disc into different folders, with same meta for album.
@@ -70,7 +71,7 @@ public class DiscMerger {
         DirMaker.mkRawDirIfNotExist(parentFolder + "\\" + heading);
         for (String filteredFold : targetArr) {
             // to make it easy, 暴力提取最后一个字符
-            String discNum = filteredFold.substring(filteredFold.length() - 1, filteredFold.length());
+            String discNum = filteredFold.substring(filteredFold.length() - 1);
             String toPutFolder = parentFolder + "\\" + heading + "\\Disc " + discNum;
             DirMaker.mkRawDirIfNotExist(toPutFolder);
             // first set up metadata

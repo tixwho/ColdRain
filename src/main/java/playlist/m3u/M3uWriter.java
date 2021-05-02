@@ -1,10 +1,11 @@
 package playlist.m3u;
 
-import java.io.IOException;
 import exception.ErrorCodes;
 import exception.PlaylistIOException;
 import playlist.generic.AbstractPlaylistSong;
 import playlist.generic.AbstractPlaylistWriter;
+
+import java.io.IOException;
 
 public class M3uWriter extends AbstractPlaylistWriter {
 

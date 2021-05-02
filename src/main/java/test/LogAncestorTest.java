@@ -1,7 +1,8 @@
 package test;
 
-import java.util.ArrayList;
 import org.slf4j.Logger;
+
+import java.util.ArrayList;
 
 public abstract class LogAncestorTest {
     

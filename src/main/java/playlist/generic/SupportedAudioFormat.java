@@ -6,12 +6,12 @@ public enum SupportedAudioFormat {
     /**
      * File Suffix
      */
-    private String fileSuffix;
+    private final String fileSuffix;
 
     /**
      * User Friendly Name
      */
-    private String displayName;
+    private final String displayName;
 
     public String getFileSuffix() {
         return fileSuffix;

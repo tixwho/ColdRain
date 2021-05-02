@@ -1,9 +1,10 @@
 package ncm;
 
-import java.io.File;
-import org.junit.jupiter.api.BeforeAll;
 import ncm.utils.NcmPropertiesUtil;
+import org.junit.jupiter.api.BeforeAll;
 import proto.KarylTestBase;
+
+import java.io.File;
 
 public class NcmServiceTest extends KarylTestBase {
 

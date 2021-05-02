@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class M3UReader_old {
@@ -11,7 +12,7 @@ public class M3UReader_old {
     ArrayList<String> allStrInfoList = new ArrayList<String>();
     public M3UReader_old(String addr) throws IOException {
       //read as a file, then divide into songParts and pack into ArrayList
-        InputStreamReader in = new InputStreamReader(new FileInputStream(addr),"utf-8");
+        InputStreamReader in = new InputStreamReader(new FileInputStream(addr), StandardCharsets.UTF_8);
         BufferedReader br=new BufferedReader(in);
         String tempData;
         while((tempData = br.readLine())!=null) {

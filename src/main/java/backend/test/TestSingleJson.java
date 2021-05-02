@@ -1,7 +1,8 @@
 package backend.test;
 
-import java.util.List;
 import backend.jsonMapping.JsonIn;
+
+import java.util.List;
 
 public class TestSingleJson extends JsonIn{
 

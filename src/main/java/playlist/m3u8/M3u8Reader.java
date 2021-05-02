@@ -1,11 +1,12 @@
 package playlist.m3u8;
 
-import java.io.IOException;
 import exception.ErrorCodes;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
 import playlist.generic.AbstractPlaylistReader;
 import playlist.generic.AbstractPlaylistTable;
+
+import java.io.IOException;
 
 public class M3u8Reader extends AbstractPlaylistReader {
     

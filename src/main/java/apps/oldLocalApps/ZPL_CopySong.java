@@ -1,17 +1,13 @@
 package apps.oldLocalApps;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import org.dom4j.DocumentException;
 import old.localModels.ZplSong;
 import old.localModels.ZplTable;
+import org.dom4j.DocumentException;
 import toolkit.DirMaker;
+
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 //用zpl去复制歌，算是对文件读写的尝试；现在没啥卵用
 public class ZPL_CopySong {
@@ -42,7 +38,7 @@ public class ZPL_CopySong {
             }
             is.close();
             os.close();
-            System.out.println("Saved "+ String.valueOf(outputFile));
+            System.out.println("Saved "+ outputFile);
         
         }
 
@@ -56,7 +52,7 @@ public class ZPL_CopySong {
         String addr = args[0];
         File checkAddr = new File(addr);
         if (checkAddr.isDirectory()) {
-            String s[] = checkAddr.list();
+            String[] s = checkAddr.list();
             for (int i = 0; i < s.length; i++) {
                 File f = new File(addr, s[i]);
                 if (f.isDirectory()) {

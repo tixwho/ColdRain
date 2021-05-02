@@ -1,21 +1,22 @@
 package apps.oldLocalApps;
 
+import old.localModels.M3USong;
+import old.localModels.M3UTable;
+import old.localModels.MetaSong_old;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.TagException;
+import toolkit.LogMaker;
+import toolkit.MethodInvoker;
+import toolkit.MisUtils;
+import toolkit.NewFileWriter;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.TagException;
-import old.localModels.M3USong;
-import old.localModels.M3UTable;
-import old.localModels.MetaSong_old;
-import toolkit.LogMaker;
-import toolkit.MethodInvoker;
-import toolkit.MisUtils;
-import toolkit.NewFileWriter;
 
 //只是暂时性用的，用法是通过metadata读专辑，然后用专辑名创新文件夹放进去
 //不仅黑历史而且还有bug，如果专辑名包含windows路径不支持字符（比如/）会当场爆炸

@@ -1,12 +1,13 @@
 package old.localModels;
 
+import old.readers.SongReader;
+import old.readers.ZplXmlReader;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import old.readers.SongReader;
-import old.readers.ZplXmlReader;
 
 public class ZplTable {
     /*

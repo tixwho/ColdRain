@@ -1,17 +1,18 @@
 package apps.oldLocalApps;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import old.localModels.MetaSong_old;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.TagException;
-import old.localModels.MetaSong_old;
 import toolkit.LogMaker;
 import toolkit.MethodInvoker;
 import toolkit.Timer;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 // tgf都找不到TotalDisc这个tag，但是dopamine在处理多disc专辑的时候要用...只好写一个了
 public class TotalDiscNoSetter {

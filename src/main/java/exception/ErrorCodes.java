@@ -11,7 +11,7 @@ public enum ErrorCodes {
     DATABASE_NOT_FOUND(501),DATABASE_DRIVER_FAILED(502),
     CLOUDMUSIC_NOT_INITIALIZED(601);
 
-    private int code;
+    private final int code;
 
     ErrorCodes(int code) {
         this.code = code;

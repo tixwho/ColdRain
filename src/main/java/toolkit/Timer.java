@@ -7,7 +7,7 @@ public class Timer {
     private long startTime=-1;   //获取开始时间  
     private long endTime=-1; //获取结束时间  
     private long passedTime = -1;
-    private ArrayList<MsgBox> checkPointList = new ArrayList<MsgBox>();
+    private final ArrayList<MsgBox> checkPointList = new ArrayList<MsgBox>();
     
     public Timer() {
         this.silentTimerEnd();//flush
@@ -103,8 +103,8 @@ public class Timer {
     }
     
     public class MsgBox{
-        private long time;
-        private String info;
+        private final long time;
+        private final String info;
         public MsgBox(long passedTime,String info) {
             this.info=info;
             this.time=passedTime;

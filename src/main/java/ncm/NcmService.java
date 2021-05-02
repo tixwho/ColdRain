@@ -1,15 +1,5 @@
 package ncm;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import exception.ColdRainException;
 import exception.DatabaseException;
@@ -20,6 +10,17 @@ import ncm.models.NcmAudioInfoComp;
 import ncm.models.NcmNegatedAudioInfo;
 import ncm.models.NcmPlaylistComp;
 import ncm.utils.NcmPropertiesUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static ncm.utils.NcmPropertiesUtil.ncmCacheDirPath;
+import static ncm.utils.NcmPropertiesUtil.ncmMusicDirPath;
+
 
 public class NcmService {
 
@@ -172,8 +173,8 @@ public class NcmService {
 
     private void initDB() throws ColdRainException {
         // first test if ncm is initialized
-        if (NcmPropertiesUtil.ncmCacheDirPath.isBlank()
-            || NcmPropertiesUtil.ncmMusicDirPath.isBlank()) {
+        if ((ncmCacheDirPath==null||ncmCacheDirPath.isEmpty())
+            || (ncmMusicDirPath==null||ncmMusicDirPath.isEmpty())) {
             logger.warn("DB initialization cancelled. Plz initialize NCM properties first.");
             throw new ColdRainException(
                 "Using NCM functions without initializing related properties",
@@ -189,7 +190,7 @@ public class NcmService {
 
         try {
             conn = DriverManager
-                .getConnection("jdbc:sqlite:" + NcmPropertiesUtil.ncmCacheDirPath + "/webdb.dat");
+                .getConnection("jdbc:sqlite:" + ncmCacheDirPath + "/webdb.dat");
             stmt = conn.createStatement();
             logger.info("NCM sqlite database connected!");
         } catch (SQLException se) {

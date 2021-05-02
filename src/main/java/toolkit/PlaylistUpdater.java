@@ -1,19 +1,20 @@
 package toolkit;
 
+import exception.NormalE.NoCorrespondingFileTypeFound;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import exception.NormalE.NoCorrespondingFileTypeFound;
 
 // Mimic the playlist update process.
 // whether or not use void/int for return undecided for now.
 
 public class PlaylistUpdater {
 
-    private ArrayList<String> renameFileLocs = new ArrayList<String>();
+    private final ArrayList<String> renameFileLocs = new ArrayList<String>();
     private HashMap<String, String> renameMap = new HashMap<String, String>();
 
     public int loadPlaylistFile(String fileloc) throws NoCorrespondingFileTypeFound {

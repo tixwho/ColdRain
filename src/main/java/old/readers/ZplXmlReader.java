@@ -1,10 +1,11 @@
 package old.readers;
 
-import java.io.File;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+
+import java.io.File;
 
 //ZplXmlReader 每次应该return的是一个Element,其中包含了所有的<media>（a.k.a <seq>)
 public class ZplXmlReader {

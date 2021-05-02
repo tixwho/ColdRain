@@ -1,17 +1,18 @@
 package backend.test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import backend.annotation.JsonClass;
+import backend.jsonMapping.JsonPrototype;
+import com.google.gson.Gson;
+
 import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.gson.Gson;
-import backend.annotation.JsonClass;
-import backend.jsonMapping.JsonPrototype;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet(name="servletNo1", urlPatterns={"/one"})
 @JsonClass(jsonIn=TestSingleJson.class)
@@ -38,8 +39,8 @@ public class TestServletNo1 extends HttpServlet{
         JsonPrototype jsonInst = new TestSingleJson();
         Gson gson = new Gson();
         try {
-        BufferedReader br = new BufferedReader(new InputStreamReader((ServletInputStream) request.getInputStream(), "utf-8"));
-        StringBuffer sb = new StringBuffer("");
+        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
+        StringBuffer sb = new StringBuffer();
         String temp;
         while ((temp = br.readLine()) != null) { 
           sb.append(temp);
@@ -47,7 +48,7 @@ public class TestServletNo1 extends HttpServlet{
         br.close();
         String params = sb.toString();
         System.out.println(params);
-        jsonInst = (JsonPrototype) gson.fromJson(params,this.getClass().getAnnotation(JsonClass.class).jsonIn());
+        jsonInst = gson.fromJson(params,this.getClass().getAnnotation(JsonClass.class).jsonIn());
         System.out.println(jsonInst);
         }catch(Exception e) {
             e.printStackTrace();

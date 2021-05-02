@@ -1,13 +1,14 @@
 package apps.oldLocalApps;
 
+import old.localModels.M3U8Table;
+import old.localModels.M3UTable;
+import org.dom4j.DocumentException;
+import toolkit.DirMaker;
+import toolkit.NewFileWriter;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import org.dom4j.DocumentException;
-import old.localModels.M3U8Table;
-import old.localModels.M3UTable;
-import toolkit.DirMaker;
-import toolkit.NewFileWriter;
 
 //最早器黑历史之一 M3U8好像格式很多，我只选了网易云导出工具导出来的那种硬做匹配
 //但是能用，先留着 要是有人想回头是岸不用网易云了这就是第一步（话又说回来很多播放器都支持m3u8了...只是
@@ -33,7 +34,7 @@ public class M3U8_2_M3U {
         String addr = args[0];
         File checkAddr = new File(addr);
         if (checkAddr.isDirectory()) {
-            String s[] = checkAddr.list();
+            String[] s = checkAddr.list();
             for (int i = 0; i < s.length; i++) {
                 File f = new File(addr, s[i]);
                 if (f.isDirectory()) {

@@ -1,21 +1,16 @@
 package apps.testDatabaseApps;
 
-import java.io.File;
-import java.io.IOException;
-import org.apache.commons.io.FileUtils;
 import database.generic.BaseDatabaseTestingClass;
-import database.models.FileModel;
-import database.models.MetaModel;
 import database.service.AudioDBService;
 import exception.DatabaseException;
 import exception.MetaIOException;
 import exception.NativeReflectionException;
 import exception.PlaylistIOException;
-import playlist.generic.AbstractPlaylistSong;
-import playlist.generic.AbstractPlaylistTable;
-import playlist.generic.BaseLocalTestingClass;
-import playlist.generic.MetaSong;
-import playlist.generic.PlaylistFileIO;
+import org.apache.commons.io.FileUtils;
+import playlist.generic.*;
+
+import java.io.File;
+import java.io.IOException;
 
 public class T_Initial extends BaseDatabaseTestingClass {
 

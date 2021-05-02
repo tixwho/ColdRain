@@ -3,13 +3,15 @@
  */
 package backend.annotation;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import backend.jsonMapping.JsonIn;
+import backend.jsonMapping.JsonOut;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import backend.jsonMapping.JsonIn;
-import backend.jsonMapping.JsonOut;
+
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Retention(RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})

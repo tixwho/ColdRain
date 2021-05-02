@@ -1,18 +1,19 @@
 package apps.oldLocalApps;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
+import old.localModels.MetaSong_old;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.TagException;
-import old.localModels.MetaSong_old;
 import toolkit.LogMaker;
 import toolkit.MethodInvoker;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 //类似一次性程序，用来从文件名读取metadata然后写进去
 public class MetaFromName {

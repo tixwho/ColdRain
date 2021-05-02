@@ -1,14 +1,15 @@
 package old.readers;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
-import org.dom4j.Attribute;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
 import old.localModels.M3U8Song;
 import old.localModels.M3USong;
 import old.localModels.ZplSong;
+import org.dom4j.Attribute;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 
 // ZplMediaReader 输入一个mediaInfo，返回一个包装好的ZplSong
 public class SongReader {

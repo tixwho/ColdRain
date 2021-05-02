@@ -6,9 +6,9 @@ public class SourceReader {
     
     //最古老版本的文件读取，啥都有但是意义不明
     
-    private DataInputStream in;
-    private DataOutputStream out;
-    private BufferedReader d;
+    private final DataInputStream in;
+    private final DataOutputStream out;
+    private final BufferedReader d;
 
     // Constructor
     public SourceReader(String inputName, String outputName)

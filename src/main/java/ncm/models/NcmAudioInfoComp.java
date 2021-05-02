@@ -1,6 +1,7 @@
 package ncm.models;
 
 import ncm.jsonSupp.Album;
+import ncm.jsonSupp.Dj;
 import ncm.jsonSupp.JsonRootBean;
 import ncm.jsonSupp.OfflineRootBean;
 
