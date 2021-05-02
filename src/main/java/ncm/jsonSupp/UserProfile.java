@@ -19,7 +19,7 @@ public class UserProfile {
     private int accountStatus;
     private int gender;
     private long city;
-    private int birthday;
+    private long birthday;
     private long userId;
     private int userType;
     private String nickname;
@@ -97,10 +97,10 @@ public class UserProfile {
          return city;
      }
 
-    public void setBirthday(int birthday) {
+    public void setBirthday(long birthday) {
          this.birthday = birthday;
      }
-     public int getBirthday() {
+     public long getBirthday() {
          return birthday;
      }
 
