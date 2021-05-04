@@ -23,7 +23,15 @@ ColdRain is a Playlist Management Software (a.k.a. NOT A MUSIC PLAYER) designed 
 - Private cloud server.
 
 ##### Struct:
-- Backend - Java, Hibernate, Jetty
+- Backend - Java, Hibernate, Jetty, SQLite
 - Frontend - Javascript (Electron)
+
+##### 3rd party library:
+- JAudioTagger: http://www.jthink.net/jaudiotagger/
+- Jetty
+- Logback
+- Commons-io
+- Gson
+- Dom4J
 
 -Last edit: 5/5/2021-
