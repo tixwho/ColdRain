@@ -34,4 +34,7 @@ ColdRain is a Playlist Management Software (a.k.a. NOT A MUSIC PLAYER) designed 
 - Gson
 - Dom4J
 
+##### Some code reference:
+- NeteaseMusicDBExport https://github.com/xirtam-ch/NeteaseMusicDBExport Many thanks! Saved me a lot of time, I mean, a LOT
+
 -Last edit: 5/5/2021-
