@@ -4,7 +4,7 @@ A stupid project trying to get rid of all kinds of cloud musics with local playl
 
 ## Tired of Cloud music service? ColdRain's here.
 
-ColdRain is a Playlist Management Software (a.k.a. NOT A MUSIC PLAYER) designed to provide Cloud-service level playlist & metadata control for local music lovers.
+ColdRain is a Playlist Management Software (a.k.a. NOT A MUSIC PLAYER) designed to provide Cloud-service level playlist & metadata control for local music lovers. Its name derives from a pessimistic view on Cloud Music Services (Cloud->Rain)
 
 #### USAGE:
 - Metadata Control: Album/Artist alias, different versions of the same song...scan automatically and minimize manual operations.
