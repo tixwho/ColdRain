@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="PlaylistConverter" />
+        <module name="ColdRain" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="PlaylistConverter" target="1.8" />
+      <module name="ColdRain" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

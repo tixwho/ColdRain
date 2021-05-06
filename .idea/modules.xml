@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PlaylistConverter.iml" filepath="$PROJECT_DIR$/PlaylistConverter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ColdRain.iml" filepath="$PROJECT_DIR$/ColdRain.iml" />
     </modules>
   </component>
 </project>

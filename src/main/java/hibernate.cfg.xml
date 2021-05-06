@@ -34,16 +34,16 @@
 		<!-- 解决指向同一entity的复数collection出现lazyinitialization问题 -->
 		<property name="hibernate.enable_lazy_load_no_trans">true</property>
 		<!-- 引入映射配置文件 -->
-		<!-- <mapping resource="database/testDatabaseModels/TestFileModel.hbm.xml" 
+		<!-- <mapping resource="com.coldrain.database/testDatabaseModels/TestFileModel.hbm.xml"
 			/> -->
-		<!--<mapping resource="database/testDatabaseModels/FileModel.hbm.xml" /> -->
-		<mapping class="database.models.FileInfoComp" />
-		<mapping class="database.models.FileModel" />
-		<mapping class="database.models.MetaModel" />
-		<mapping class="database.models.ArtistModel" />
-		<mapping class="database.models.AlbumModel"/>
-		<mapping class="database.models.SongModel"/>
-		<mapping class="database.models.PlaylistModel"/>
-		<mapping class="database.models.PlaylistRecordModel"/>
+		<!--<mapping resource="com.coldrain.database/testDatabaseModels/FileModel.hbm.xml" /> -->
+		<mapping class="com.coldrain.database.models.FileInfoComp" />
+		<mapping class="com.coldrain.database.models.FileModel" />
+		<mapping class="com.coldrain.database.models.MetaModel" />
+		<mapping class="com.coldrain.database.models.ArtistModel" />
+		<mapping class="com.coldrain.database.models.AlbumModel"/>
+		<mapping class="com.coldrain.database.models.SongModel"/>
+		<mapping class="com.coldrain.database.models.PlaylistModel"/>
+		<mapping class="com.coldrain.database.models.PlaylistRecordModel"/>
 	</session-factory>
 </hibernate-configuration>
