@@ -35,8 +35,9 @@ public class HibernateDatabaseConfig {
         dataSource.setValidationQuery("SELECT '1' from sqlite_master");
         dataSource.setTestOnBorrow(false);
         dataSource.setTestOnReturn(false);
-        dataSource.setPoolPreparedStatements(true);
-        dataSource.setMaxOpenPreparedStatements(20);
+        //can not integrate with sqlite
+        dataSource.setPoolPreparedStatements(false);
+        //dataSource.setMaxOpenPreparedStatements(20);
         dataSource.setAsyncInit(true);
         //DEVELOPING
         dataSource.setBreakAfterAcquireFailure(true);
@@ -67,7 +68,7 @@ public class HibernateDatabaseConfig {
         return sessionFactoryBean;
     }
 
-    @Bean
+    @Bean(name="crHibernateTemplate")
     @Primary
     HibernateTemplate createHibernateTemplate(@Autowired SessionFactory sessionFactory) {
         return new HibernateTemplate(sessionFactory);
