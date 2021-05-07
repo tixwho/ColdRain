@@ -3,14 +3,20 @@ package com.coldrain.database.models;
 import com.coldrain.database.generic.DatabasePOJO;
 import com.coldrain.database.utils.InitSessionFactory;
 import com.coldrain.playlist.generic.MetaSong;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 @Entity
 @Table(name = "Artist", indexes = {@Index(name = "index_artist",columnList = "artist ASC")})

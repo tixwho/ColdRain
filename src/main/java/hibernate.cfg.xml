@@ -33,6 +33,13 @@
 		<!-- <property name="hibernate.connection.autocommit">true</property> -->
 		<!-- 解决指向同一entity的复数collection出现lazyinitialization问题 -->
 		<property name="hibernate.enable_lazy_load_no_trans">true</property>
+
+		<!-- druid连接池 -->
+		<property name="hibernate.connection.provider_class">
+			<!--org.hibernate.connection.C3P0ConnectionProvider-->
+			com.alibaba.druid.support.hibernate.DruidConnectionProvider
+		</property>
+
 		<!-- 引入映射配置文件 -->
 		<!-- <mapping resource="com.coldrain.database/testDatabaseModels/TestFileModel.hbm.xml"
 			/> -->

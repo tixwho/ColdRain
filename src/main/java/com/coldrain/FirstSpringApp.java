@@ -15,6 +15,8 @@ public class FirstSpringApp {
     public static void main(String[] args){
         ApplicationContext context = new AnnotationConfigApplicationContext(FirstSpringApp.class);
         TestSpringService testSpringService = context.getBean(TestSpringService.class);
-        testSpringService.testNcmInside();
+        //testSpringService.testNcmInside();
+        testSpringService.testNcmTransaction();
     }
+
 }

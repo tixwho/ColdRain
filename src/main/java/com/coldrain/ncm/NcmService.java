@@ -1,31 +1,41 @@
 package com.coldrain.ncm;
 
+import static com.coldrain.ncm.utils.NcmPropertiesUtil.ncmCacheDirPath;
+import static com.coldrain.ncm.utils.NcmPropertiesUtil.ncmMusicDirPath;
+
 import com.coldrain.exception.ColdRainException;
 import com.coldrain.exception.DatabaseException;
 import com.coldrain.exception.ErrorCodes;
 import com.coldrain.exception.MetaIOException;
+import com.coldrain.ncm.annotations.NcmTask;
 import com.coldrain.ncm.jsonSupp.JsonRootBean;
 import com.coldrain.ncm.jsonSupp.OfflineRootBean;
 import com.coldrain.ncm.jsonSupp.PlayListBean;
 import com.coldrain.ncm.models.NcmAudioInfoComp;
 import com.coldrain.ncm.models.NcmNegatedAudioInfo;
 import com.coldrain.ncm.models.NcmPlaylistComp;
+import com.coldrain.ncm.utils.NcmConfig;
 import com.coldrain.ncm.utils.NcmPropertiesUtil;
 import com.coldrain.ncm.utils.NcmTempFileUtil;
 import com.coldrain.playlist.generic.MetaSong;
 import com.google.gson.Gson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
 import java.io.File;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.coldrain.ncm.utils.NcmPropertiesUtil.ncmCacheDirPath;
-import static com.coldrain.ncm.utils.NcmPropertiesUtil.ncmMusicDirPath;
+import javax.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 @Component
 public class NcmService {
@@ -34,6 +44,14 @@ public class NcmService {
     private static Connection conn = null;
     private static Statement stmt = null;
 
+    @Qualifier("ncmJdbcTemplate")
+    @Autowired
+    JdbcTemplate ncmJdbcTemplate;
+    
+    @Autowired
+    NcmConfig ncmConfig;
+
+    @NcmTask("TestRead")
     public void test() throws ColdRainException {
         String propStr =
             "E:\\lzx\\Discovery\\NeteaseMusicDBExport-master\\NeteaseMusicDBExport-master\\ncm.properties";
@@ -197,6 +215,21 @@ public class NcmService {
             logger.warn("NCM query failed in selecting com.coldrain.playlist.");
             return null;
         }
+    }
+
+    @Transactional
+    public List<PlayListBean> getPlaylists_publicTest(){
+        Gson gson = new Gson();
+        String sql = "SELECT playlist FROM web_playlist;";
+        List<PlayListBean> playlistBeans = this.ncmJdbcTemplate.query(sql,
+            new RowMapper<PlayListBean>() {
+                @Override
+                public PlayListBean mapRow(ResultSet resultSet, int i) throws SQLException {
+                    PlayListBean plb = gson.fromJson(resultSet.getString(1),PlayListBean.class);
+                    return plb;
+                }
+            });
+        return playlistBeans;
     }
 
     private void updateDJAlbumArt(NcmAudioInfoComp toModifyDJProgram){

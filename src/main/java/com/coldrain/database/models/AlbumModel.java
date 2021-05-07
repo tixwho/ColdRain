@@ -3,17 +3,22 @@ package com.coldrain.database.models;
 import com.coldrain.database.generic.DatabasePOJO;
 import com.coldrain.database.utils.InitSessionFactory;
 import com.coldrain.playlist.generic.MetaSong;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
-
 @Entity
 @Table(name = "Album", indexes = {@Index(name = "index_album",columnList = "album ASC")})
 @SequenceGenerator(name = "album_seq", sequenceName = "album_id_seq", initialValue = 1,

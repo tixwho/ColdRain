@@ -168,6 +168,9 @@ public class FileModel extends DatabasePOJO implements Serializable {
         return returnFileM;
     }
 
+    //NEW TEST
+
+
     public static FileModel findFileModelByMd5(String md5, boolean oughtFlag)
         throws DatabaseException {
         FileModel returnFileM = null;

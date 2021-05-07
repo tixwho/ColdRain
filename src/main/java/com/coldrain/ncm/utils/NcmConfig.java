@@ -1,14 +1,13 @@
 package com.coldrain.ncm.utils;
 
-import java.util.StringJoiner;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
-
-import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.util.StringJoiner;
+import javax.swing.filechooser.FileSystemView;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
-@Component
+@Configuration
 @PropertySource("classpath:ncm.properties")
 public class NcmConfig {
 
