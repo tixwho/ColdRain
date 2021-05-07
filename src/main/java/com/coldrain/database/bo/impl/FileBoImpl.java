@@ -8,6 +8,7 @@ import com.coldrain.database.models.MetaModel;
 import com.coldrain.database.utils.DbHelper;
 import com.coldrain.playlist.generic.MetaSong;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,7 @@ public class FileBoImpl implements FileBo {
     FileDao fileDao;
 
     @Autowired
-    public void setFileDao(FileDao fileDao) {
+    public void setFileDao(@Qualifier("FileDao") FileDao fileDao) {
         this.fileDao = fileDao;
     }
 

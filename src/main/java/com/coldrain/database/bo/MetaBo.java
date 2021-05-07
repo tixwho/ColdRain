@@ -1,19 +1,13 @@
 package com.coldrain.database.bo;
 
+import com.coldrain.database.dao.MetaDao;
 import com.coldrain.database.models.AlbumModel;
 import com.coldrain.database.models.FileModel;
 import com.coldrain.database.models.MetaModel;
 import com.coldrain.database.models.SongModel;
 import com.coldrain.playlist.generic.MetaSong;
 
-public interface MetaBo {
-    void save(MetaModel metaM);
-    void update(MetaModel metaM);
-    void delete(MetaModel metaM);
-
-    //query
-    MetaModel findByAlbumMandSongM(AlbumModel albumM, SongModel songM);
-    int checkMetaCount(AlbumModel albumM, SongModel songM);
+public interface MetaBo extends MetaDao {
 
 
     //logic level operation

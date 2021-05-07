@@ -1,23 +1,18 @@
 package com.coldrain.database.bo;
 
+import com.coldrain.database.dao.SongDao;
 import com.coldrain.database.models.ArtistModel;
 import com.coldrain.database.models.MetaModel;
 import com.coldrain.database.models.SongModel;
 import com.coldrain.playlist.generic.MetaSong;
 
-public interface SongBo {
+public interface SongBo extends SongDao {
 
-    void save(SongModel songM);
-    void update(SongModel songM);
-    void delete(SongModel songM);
-
-    //query
-    SongModel findByTitleAndArtistM(String title, ArtistModel artistM);
 
     //logical operation
     SongModel guaranteeSongModel(MetaSong metaSong);
     SongModel createSongModel(MetaSong metaSong);
-    SongModel registerSongMtoArtistM(SongModel songM, ArtistModel artistM);
-    SongModel attachSongMtoMetaM(SongModel songM, MetaModel metaM);
+    SongModel attachArtistMtoSongM(SongModel songM, ArtistModel artistM);
+    SongModel registerMetaMtoSongM(SongModel songM, MetaModel metaM);
 
 }

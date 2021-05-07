@@ -8,6 +8,7 @@ import com.coldrain.database.models.MetaModel;
 import com.coldrain.database.models.SongModel;
 import com.coldrain.playlist.generic.MetaSong;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MetaBoImpl implements MetaBo {
 
     @Autowired
-    public void setMetaDao(MetaDao metaDao) {
+    public void setMetaDao(@Qualifier("MetaDao") MetaDao metaDao) {
         this.metaDao = metaDao;
     }
 
