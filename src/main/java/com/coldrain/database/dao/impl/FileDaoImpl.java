@@ -6,7 +6,6 @@ import com.coldrain.database.models.FileModel;
 import com.coldrain.database.utils.CustomHibernateDaoSupport;
 import java.util.List;
 import javax.annotation.Nullable;
-import javax.transaction.Transactional;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Repository;
 
 //hibernate template embedded
 @Repository("FileDao")
-@Transactional
 public class FileDaoImpl extends CustomHibernateDaoSupport implements FileDao {
 
     private static final Logger logger = LoggerFactory.getLogger(FileDaoImpl.class);

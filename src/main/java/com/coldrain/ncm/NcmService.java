@@ -28,7 +28,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +35,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class NcmService {
@@ -217,7 +217,7 @@ public class NcmService {
         }
     }
 
-    @Transactional
+    @Transactional(transactionManager = "ncmTxManager")
     public List<PlayListBean> getPlaylists_publicTest(){
         Gson gson = new Gson();
         String sql = "SELECT playlist FROM web_playlist;";
