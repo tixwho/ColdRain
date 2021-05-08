@@ -1,7 +1,7 @@
 package com.coldrain.database.models;
 
 import com.coldrain.database.generic.DatabasePOJO;
-import com.coldrain.database.service.AudioDBService;
+import com.coldrain.database.service.AudioDBService_legacy;
 import com.coldrain.database.utils.InitSessionFactory;
 import com.coldrain.exception.DatabaseException;
 import com.coldrain.exception.MetaIOException;
@@ -31,7 +31,7 @@ public class PlaylistRecordModel extends DatabasePOJO implements Serializable {
         } catch (DatabaseException de) {
             // song not presented in com.coldrain.database; scan first
             try {
-                this.fileM = AudioDBService.loadNewFile(new MetaSong(unknownSong.getSrc()));
+                this.fileM = AudioDBService_legacy.loadNewFile(new MetaSong(unknownSong.getSrc()));
             } catch (MetaIOException me) {
                 // should not happen if audioFile is valid
                 return;

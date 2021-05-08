@@ -23,8 +23,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class PlaylistDBService {
-    private static final Logger logger = LoggerFactory.getLogger(PlaylistDBService.class);
+public class PlaylistDBService_legacy {
+    private static final Logger logger = LoggerFactory.getLogger(PlaylistDBService_legacy.class);
 
 
     public static void fullScanPlaylistFiles(File inDir) throws DatabaseException {

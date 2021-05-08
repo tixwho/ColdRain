@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>Coldrain</groupId>
-    <artifactId>PlaylistConverter</artifactId>
+    <groupId>coldrain</groupId>
+    <artifactId>ColdRain</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -104,12 +104,6 @@
             <artifactId>jetty-server</artifactId>
             <version>9.4.38.v20210224</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-servlet -->
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>9.4.36.v20210114</version>
-        </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
         <dependency>
@@ -148,6 +142,11 @@
             <artifactId>spring-tx</artifactId>
             <version>5.3.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>5.3.4</version>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
         <dependency>
@@ -176,7 +175,12 @@
             <version>4.0.1</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/org.hibernate.javax.persistence/hibernate-jpa-2.1-api -->
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <version>1.0.2.Final</version>
+        </dependency>
 
 
 
@@ -185,6 +189,11 @@
             <artifactId>junit-jupiter</artifactId>
             <version>RELEASE</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>9.4.36.v20210114</version>
         </dependency>
 
 

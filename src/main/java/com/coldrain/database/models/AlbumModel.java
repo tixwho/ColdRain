@@ -3,17 +3,26 @@ package com.coldrain.database.models;
 import com.coldrain.database.generic.DatabasePOJO;
 import com.coldrain.database.utils.InitSessionFactory;
 import com.coldrain.playlist.generic.MetaSong;
-import org.hibernate.NonUniqueObjectException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-
-
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import org.hibernate.NonUniqueObjectException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.query.Query;
 @Entity
 @Table(name = "Album", indexes = {@Index(name = "index_album",columnList = "album ASC")})
 @SequenceGenerator(name = "album_seq", sequenceName = "album_id_seq", initialValue = 1,
@@ -34,7 +43,8 @@ public class AlbumModel extends DatabasePOJO implements Serializable {
     @JoinColumn(name = "albumArtistid")
     private ArtistModel albumArtistM;
 
-    @OneToMany(mappedBy = "albumM")
+    @OneToMany(mappedBy = "albumM", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SELECT)
     private Set<MetaModel> metaModels = new HashSet<MetaModel>();
 
     private String album;

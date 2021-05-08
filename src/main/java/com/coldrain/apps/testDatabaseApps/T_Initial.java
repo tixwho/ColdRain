@@ -1,7 +1,7 @@
 package com.coldrain.apps.testDatabaseApps;
 
 import com.coldrain.database.generic.BaseDatabaseTestingClass;
-import com.coldrain.database.service.AudioDBService;
+import com.coldrain.database.service.AudioDBService_legacy;
 import com.coldrain.exception.DatabaseException;
 import com.coldrain.exception.MetaIOException;
 import com.coldrain.exception.NativeReflectionException;
@@ -35,14 +35,14 @@ public class T_Initial extends BaseDatabaseTestingClass {
             MetaSong aMeta = new MetaSong(aSong.getSrc());
             System.out.println("aMeta Date:"+aMeta.getAlbumDate());
             if(isInitializing) {
-            AudioDBService.loadNewFile(aMeta);
+            AudioDBService_legacy.loadNewFile(aMeta);
             }else {
-            AudioDBService.updateMetaForFile(aMeta);
+            AudioDBService_legacy.updateMetaForFile(aMeta);
             }
             
         }
         if(!isInitializing) {
-        AudioDBService.cleanValidationSets();
+        AudioDBService_legacy.cleanValidationSets();
         }
         
         

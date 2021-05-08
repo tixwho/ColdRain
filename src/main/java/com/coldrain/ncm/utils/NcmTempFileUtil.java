@@ -34,7 +34,7 @@ public class NcmTempFileUtil {
 
 
     private static File initTempPath(){
-        File tempPath = new File("com/coldrain/temp");
+        File tempPath = new File("temp");
         if(!tempPath.exists() || !tempPath.isDirectory()) {
             tempPath.mkdir(); //如果不存在，则创建该文件夹
          }
