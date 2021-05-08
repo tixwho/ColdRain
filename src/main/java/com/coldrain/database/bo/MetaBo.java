@@ -12,7 +12,7 @@ public interface MetaBo extends MetaDao {
 
     //logic level operation
     int checkMetaCount(MetaSong metaSong); //contains an extra conversion
-    MetaModel guaranteeMetaModel(MetaSong metaSong);
+    MetaModel guaranteeMetaModel(MetaSong metaSong, AlbumModel albumM, SongModel songM);
     MetaModel createMetaModel(MetaSong metaSong);
     MetaModel registerFileMtoMetaM(MetaModel metaM, FileModel fileM);
     MetaModel attachAlbumMtoMetaM(MetaModel metaM, AlbumModel albumM);

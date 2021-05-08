@@ -1,6 +1,6 @@
 package com.coldrain.test;
 
-import com.coldrain.database.service.AudioDBService;
+import com.coldrain.database.service.AudioDBService_legacy;
 import com.coldrain.exception.ColdRainException;
 import com.coldrain.playlist.generic.BaseLocalTestingClass;
 
@@ -11,7 +11,7 @@ public class GeneralTesting extends BaseLocalTestingClass{
         me.setAllLevel("debug");
 //        me.readerCtrl.setLevel("error");
         
-        AudioDBService adbs = new AudioDBService();
+        AudioDBService_legacy adbs = new AudioDBService_legacy();
         //adbs.fullScanAudioFiles(new File("F:\\Discography\\Wonder Egg Priority"));
         adbs.fullFileModelCleanse();
         

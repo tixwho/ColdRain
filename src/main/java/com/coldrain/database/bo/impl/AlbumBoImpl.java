@@ -9,10 +9,8 @@ import com.coldrain.playlist.generic.MetaSong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service("AlbumBo")
-@Transactional(transactionManager = "crTxManager")
 public class AlbumBoImpl implements AlbumBo {
     
     AlbumDao albumDao;
@@ -24,12 +22,19 @@ public class AlbumBoImpl implements AlbumBo {
 
     @Override
     public AlbumModel createAlbumModel(MetaSong metaSong) {
-        return null;
+        AlbumModel albumM = new AlbumModel(metaSong);
+        albumDao.save(albumM);
+        return albumM;
     }
 
     @Override
-    public AlbumModel guaranteeAlbumModel(MetaSong metaSong) {
-        return null;
+    public AlbumModel guaranteeAlbumModel(MetaSong metaSong, ArtistModel artistM) {
+        AlbumModel albumM = findByAlbumAndArtistM(metaSong.getAlbum(), artistM);
+        if(albumM == null){
+            albumM = createAlbumModel(metaSong);
+            attachArtistMtoAlbumM(albumM,artistM);
+        }
+        return albumM;
     }
 
     @Override

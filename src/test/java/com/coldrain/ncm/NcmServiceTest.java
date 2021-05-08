@@ -25,7 +25,7 @@ public class NcmServiceTest extends KarylTestBase {
     @BeforeAll
     static void initService() throws NoSuchMethodException {
         String propStr =
-            "E:\\lzx\\Discovery\\NeteaseMusicDBExport-master\\NeteaseMusicDBExport-master\\com.coldrain.ncm.properties";
+            "E:\\lzx\\Discovery\\NeteaseMusicDBExport-master\\NeteaseMusicDBExport-master\\ncm.properties";
         NcmPropertiesUtil.readNcmProperties(new File(propStr)); //initialize DB location
         service = new NcmService();
         serviceClazz= NcmService.class;

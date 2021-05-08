@@ -10,7 +10,7 @@ public interface AlbumBo extends AlbumDao {
 
     //logical operations
     AlbumModel createAlbumModel(MetaSong metaSong);
-    AlbumModel guaranteeAlbumModel(MetaSong metaSong);
+    AlbumModel guaranteeAlbumModel(MetaSong metaSong, ArtistModel artistM);
     AlbumModel registerMetaMtoAlbumM(AlbumModel albumM, MetaModel metaM);
     AlbumModel attachArtistMtoAlbumM(AlbumModel albumM, ArtistModel artistM);
 

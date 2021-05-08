@@ -12,8 +12,10 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository("MetaDao")
+@Transactional(transactionManager = "crTxManager")
 public class MetaDaoImpl extends CustomHibernateDaoSupport implements MetaDao {
 
     private static final Logger logger = LoggerFactory.getLogger(MetaDaoImpl.class);

@@ -9,32 +9,44 @@ import com.coldrain.playlist.generic.MetaSong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service("ArtistBo")
-@Transactional(transactionManager = "crTxManager")
 public class ArtistBoImpl implements ArtistBo {
 
     ArtistDao artistDao;
 
     @Override
     public ArtistModel createArtistModel(String artist) {
-        return null;
+        ArtistModel artistM = new ArtistModel(artist);
+        artistDao.save(artistM);
+        return artistM;
+    }
+    @Override
+    public ArtistModel createArtistModel_track(MetaSong metaSong) {
+        return createArtistModel(metaSong.getArtist());
     }
 
     @Override
-    public ArtistModel createArtistModel(MetaSong metaSong) {
-        return null;
+    public ArtistModel createArtistModel_album(MetaSong metaSong) {
+        return createArtistModel(metaSong.getAlbumArtist());
     }
 
     @Override
     public ArtistModel guaranteeArtistModel_track(MetaSong metaSong) {
-        return null;
+        ArtistModel artistM = artistDao.findByArtist(metaSong.getArtist());
+        if (artistM == null){
+            artistM = createArtistModel_track(metaSong);
+        }
+        return artistM;
     }
 
     @Override
     public ArtistModel guaranteeArtistModel_album(MetaSong metaSong) {
-        return null;
+        ArtistModel artistM = artistDao.findByArtist(metaSong.getAlbumArtist());
+        if (artistM == null){
+            artistM = createArtistModel_track(metaSong);
+        }
+        return artistM;
     }
 
     @Override

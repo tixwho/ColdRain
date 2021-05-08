@@ -18,7 +18,6 @@ public class HibernateConfig {
     private boolean autoUpdateStruct;
 
 
-
     @Value("${coldrain.db.hbm2ddl.auto.create}")
     private boolean autoFormatDatabase;
 

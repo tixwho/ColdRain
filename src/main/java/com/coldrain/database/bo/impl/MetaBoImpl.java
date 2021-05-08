@@ -10,10 +10,8 @@ import com.coldrain.playlist.generic.MetaSong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service("MetaBo")
-@Transactional(transactionManager = "crTxManager")
 public class MetaBoImpl implements MetaBo {
 
     @Autowired
@@ -38,11 +36,7 @@ public class MetaBoImpl implements MetaBo {
         metaDao.delete(metaM);
     }
 
-    @Override
-    public MetaModel guaranteeMetaModel(MetaSong metaSong) {
-        //TODO fill in after complete albumM and songM
-        return null;
-    }
+
 
     @Override
     public MetaModel findByAlbumMandSongM(AlbumModel albumM, SongModel songM) {
@@ -61,9 +55,21 @@ public class MetaBoImpl implements MetaBo {
     }
 
     @Override
+    public MetaModel guaranteeMetaModel(MetaSong metaSong, AlbumModel albumM, SongModel songM) {
+        MetaModel metaM = findByAlbumMandSongM(albumM,songM);
+        if(metaM == null){
+            metaM = createMetaModel(metaSong);
+            attachAlbumMtoMetaM(metaM,albumM);
+            attachSongMtoMetaM(metaM,songM);
+        }
+        return metaM;
+    }
+
+    @Override
     public MetaModel createMetaModel(MetaSong metaSong) {
-        //TODO fill in after complete albumM and songM
-        return null;
+        MetaModel metaM = new MetaModel(metaSong);
+        metaDao.save(metaM);
+        return metaM;
     }
 
     @Override

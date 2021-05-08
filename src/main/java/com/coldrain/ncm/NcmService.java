@@ -252,6 +252,7 @@ public class NcmService {
 
         } catch (IOException e) {
             logger.warn("Failure caching DJProgram imageUrl:"+toModifyDJProgram.getRelative_path());
+            e.printStackTrace();
 
         } catch (MetaIOException e) {
             logger.warn("Unable to create MetaSong for DJProgram:"+toModifyDJProgram.getRelative_path());

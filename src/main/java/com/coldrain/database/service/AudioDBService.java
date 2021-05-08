@@ -1,407 +1,85 @@
 package com.coldrain.database.service;
 
-import com.coldrain.database.models.*;
-import com.coldrain.database.utils.DbHelper;
-import com.coldrain.database.utils.InitSessionFactory;
-import com.coldrain.exception.DatabaseException;
-import com.coldrain.exception.ErrorCodes;
-import com.coldrain.exception.MetaIOException;
+import com.coldrain.database.bo.AlbumBo;
+import com.coldrain.database.bo.ArtistBo;
+import com.coldrain.database.bo.FileBo;
+import com.coldrain.database.bo.MetaBo;
+import com.coldrain.database.bo.SongBo;
+import com.coldrain.database.models.AlbumModel;
+import com.coldrain.database.models.ArtistModel;
+import com.coldrain.database.models.FileModel;
+import com.coldrain.database.models.MetaModel;
+import com.coldrain.database.models.SongModel;
 import com.coldrain.playlist.generic.MetaSong;
-import com.coldrain.playlist.generic.SupportedAudioFormat;
-import com.coldrain.toolkit.AudioMd5Helper;
-import org.apache.commons.io.FileUtils;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-
+@Service("AudioDBService")
 public class AudioDBService {
-    private static final Logger logger = LoggerFactory.getLogger(AudioDBService.class);
-    private static final HashSet<ArtistModel> toValidateArtists = new HashSet<ArtistModel>();
-    private static final HashSet<AlbumModel> toValidateAlbums = new HashSet<AlbumModel>();
-    private static final HashSet<SongModel> toValidateSongs = new HashSet<SongModel>();
 
-    /* Functional Methods Below */
+    final
+    AlbumBo albumBo;
+    final
+    ArtistBo artistBo;
+    final
+    FileBo fileBo;
+    final
+    MetaBo metaBo;
+    final
+    SongBo songBo;
 
-    // Called Once ColdRain Launched. Requires considerable com.coldrain.database I/O resource.
-    /**
-     *  Load new file, modify any changed, and delete missing. 
-     * @param inDir Directory to be scanned for audioFiles.
-     * @throws DatabaseException When it is not a directory
-     */
-    public void fullScanAudioFiles(File inDir) throws DatabaseException {
-
-
-        // check this is a directory
-        if (!inDir.isDirectory()) {
-            throw new DatabaseException("Not a Directory to apply fullScan",
-                ErrorCodes.BASE_IO_ERROR);
-        }
-
-        // filter audiofiles with SuffixFileFilter (from commonsIO)
-        String[] acceptedAudioFormat = SupportedAudioFormat.getSupportedAudioArray();
-        Collection<File> allAudios = FileUtils.listFiles(inDir, acceptedAudioFormat, true);
-
-
-        // try find file in com.coldrain.database; if not found, insert;
-        for (File audio : allAudios) {
-            String audioStr = audio.getAbsolutePath();
-            MetaSong theMeta;
-            try {
-                theMeta = new MetaSong(audioStr);
-            } catch (MetaIOException me) {
-                // should not happen if all audiofile is valid
-                continue;
-            }
-
-            if (FileModel.findFileModel(audioStr, false) == null) {
-                // load a brand new file with possibly existing metadata
-                loadNewFile(theMeta);
-            }
-            // update file if timestamp later.
-            updateMetaForFile(theMeta);
-        }
-
-        // finally delete unused fileM once
-        fullFileModelCleanse();
-        //validation service-level clean up
-        cleanValidationSets(); 
+    @Autowired
+    public AudioDBService(AlbumBo albumBo, ArtistBo artistBo, FileBo fileBo, MetaBo metaBo,
+        SongBo songBo) {
+        this.albumBo = albumBo;
+        this.artistBo = artistBo;
+        this.fileBo = fileBo;
+        this.metaBo = metaBo;
+        this.songBo = songBo;
     }
 
 
-    /**
-     * Standard Procedure for loading a new audioFile.
-     * Create a FileM and guarantee a MetaM for it, attached.
-     * @param meta MetaSong instance to be loaded.
-     * @return fileM, attached with functional MetaM.
-     */
-    public static FileModel loadNewFile(MetaSong meta) {
-        FileModel fileM = FileModel.createFileModel(meta);
-        MetaModel metaM = MetaModel.guaranteeMetaModel(meta);
-        fileM.attachMetaModel(metaM);
-        return fileM;
-    }
-
-    /**
-     * Standard Procedure for Deleting a fileM from com.coldrain.database. Automatic clean-up.
-     * If it's the only file that shares corresponding metaM, metaM will also be disposed.
-     * @param meta MetaSong instance to be disposed.
-     * @return status
-     */
-    public static boolean deleteFileFromDB(MetaSong meta) {
-        try {
-            FileModel fileM = FileModel.findFileModel(meta);
-            return deleteFileFromDB(fileM,true);
-        } catch (DatabaseException de) {
-            // try to delete a fileM not within com.coldrain.database, ignore
-            logger.warn("Tried to discard an fileM not within databse!", de);
+    public MetaModel scanSingle(MetaSong metaSong){
+        //file prototype
+        System.out.println("FINDBYSRC START");
+        FileModel fileM = fileBo.findBySrc(metaSong.getSrc());
+        if(fileM==null){
+            fileM=fileBo.createFileModel(metaSong);
         }
-        return false;
-    }
-    
-    /**
-     * Standard Procedure for Deleting a fileM from com.coldrain.database. Automatic clean-up.
-     * If it's the only file that shares corresponding metaM, metaM will also be disposed.
-     * @param fileM fileM to be disposed
-     * @return  status. always true in this case.
-     */
-    public static boolean deleteFileFromDB(FileModel fileM) {
-        return deleteFileFromDB(fileM,true);
-    }
-
-    /**
-     * Standard Procedure for Deleting a fileM from com.coldrain.database.
-     * If it's the only file that shares corresponding metaM, metaM will also be disposed.
-     * @param fileM fileM to be disposed
-     * @param autoCleanFlag in-class, service level use can set false for performance
-     * @return  status. always true in this case.
-     */
-    private static boolean deleteFileFromDB(FileModel fileM, boolean autoCleanFlag) {
-        fileM.getMetaM().getFileModels().remove(fileM);
-        if (fileM.getMetaM().getFileModels().size() == 0) {
-            safelyDisposeMetaM(fileM.getMetaM());
+        //find
+        //start with artist
+        System.out.println(("ARTIST SCAN START"));
+        ArtistModel artistM = artistBo.guaranteeArtistModel_track(metaSong);
+        ArtistModel albumArtistM = artistBo.guaranteeArtistModel_album(metaSong);
+        //songM, always add to relation
+        System.out.println("SONG SCAN START");
+        SongModel songM = songBo.findByTitleAndArtistM(metaSong.getTrackTitle(),artistM);
+        if(songM==null) {
+            songM = songBo.guaranteeSongModel(metaSong.getTrackTitle(),artistM);
+            artistBo.registerSongMtoArtistM(artistM, songM);
         }
-        Session session = InitSessionFactory.getNewSession();
-        Transaction tx = session.beginTransaction();
-        session.delete(fileM);
-        logger.info("Deleted empty fileM entry:" + fileM);
-        tx.commit();
-        session.close();
-        if(autoCleanFlag) {
-            cleanValidationSets();
+        //AlbumM, always add to relation
+        System.out.println("ALBUM SCAN START");
+        AlbumModel albumM=albumBo.findByAlbumAndArtistM(metaSong.getAlbum(),albumArtistM);
+        if(albumM==null){
+            albumM = albumBo.guaranteeAlbumModel(metaSong,albumArtistM);
+            artistBo.registerAlbumMtoArtistM(albumArtistM, albumM);
         }
-        return true;
-    }
+        System.out.println(albumM);
+        System.out.println(albumArtistM);
 
-    // logic: query:all fileM -> check if File valid -> delete any invalid fileM (heavy work)
-    /**
-     * Cleanup the whole com.coldrain.database and delete any unused fileM
-     * Any unattached metaM will also be disposed. Requires considerable com.coldrain.database I/O resource.
-     */
-    public void fullFileModelCleanse() {
-        logger.info("Start FileM Cleansing Process!");
-        Session session = InitSessionFactory.getNewSession();
-        session.beginTransaction();
-        // retrieve all fileModels
-        Query<FileModel> q = session.createQuery("from FileModel f", FileModel.class);
-        List<FileModel> fList = q.getResultList();
-        session.close();
-        logger.info("List Check: " + fList.size() + " FileM in total!");
-        int delCount = 0;
-        int updCount = 0;
-        for (FileModel aFile : fList) {
-            File toCheckFile = new File(aFile.getSrc());
-            if (!toCheckFile.exists()) {
-                deleteFileFromDB(aFile,false);
-                delCount += 1;
-            } else {
-                if (aFile.getMd5()==null || aFile.getMd5().isEmpty()) {
-                    try {
-                        aFile.setMd5(AudioMd5Helper.getAudioMd5Force(new MetaSong(aFile.getSrc())));
-                    } catch (MetaIOException e) {
-                        e.printStackTrace();
-                    }
-                    session = InitSessionFactory.getNewSession();
-                    Transaction tx = session.beginTransaction();
-                    session.update(aFile);
-                    logger.info("UpdatedfileM entry:" + aFile);
-                    tx.commit();
-                    session.close();
-                    updCount += 1;
-                }
-            }
+        //End with Meta, always add to relation
+        System.out.println("META SCAN START");
+        MetaModel metaM = metaBo.findByAlbumMandSongM(albumM,songM);
+        if(metaM==null) {
+            metaM = metaBo.guaranteeMetaModel(metaSong, albumM, songM);
+            albumBo.registerMetaMtoAlbumM(albumM, metaM);
+            songBo.registerMetaMtoSongM(songM, metaM);
         }
-        //cleanup
-        cleanValidationSets();
-        logger.info("Deleted " + delCount + " unused FileM in cleansing!");
-        logger.info("Updated " + updCount + " FileM without Md5 info!");
-    }
-
-    /**
-     * Stantard procedure for undating a metaM for file.
-     * @param meta MetaSong instance that *might* need to be updated. automatically clean-up
-     * @return An always up-to-date FileM
-     * @throws DatabaseException When unable to find FileM in com.coldrain.database.
-     */
-    public static FileModel updateMetaForFile(MetaSong meta) throws DatabaseException {
-        return updateMetaForFile(meta, true);
-    }
-
-    // logic: check timestamp first, if local files newer, modify(fileM=1)/(fileM>1)initiate
-    // metadata
-    // todo: separate checking of timestamp (use src string only to save MetaSong resource)
-    /**
-     * Stantard procedure for undating a metaM for file.
-     * @param meta MetaSong instance that *might* need to be updated.
-     * @param autoCleanFlag automatic cleanup validation set. could be disabled for private use
-     * but BE SURE TO CLEAN in service level.
-     * @return An always up-to-date FileM
-     * @throws DatabaseException When unable to find FileM in com.coldrain.database.
-     */
-    private static FileModel updateMetaForFile(MetaSong meta, boolean autoCleanFlag)
-        throws DatabaseException {
-        FileModel reFileModel = FileModel.findFileModel(meta);
-        // check timeStamp
-        long timestampNow = DbHelper.calcLastModTimestamp(meta);
-        if (timestampNow != reFileModel.getLastModified()) {
-            logger.info("Start Updating new Meta for File " + reFileModel.getSrc() + "("
-                + reFileModel.getFileid() + ")");
-
-            // get MetaModel
-            MetaModel toHandleMetaM = reFileModel.getMetaM();
-            logger.trace("MetaModel Info Before:" + toHandleMetaM.toString());
-
-            // if only one file use this meta, directly modify current MetaModel
-            if (toHandleMetaM.getFileModels().size() == 1) {
-                logger.warn("Only a single file use this meta.");
-
-
-                if (MetaModel.checkMetaCount(meta) == 0) {
-                    logger.info("Single File&New Meta, directly modify current meta.");
-                    logger.warn("toHandleMetaM" + toHandleMetaM);
-                    // no current meta exist for the file & only one file share this Meta, update
-                    // check album
-                    AlbumModel toCheckAlbumM = AlbumModel.guaranteeAlbumModel(meta);
-                    boolean setNewAlbum = false;
-                    if (!toHandleMetaM.getAlbumM().equals(toCheckAlbumM)) {
-
-                        toHandleMetaM.getAlbumM().getMetaModels().remove(toHandleMetaM);
-
-                        toValidateAlbums.add(toHandleMetaM.getAlbumM());
-                        // set later to avoid different hashcode;
-                        setNewAlbum = true;
-                    }
-                    SongModel toCheckSongM = SongModel.guaranteeSongModel(meta);
-                    boolean setNewSong = false;
-                    if (!toHandleMetaM.getSongM().equals(toCheckSongM)) {
-
-                        toHandleMetaM.getSongM().getMetaModels().remove(toHandleMetaM);
-
-                        toValidateSongs.add(toHandleMetaM.getSongM());
-                        // set later to avoid different hashcode;
-                        setNewSong = true;
-
-                    }
-                    if (setNewAlbum) {
-                        toHandleMetaM.setAlbumM(toCheckAlbumM);
-                    }
-                    if (setNewSong) {
-                        toHandleMetaM.setSongM(toCheckSongM);
-                    }
-
-                    String toCheckDiscNo = meta.getDiscNo();
-                    if (toHandleMetaM.getDiscNo() != toCheckDiscNo) {
-                        toHandleMetaM.setDiscNo(toCheckDiscNo);
-                    }
-                    String toCheckTrackNo = meta.getTrackNo();
-                    if (toHandleMetaM.getTrackNo() != toCheckTrackNo) {
-                        toHandleMetaM.setTrackNo(toCheckTrackNo);
-                    }
-                    // attach to file
-                    Session session = InitSessionFactory.getNewSession();
-                    Transaction tx = session.beginTransaction();
-                    session.saveOrUpdate(toHandleMetaM);
-                    tx.commit();
-                    session.close();
-                    logger.info("Updated MetaModel!");
-                    logger.warn("MetaModel Info Now:" + toHandleMetaM);
-                } else {
-                    MetaModel toCompareMetaM = MetaModel.guaranteeMetaModel(meta);
-                    logger.info(
-                        "Single File& Current Meta: Using current Meta and try to delete com.coldrain.old.");
-                    // delete first since new relation will make collection unable to find FileModel
-
-                    toHandleMetaM.getFileModels().remove(reFileModel);
-                    // only a single file and a current meta exist, attach new meta & delete
-                    // set new relation for File
-                    reFileModel.attachMetaModel(toCompareMetaM);
-
-                    // delete if no other files use this meta
-                    if (toHandleMetaM.getFileModels().size() == 0) {
-                        safelyDisposeMetaM(toHandleMetaM);
-                    }
-
-                }
-            } else {
-                // multiple files share same meta.create/retrieve new meta and attach
-                logger.warn("Multiple Files use this meta");
-                // delink original Meta
-                toHandleMetaM.getFileModels().remove(reFileModel);
-                // find new meta to attach
-                MetaModel toAttachNewMeta = MetaModel.guaranteeMetaModel(meta);
-                // updated to com.coldrain.database
-                reFileModel.attachMetaModel(toAttachNewMeta);
-
-
-
-            }
-            reFileModel.updateTimeStamp();
-
-        } else {
-            logger.info("No need to update");
-        }
-        if (autoCleanFlag) {
-            cleanValidationSets(); // could repeat for multiple times if called many times
-            // but since this is a static method, place it here for safe.
-        }
-        return reFileModel;
-    }
-
-
-    /* Support Methods Below */
-
-    /**
-     * Delete albumM, songM relation with target metaM (delete when necessary), dispose metaM.
-     * @param toDisposeMetaM metaM to be safely disposed.
-     */
-    private static void safelyDisposeMetaM(MetaModel toDisposeMetaM) {
-        toDisposeMetaM.getAlbumM().getMetaModels().remove(toDisposeMetaM);
-        toValidateAlbums.add(toDisposeMetaM.getAlbumM());
-        toDisposeMetaM.getSongM().getMetaModels().remove(toDisposeMetaM);
-        toValidateSongs.add(toDisposeMetaM.getSongM());
-        // double check: no fileM should use this MetaM now.
-        if (toDisposeMetaM.getFileModels().size() != 0) {
-            logger.warn("Disposing MetaModel " + toDisposeMetaM + "but FileM NOT CLEARED");
-        }
-        Session session = InitSessionFactory.getNewSession();
-        Transaction tx = session.beginTransaction();
-        session.delete(toDisposeMetaM);
-        tx.commit();
-        session.close();
-        logger.info("Deleted MetaM " + toDisposeMetaM);
+        //link with file
+        fileBo.attachMetaMToFileM(fileM,metaM);
+        metaBo.registerFileMtoMetaM(metaM,fileM);
+        return metaM;
 
     }
-
-
-    // REMEMBER TO CALL IT ON EVERY SERVICE LEVEL DELETION!!!
-    public static void cleanValidationSets() {
-        logger.debug("Start Cleaning up!");
-        if (toValidateAlbums != null) {
-            logger.debug("Validating Albums!");
-            for (AlbumModel toValidateAlbumM : toValidateAlbums) {
-                if (toValidateAlbumM.getMetaModels().size() == 0) {
-                    logger.debug("Cleaning Album:" + toValidateAlbumM);
-                    toValidateAlbumM.getAlbumArtistM().getAlbumModels().remove(toValidateAlbumM);
-                    toValidateArtists.add(toValidateAlbumM.getAlbumArtistM());
-                    Session session = InitSessionFactory.getNewSession();
-                    Transaction tx = session.beginTransaction();
-                    session.delete(toValidateAlbumM);
-                    tx.commit();
-                    session.close();
-                    logger.info("Deleted AlbumModel!");
-                }
-            }
-            toValidateAlbums.clear();
-        }
-        if (toValidateSongs != null) {
-            logger.debug("Validating Songs!");
-            for (SongModel toValidateSongM : toValidateSongs) {
-                if (toValidateSongM.getMetaModels().size() == 0) {
-                    logger.debug("Cleaning Song:" + toValidateSongM);
-                    toValidateSongM.getArtistM().getSongModels().remove(toValidateSongM);
-                    toValidateArtists.add(toValidateSongM.getArtistM());
-                    Session session = InitSessionFactory.getNewSession();
-                    Transaction tx = session.beginTransaction();
-                    session.delete(toValidateSongM);
-                    tx.commit();
-                    session.close();
-                    logger.info("Deleted SongModel!");
-                }
-            }
-            toValidateSongs.clear();
-        }
-        if (toValidateArtists != null) {
-            logger.debug("Validating Artists!");
-            for (ArtistModel toValidateArtistM : toValidateArtists) {
-                boolean noArtist = false;
-                boolean noAlbumArtist = false;
-                if (toValidateArtistM.getSongModels().size() == 0) {
-                    logger.debug("No Song use Artist:" + toValidateArtistM);
-                    noArtist = true;
-                }
-                if (toValidateArtistM.getAlbumModels().size() == 0) {
-                    logger.debug("No Album use Artist:" + toValidateArtistM);
-                    noAlbumArtist = true;
-                }
-
-                if (noArtist && noAlbumArtist) {
-                    logger.info("Cleaning Artist:" + toValidateArtistM);
-                    Session session = InitSessionFactory.getNewSession();
-                    Transaction tx = session.beginTransaction();
-                    session.delete(toValidateArtistM);
-                    tx.commit();
-                    session.close();
-                    logger.info("Deleted ArtistModel!");
-                }
-            }
-            toValidateArtists.clear();
-        }
-    }
-
 }

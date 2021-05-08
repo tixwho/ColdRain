@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +17,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.query.Query;
 
 @Entity
@@ -33,10 +36,12 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "artist_seq")
     private Integer artistid;
 
-    @OneToMany(mappedBy = "albumArtistM")
+    @OneToMany(mappedBy = "albumArtistM", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SELECT)
     private Set<AlbumModel> albumModels = new HashSet<AlbumModel>();
 
-    @OneToMany(mappedBy = "artistM")
+    @OneToMany(mappedBy = "artistM", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SELECT)
     private Set<SongModel> songModels = new HashSet<SongModel>();
 
     private String artist;
@@ -48,6 +53,8 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
     public ArtistModel(MetaSong meta) {
         this.artist = meta.getArtist();
     }
+
+    public ArtistModel(String artistName) {this.artist = artistName;}
 
 
     public Integer getArtistid() {

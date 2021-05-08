@@ -7,8 +7,10 @@ import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository("ArtistDao")
+@Transactional(transactionManager = "crTxManager")
 public class ArtistDaoImpl extends CustomHibernateDaoSupport implements ArtistDao {
 
     @Override

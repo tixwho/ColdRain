@@ -8,8 +8,10 @@ import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository("SongDao")
+@Transactional(transactionManager = "crTxManager")
 public class SongDaoImpl extends CustomHibernateDaoSupport implements SongDao {
 
     @Override
@@ -30,7 +32,7 @@ public class SongDaoImpl extends CustomHibernateDaoSupport implements SongDao {
     @Override
     public SongModel findByTitleAndArtistM(String title, ArtistModel artistM) {
         DetachedCriteria criteria = DetachedCriteria.forClass(SongModel.class);
-        criteria.add(Restrictions.and(Restrictions.eq("title",title),Restrictions.eq("artistM",artistM)));
+        criteria.add(Restrictions.and(Restrictions.eq("trackTitle",title),Restrictions.eq("artistM",artistM)));
         List list = getHibernateTemplate().findByCriteria(criteria);
         if(list.size()==0){
             logger.info("Missing Song with title & artistM " +title + artistM);

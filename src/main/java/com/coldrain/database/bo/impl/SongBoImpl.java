@@ -9,27 +9,41 @@ import com.coldrain.playlist.generic.MetaSong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service("SongBo")
-@Transactional(transactionManager = "crTxManager")
 public class SongBoImpl implements SongBo {
     
     SongDao songDao;
+
 
     @Autowired
     public void setSongDao(@Qualifier("SongDao") SongDao songDao) {
         this.songDao = songDao;
     }
 
+
     @Override
-    public SongModel guaranteeSongModel(MetaSong metaSong) {
-        return null;
+    public SongModel guaranteeSongModel(String title, ArtistModel artistM) {
+        SongModel songM = songDao.findByTitleAndArtistM(title,artistM);
+        if(songM==null){
+            songM = createSongModel(title);
+            //所有attach操作均在Bo完成 避免hashcode出现问题
+            attachArtistMtoSongM(songM, artistM);
+        }
+        return songM;
     }
 
     @Override
     public SongModel createSongModel(MetaSong metaSong) {
-        return null;
+        SongModel songM= new SongModel(metaSong);
+        songDao.save(songM);
+        return songM;
+    }
+
+    public SongModel createSongModel(String trackTitle){
+        SongModel songM = new SongModel(trackTitle);
+        songDao.save(songM);
+        return songM;
     }
 
     @Override

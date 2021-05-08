@@ -3,16 +3,26 @@ package com.coldrain.database.models;
 import com.coldrain.database.generic.DatabasePOJO;
 import com.coldrain.database.utils.InitSessionFactory;
 import com.coldrain.playlist.generic.MetaSong;
-import org.hibernate.NonUniqueResultException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import org.hibernate.NonUniqueResultException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.query.Query;
 
 
 @Entity
@@ -30,7 +40,8 @@ public class MetaModel extends DatabasePOJO implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "meta_seq")
     private Integer metaid;
 
-    @OneToMany(mappedBy = "metaM")
+    @OneToMany(mappedBy = "metaM", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SELECT)
     private Set<FileModel> fileModels = new HashSet<FileModel>();
 
 

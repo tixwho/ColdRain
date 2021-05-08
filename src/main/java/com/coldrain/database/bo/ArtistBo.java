@@ -10,7 +10,8 @@ public interface ArtistBo extends ArtistDao {
 
     //logical operations
     ArtistModel createArtistModel(String artist);
-    ArtistModel createArtistModel(MetaSong metaSong);
+    ArtistModel createArtistModel_track(MetaSong metaSong);
+    ArtistModel createArtistModel_album(MetaSong metaSong);
     ArtistModel guaranteeArtistModel_track(MetaSong metaSong);
     ArtistModel guaranteeArtistModel_album(MetaSong metaSong);
     ArtistModel registerSongMtoArtistM(ArtistModel artistM, SongModel songM);

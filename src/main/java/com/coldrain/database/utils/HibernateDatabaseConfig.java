@@ -21,12 +21,13 @@ public class HibernateDatabaseConfig {
     @Bean(name = "crDatasource")
     @Primary
     DataSource createDataSource(@Autowired HibernateConfig hibernateConfig) {
+
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setUrl("jdbc:sqlite:"+hibernateConfig.getDburl());
         System.out.println("DBURL:"+hibernateConfig.getDburl());
         dataSource.setDriverClassName("org.sqlite.JDBC");
-        dataSource.setInitialSize(5);
-        dataSource.setMaxActive((10));
+        dataSource.setInitialSize(1);
+        dataSource.setMaxActive(1);
         dataSource.setMaxWait(60000);
         dataSource.setMinIdle(1);
         dataSource.setTimeBetweenEvictionRunsMillis(60000);
@@ -41,8 +42,14 @@ public class HibernateDatabaseConfig {
         dataSource.setAsyncInit(true);
         //DEVELOPING
         dataSource.setBreakAfterAcquireFailure(true);
-
         return dataSource;
+        /*
+        DriverManagerDataSource ds = new DriverManagerDataSource();
+        ds.setDriverClassName("org.sqlite.JDBC");
+        ds.setUrl("jdbc:sqlite:" + hibernateConfig.getDburl());
+        return ds;
+        */
+
 
     }
 
@@ -77,7 +84,9 @@ public class HibernateDatabaseConfig {
     @Bean(name="crTxManager")
     @Primary
     PlatformTransactionManager createTxManager(@Autowired SessionFactory sessionFactory) {
-        return new HibernateTransactionManager(sessionFactory);
+        HibernateTransactionManager manager =  new HibernateTransactionManager(sessionFactory);
+        manager.setNestedTransactionAllowed(true);
+        return manager;
     }
 
 }

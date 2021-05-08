@@ -10,7 +10,7 @@ public interface SongBo extends SongDao {
 
 
     //logical operation
-    SongModel guaranteeSongModel(MetaSong metaSong);
+    SongModel guaranteeSongModel(String title, ArtistModel artistM);
     SongModel createSongModel(MetaSong metaSong);
     SongModel attachArtistMtoSongM(SongModel songM, ArtistModel artistM);
     SongModel registerMetaMtoSongM(SongModel songM, MetaModel metaM);

@@ -10,10 +10,8 @@ import com.coldrain.playlist.generic.MetaSong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service("FileBo")
-@Transactional(transactionManager = "crTxManager")
 public class FileBoImpl implements FileBo {
 
 
@@ -48,6 +46,7 @@ public class FileBoImpl implements FileBo {
     public FileModel findByMd5(String fileMd5) {
         return fileDao.findByMd5(fileMd5);
     }
+
 
     @Override
     public FileModel createFileModel(MetaSong metaSong) {

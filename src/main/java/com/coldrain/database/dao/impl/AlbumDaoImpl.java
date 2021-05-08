@@ -8,8 +8,10 @@ import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository("AlbumDao")
+@Transactional(transactionManager = "crTxManager")
 public class AlbumDaoImpl extends CustomHibernateDaoSupport implements AlbumDao {
 
     @Override
@@ -30,7 +32,7 @@ public class AlbumDaoImpl extends CustomHibernateDaoSupport implements AlbumDao 
     @Override
     public AlbumModel findByAlbumAndArtistM(String album, ArtistModel artistM) {
         DetachedCriteria criteria = DetachedCriteria.forClass(AlbumModel.class);
-        criteria.add(Restrictions.and(Restrictions.eq("album",album),Restrictions.eq("artistM",artistM)));
+        criteria.add(Restrictions.and(Restrictions.eq("album",album),Restrictions.eq("albumArtistM",artistM)));
         List list = getHibernateTemplate().findByCriteria(criteria);
         if(list.size()==0){
             logger.info("Missing Album with album & artistM " +album + artistM);

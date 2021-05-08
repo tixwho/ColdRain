@@ -11,9 +11,11 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 //hibernate template embedded
 @Repository("FileDao")
+@Transactional(transactionManager = "crTxManager")
 public class FileDaoImpl extends CustomHibernateDaoSupport implements FileDao {
 
     private static final Logger logger = LoggerFactory.getLogger(FileDaoImpl.class);
