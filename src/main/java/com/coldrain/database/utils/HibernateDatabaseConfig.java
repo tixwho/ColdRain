@@ -27,7 +27,7 @@ public class HibernateDatabaseConfig {
         System.out.println("DBURL:"+hibernateConfig.getDburl());
         dataSource.setDriverClassName("org.sqlite.JDBC");
         dataSource.setInitialSize(1);
-        dataSource.setMaxActive(1);
+        dataSource.setMaxActive(2);
         dataSource.setMaxWait(60000);
         dataSource.setMinIdle(1);
         dataSource.setTimeBetweenEvictionRunsMillis(60000);

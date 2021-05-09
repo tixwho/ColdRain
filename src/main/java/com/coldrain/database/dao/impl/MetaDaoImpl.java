@@ -8,6 +8,7 @@ import com.coldrain.database.utils.CustomHibernateDaoSupport;
 import java.util.List;
 import javax.annotation.Nullable;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,5 +57,30 @@ public class MetaDaoImpl extends CustomHibernateDaoSupport implements MetaDao {
         criteria.add(Restrictions.and(Restrictions.eq("albumM",albumM),Restrictions.eq("songM",songM)));
         List list = getHibernateTemplate().findByCriteria(criteria);
         return list.size();
+    }
+
+    @Override
+    public boolean checkAlbumExistenceInMeta(AlbumModel albumM) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(MetaModel.class);
+        criteria.add(Restrictions.eq("albumM",albumM)).setProjection(Projections.rowCount());
+        Long count = (Long)getHibernateTemplate().findByCriteria(criteria).get(0);
+        return count > 0;
+    }
+
+    @Override
+    public boolean checkSongExistenceInMeta(SongModel songM) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(MetaModel.class);
+        criteria.add(Restrictions.eq("songM",songM)).setProjection(Projections.rowCount());
+        Long count = (Long)getHibernateTemplate().findByCriteria(criteria).get(0);
+        return count > 0;
+    }
+
+    @Override
+    public List<MetaModel> findUnusedMetaM(){
+        DetachedCriteria criteria = DetachedCriteria.forClass(MetaModel.class);
+        criteria.add(Restrictions.sizeEq("fileModels",0));
+        List<MetaModel> unusedMetaMs = (List<MetaModel>) getHibernateTemplate().findByCriteria(criteria);
+        logger.debug("Found "+ unusedMetaMs.size() +" unused MetaMs");
+        return unusedMetaMs;
     }
 }

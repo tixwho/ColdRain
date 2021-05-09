@@ -7,6 +7,11 @@ import com.coldrain.database.models.FileModel;
 import com.coldrain.database.models.MetaModel;
 import com.coldrain.database.utils.DbHelper;
 import com.coldrain.playlist.generic.MetaSong;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -14,6 +19,7 @@ import org.springframework.stereotype.Service;
 @Service("FileBo")
 public class FileBoImpl implements FileBo {
 
+    Logger logger = LoggerFactory.getLogger(FileBoImpl.class);
 
     FileDao fileDao;
 
@@ -47,6 +53,21 @@ public class FileBoImpl implements FileBo {
         return fileDao.findByMd5(fileMd5);
     }
 
+    @Override
+    public boolean checkMetaExistenceInFile(MetaModel metaM) {
+        return fileDao.checkMetaExistenceInFile(metaM);
+    }
+
+    @Override
+    public List<FileModel> findAllFileModels() {
+        return fileDao.findAllFileModels();
+    }
+
+    @Override
+    public List<String> findAllFileModelsSRC() {
+        return fileDao.findAllFileModelsSRC();
+    }
+
 
     @Override
     public FileModel createFileModel(MetaSong metaSong) {
@@ -70,5 +91,24 @@ public class FileBoImpl implements FileBo {
         fileM.setLastModified(DbHelper.calcLastModTimestamp(fileM.getSrc()));
         fileDao.update(fileM);
         return fileM;
+    }
+
+    @Override
+    public List<FileModel> findAllInvalidFiles() {
+        //List<FileModel> allFileMs = findAllFileModels();
+        List<String> allFileMSRCs = findAllFileModelsSRC();
+        List<FileModel> invalidFileMs = new ArrayList<>();
+        for(String fileMSrc: allFileMSRCs){
+            File tempFile = new File(fileMSrc);
+            if(tempFile.exists()&&tempFile.isFile()){
+                continue;
+            }
+            //either not exist or is directory
+            FileModel fileM = findBySrc(fileMSrc);
+            invalidFileMs.add(fileM);
+            logger.debug("Found invalid fileM:"+fileM);
+
+        }
+        return invalidFileMs;
     }
 }

@@ -7,6 +7,7 @@ import com.coldrain.database.models.FileModel;
 import com.coldrain.database.models.MetaModel;
 import com.coldrain.database.models.SongModel;
 import com.coldrain.playlist.generic.MetaSong;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,21 @@ public class MetaBoImpl implements MetaBo {
     @Override
     public int checkMetaCount(AlbumModel albumM, SongModel songM) {
         return metaDao.checkMetaCount(albumM,songM);
+    }
+
+    @Override
+    public boolean checkAlbumExistenceInMeta(AlbumModel albumM) {
+        return metaDao.checkAlbumExistenceInMeta(albumM);
+    }
+
+    @Override
+    public boolean checkSongExistenceInMeta(SongModel songM) {
+        return metaDao.checkSongExistenceInMeta(songM);
+    }
+
+    @Override
+    public List<MetaModel> findUnusedMetaM() {
+        return metaDao.findUnusedMetaM();
     }
 
     @Override

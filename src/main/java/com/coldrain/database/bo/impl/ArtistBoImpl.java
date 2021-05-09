@@ -6,6 +6,7 @@ import com.coldrain.database.models.AlbumModel;
 import com.coldrain.database.models.ArtistModel;
 import com.coldrain.database.models.SongModel;
 import com.coldrain.playlist.generic.MetaSong;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -82,6 +83,11 @@ public class ArtistBoImpl implements ArtistBo {
     @Override
     public ArtistModel findByArtist(String artist) {
         return artistDao.findByArtist(artist);
+    }
+
+    @Override
+    public List<ArtistModel> findUnusedArtistMs() {
+        return artistDao.findUnusedArtistMs();
     }
 
     @Autowired

@@ -3,10 +3,12 @@ package com.coldrain.database.dao.impl;
 import com.coldrain.database.annotations.CrTask;
 import com.coldrain.database.dao.FileDao;
 import com.coldrain.database.models.FileModel;
+import com.coldrain.database.models.MetaModel;
 import com.coldrain.database.utils.CustomHibernateDaoSupport;
 import java.util.List;
 import javax.annotation.Nullable;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,5 +71,28 @@ public class FileDaoImpl extends CustomHibernateDaoSupport implements FileDao {
             logger.warn("Finding multiple files by md5");
         }
         return (FileModel)list.get(0);
+    }
+
+    @Override
+    public boolean checkMetaExistenceInFile(MetaModel metaM) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(FileModel.class);
+        criteria.add(Restrictions.eq("metaM",metaM)).setProjection(Projections.rowCount());
+        Long count = (Long)getHibernateTemplate().findByCriteria(criteria).get(0);
+        return count > 0;
+    }
+
+    @Override
+    public List<FileModel> findAllFileModels() {
+        DetachedCriteria criteria = DetachedCriteria.forClass(FileModel.class);
+        List<FileModel> allFileModels = (List<FileModel>) getHibernateTemplate().findByCriteria(criteria);
+        return allFileModels;
+    }
+
+    @Override
+    public List<String> findAllFileModelsSRC() {
+        DetachedCriteria criteria = DetachedCriteria.forClass(FileModel.class);
+        criteria.setProjection(Projections.property("src"));
+        List<String> allFileModelSRCs = (List<String>) getHibernateTemplate().findByCriteria(criteria);
+        return allFileModelSRCs;
     }
 }

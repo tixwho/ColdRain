@@ -11,11 +11,16 @@ import com.coldrain.database.models.FileModel;
 import com.coldrain.database.models.MetaModel;
 import com.coldrain.database.models.SongModel;
 import com.coldrain.playlist.generic.MetaSong;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("AudioDBService")
 public class AudioDBService {
+
+    private final static Logger logger = LoggerFactory.getLogger(AudioDBService.class);
 
     final
     AlbumBo albumBo;
@@ -39,27 +44,23 @@ public class AudioDBService {
     }
 
 
-    public MetaModel scanSingle(MetaSong metaSong){
-        //file prototype
-        System.out.println("FINDBYSRC START");
+    public FileModel scanSingle(MetaSong metaSong){
+        //file prototypeT");
         FileModel fileM = fileBo.findBySrc(metaSong.getSrc());
         if(fileM==null){
             fileM=fileBo.createFileModel(metaSong);
         }
         //find
         //start with artist
-        System.out.println(("ARTIST SCAN START"));
         ArtistModel artistM = artistBo.guaranteeArtistModel_track(metaSong);
         ArtistModel albumArtistM = artistBo.guaranteeArtistModel_album(metaSong);
         //songM, always add to relation
-        System.out.println("SONG SCAN START");
         SongModel songM = songBo.findByTitleAndArtistM(metaSong.getTrackTitle(),artistM);
         if(songM==null) {
             songM = songBo.guaranteeSongModel(metaSong.getTrackTitle(),artistM);
             artistBo.registerSongMtoArtistM(artistM, songM);
         }
         //AlbumM, always add to relation
-        System.out.println("ALBUM SCAN START");
         AlbumModel albumM=albumBo.findByAlbumAndArtistM(metaSong.getAlbum(),albumArtistM);
         if(albumM==null){
             albumM = albumBo.guaranteeAlbumModel(metaSong,albumArtistM);
@@ -69,7 +70,6 @@ public class AudioDBService {
         System.out.println(albumArtistM);
 
         //End with Meta, always add to relation
-        System.out.println("META SCAN START");
         MetaModel metaM = metaBo.findByAlbumMandSongM(albumM,songM);
         if(metaM==null) {
             metaM = metaBo.guaranteeMetaModel(metaSong, albumM, songM);
@@ -79,7 +79,65 @@ public class AudioDBService {
         //link with file
         fileBo.attachMetaMToFileM(fileM,metaM);
         metaBo.registerFileMtoMetaM(metaM,fileM);
-        return metaM;
-
+        logger.debug("Meta loaded:"+metaM);
+        return fileM;
     }
+
+    /**
+     * Not responsible for checking file existence or record deletion.
+     * Requires n+1 load(fileMs in metaM). Use with caution
+     * @param fileM FileModel to be disposed & unlinked with Meta
+     */
+    public void disposeSingle(FileModel fileM){
+        fileM.getMetaM().getFileModels().remove(fileM);
+        fileBo.delete(fileM);
+    }
+
+    /**
+     * Delete invalid FileMs and detach MetaM. Not responsible for MetaM cleanse.
+     */
+    public void invalidFileMFullCleanse(){
+        List<FileModel> invalidFileMs = fileBo.findAllInvalidFiles();
+        for(FileModel invalidFileM: invalidFileMs){
+            disposeSingle(invalidFileM);
+            logger.debug("Disposed invalid fileM"+invalidFileM);
+        }
+    }
+
+    /**
+     * Cleanse ALL unused MetaM, AlbumM, ArtistM, and SongM
+     * Uses 4 separate checks from Bo layer
+     */
+    public void invalidMetaCleanup(){
+        //meta relationship deletion
+        List<MetaModel> unusedMetaMs = metaBo.findUnusedMetaM();
+        for(MetaModel unusedMetaM: unusedMetaMs){
+            unusedMetaM.getAlbumM().getMetaModels().remove(unusedMetaM);
+            unusedMetaM.getSongM().getMetaModels().remove(unusedMetaM);
+            metaBo.delete(unusedMetaM);
+            logger.debug("Deleted MetaM:"+unusedMetaM);
+        }
+        //Album relationship deletion
+        List<AlbumModel> unusedAlbumMs = albumBo.findUnusedAlbumMs();
+        for(AlbumModel unusedAlbumM: unusedAlbumMs){
+            unusedAlbumM.getAlbumArtistM().getAlbumModels().remove(unusedAlbumM);
+            albumBo.delete(unusedAlbumM);
+            logger.debug("Deleted AlbumM:"+unusedAlbumM);
+        }
+        //Song relationship deletion
+        List<SongModel> unusedSongMs = songBo.findUnusedSongMs();
+        for(SongModel unusedSongM: unusedSongMs){
+            unusedSongM.getArtistM().getSongModels().remove(unusedSongM);
+            songBo.delete(unusedSongM);
+            logger.debug("Deleted SongM:"+unusedSongM);
+        }
+        //Artist relationship deletion
+        List<ArtistModel> unusedArtistMs = artistBo.findUnusedArtistMs();
+        for(ArtistModel unusedArtistM: unusedArtistMs){
+            //last chain of relationship, no relationship deletion needed
+            artistBo.delete(unusedArtistM);
+            logger.debug("Deleted ArtistM:"+unusedArtistM);
+        }
+    }
+
 }

@@ -6,6 +6,7 @@ import com.coldrain.database.models.AlbumModel;
 import com.coldrain.database.models.ArtistModel;
 import com.coldrain.database.models.MetaModel;
 import com.coldrain.playlist.generic.MetaSong;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -69,5 +70,15 @@ public class AlbumBoImpl implements AlbumBo {
     @Override
     public AlbumModel findByAlbumAndArtistM(String album, ArtistModel artistM) {
         return albumDao.findByAlbumAndArtistM(album,artistM);
+    }
+
+    @Override
+    public boolean checkAlbumArtistExistenceInAlbum(ArtistModel albumArtistM) {
+        return albumDao.checkAlbumArtistExistenceInAlbum(albumArtistM);
+    }
+
+    @Override
+    public List<AlbumModel> findUnusedAlbumMs() {
+        return albumDao.findUnusedAlbumMs();
     }
 }

@@ -1,6 +1,7 @@
 package com.coldrain.database.dao;
 
 import com.coldrain.database.models.ArtistModel;
+import java.util.List;
 
 public interface ArtistDao {
 
@@ -10,5 +11,6 @@ public interface ArtistDao {
 
     //query
     ArtistModel findByArtist (String artist);
+    List<ArtistModel> findUnusedArtistMs();
 
 }

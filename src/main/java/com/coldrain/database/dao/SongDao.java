@@ -2,6 +2,7 @@ package com.coldrain.database.dao;
 
 import com.coldrain.database.models.ArtistModel;
 import com.coldrain.database.models.SongModel;
+import java.util.List;
 
 public interface SongDao {
 
@@ -11,5 +12,9 @@ public interface SongDao {
 
     //query
     SongModel findByTitleAndArtistM(String title, ArtistModel artistM);
+
+    boolean checkArtistExistenceInSong(ArtistModel artistM);
+
+    List<SongModel> findUnusedSongMs();
 
 }

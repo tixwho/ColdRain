@@ -5,6 +5,14 @@
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
+        <!-- show parameters for hibernate sql 专为 Hibernate 定制 -->
+        <logger name="org.hibernate.type.descriptor.sql.BasicBinder"  level="TRACE" />
+        <logger name="org.hibernate.type.descriptor.sql.BasicExtractor"  level="DEBUG" />
+        <logger name="org.hibernate.loader.Loader" level="INFO"/>
+        <logger name="org.hibernate.SQL" level="DEBUG" />
+        <logger name="org.hibernate.type" level="TRACE" />
+        <logger name="org.hibernate.engine.QueryParameters" level="DEBUG" />
+        <logger name="org.hibernate.engine.query.HQLQueryPlan" level="DEBUG" />
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
