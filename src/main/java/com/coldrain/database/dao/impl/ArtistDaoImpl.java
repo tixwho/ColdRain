@@ -41,7 +41,7 @@ public class ArtistDaoImpl extends CustomHibernateDaoSupport implements ArtistDa
             logger.info("Missing Artist with artistName " + artist);
             return null;
         } else if (list.size() > 1) {
-            logger.warn("Finding multiple Artists by artistName");
+            logger.warn("Finding multiple Artists by artistName " + artist);
         }
         return (ArtistModel) list.get(0);
     }

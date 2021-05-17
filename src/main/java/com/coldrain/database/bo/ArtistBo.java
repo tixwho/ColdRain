@@ -16,5 +16,9 @@ public interface ArtistBo extends ArtistDao {
     ArtistModel guaranteeArtistModel_album(MetaSong metaSong);
     ArtistModel registerSongMtoArtistM(ArtistModel artistM, SongModel songM);
     ArtistModel registerAlbumMtoArtistM(ArtistModel artistM, AlbumModel albumM);
+    void connectSingleAndMultiArtistM(ArtistModel singleArtistM, ArtistModel multiArtistM);
+    void disconnectSingleAndMultiArtistM(ArtistModel singleArtistM, ArtistModel multiArtistM);
+    void registerArtistJacket(ArtistModel rootArtistM, ArtistModel jacketArtistM);
+    void abandonArtistJacket(ArtistModel jacketArtistM);
 
 }

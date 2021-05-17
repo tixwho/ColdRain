@@ -6,12 +6,17 @@ import com.coldrain.playlist.generic.MetaSong;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -32,19 +37,53 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
      */
     private static final long serialVersionUID = -1634806897634166804L;
 
+    //id
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "artist_seq")
     private Integer artistid;
 
+
+    //ArtistName
+    private String artist;
+
+    //FK in album
     @OneToMany(mappedBy = "albumArtistM", fetch = FetchType.LAZY)
     @Fetch(FetchMode.SELECT)
     private Set<AlbumModel> albumModels = new HashSet<AlbumModel>();
 
+    //FK in song
     @OneToMany(mappedBy = "artistM", fetch = FetchType.LAZY)
     @Fetch(FetchMode.SELECT)
     private Set<SongModel> songModels = new HashSet<SongModel>();
 
-    private String artist;
+    //root status
+    private Boolean root_status;
+
+    //jacket
+    @ManyToOne
+    @JoinColumn(name = "rootArtistid")
+    private ArtistModel rootArtistM;
+
+    @OneToMany(mappedBy = "rootArtistM", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SELECT)
+    private Set<ArtistModel> jacketArtists;
+
+    //multi-artist
+    private Boolean multi_status;
+
+    @ManyToMany(fetch = FetchType.LAZY,cascade= CascadeType.ALL)
+    @Fetch(FetchMode.SELECT)
+    @JoinTable(
+        name = "multivalue_artists",
+        joinColumns = {@JoinColumn(name="multiArtist_id")},
+        inverseJoinColumns = {@JoinColumn(name="singleArtist_id")}
+    )
+    private Set<ArtistModel> relatedSingleArtists;
+
+    @ManyToMany(mappedBy = "relatedSingleArtists", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SELECT)
+    private Set<ArtistModel> relatedMultiArtists;
+
 
     public ArtistModel() {
 
@@ -90,6 +129,60 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
     public void setArtist(String artist) {
         this.artist = artist;
     }
+
+
+
+    public Set<ArtistModel> getRelatedMultiArtists() {
+        return relatedMultiArtists;
+    }
+
+    public void setRelatedMultiArtists(
+        Set<ArtistModel> relatedMultiArtists) {
+        this.relatedMultiArtists = relatedMultiArtists;
+    }
+
+    public Set<ArtistModel> getRelatedSingleArtists() {
+        return relatedSingleArtists;
+    }
+
+    public void setRelatedSingleArtists(
+        Set<ArtistModel> relatedSingleArtists) {
+        this.relatedSingleArtists = relatedSingleArtists;
+    }
+
+    public ArtistModel getRootArtistM() {
+        return rootArtistM;
+    }
+
+    public void setRootArtistM(ArtistModel rootArtistM) {
+        this.rootArtistM = rootArtistM;
+    }
+
+    public Set<ArtistModel> getJacketArtists() {
+        return jacketArtists;
+    }
+
+    public void setJacketArtists(Set<ArtistModel> jacketArtists) {
+        this.jacketArtists = jacketArtists;
+    }
+
+    public Boolean getMulti_status() {
+        return multi_status;
+    }
+
+    public void setMulti_status(Boolean multi_status) {
+        this.multi_status = multi_status;
+    }
+
+    public Boolean getRoot_status() {
+        return root_status;
+    }
+
+    public void setRoot_status(Boolean root_status) {
+        this.root_status = root_status;
+    }
+
+
 
     public static ArtistModel createArtistModel(MetaSong meta) {
         ArtistModel artist = new ArtistModel(meta);

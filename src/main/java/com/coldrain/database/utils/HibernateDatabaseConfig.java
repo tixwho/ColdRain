@@ -1,6 +1,5 @@
 package com.coldrain.database.utils;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
@@ -8,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -22,18 +22,19 @@ public class HibernateDatabaseConfig {
     @Primary
     DataSource createDataSource(@Autowired HibernateConfig hibernateConfig) {
 
+        /*
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setUrl("jdbc:sqlite:"+hibernateConfig.getDburl());
         System.out.println("DBURL:"+hibernateConfig.getDburl());
         dataSource.setDriverClassName("org.sqlite.JDBC");
         dataSource.setInitialSize(1);
-        dataSource.setMaxActive(2);
+        dataSource.setMaxActive(1);
         dataSource.setMaxWait(60000);
         dataSource.setMinIdle(1);
         dataSource.setTimeBetweenEvictionRunsMillis(60000);
         dataSource.setMinEvictableIdleTimeMillis(300000);
-        dataSource.setTestWhileIdle(true);
-        dataSource.setValidationQuery("SELECT '1' from sqlite_master");
+        //dataSource.setTestWhileIdle(true);
+        //dataSource.setValidationQuery("SELECT '1' from sqlite_master");
         dataSource.setTestOnBorrow(false);
         dataSource.setTestOnReturn(false);
         //can not integrate with sqlite
@@ -43,12 +44,14 @@ public class HibernateDatabaseConfig {
         //DEVELOPING
         dataSource.setBreakAfterAcquireFailure(true);
         return dataSource;
-        /*
+        */
+
+
         DriverManagerDataSource ds = new DriverManagerDataSource();
         ds.setDriverClassName("org.sqlite.JDBC");
         ds.setUrl("jdbc:sqlite:" + hibernateConfig.getDburl());
         return ds;
-        */
+
 
 
     }

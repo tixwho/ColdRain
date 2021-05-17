@@ -7,6 +7,8 @@ import com.coldrain.database.models.ArtistModel;
 import com.coldrain.database.models.SongModel;
 import com.coldrain.playlist.generic.MetaSong;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -14,11 +16,16 @@ import org.springframework.stereotype.Service;
 @Service("ArtistBo")
 public class ArtistBoImpl implements ArtistBo {
 
+    Logger logger = LoggerFactory.getLogger(ArtistBoImpl.class);
     ArtistDao artistDao;
 
     @Override
     public ArtistModel createArtistModel(String artist) {
         ArtistModel artistM = new ArtistModel(artist);
+        //default: not jacked unless specified
+        artistM.setRoot_status(true);
+        //default: not multi-artist unless specified
+        artistM.setMulti_status(false);
         artistDao.save(artistM);
         return artistM;
     }
@@ -45,7 +52,7 @@ public class ArtistBoImpl implements ArtistBo {
     public ArtistModel guaranteeArtistModel_album(MetaSong metaSong) {
         ArtistModel artistM = artistDao.findByArtist(metaSong.getAlbumArtist());
         if (artistM == null){
-            artistM = createArtistModel_track(metaSong);
+            artistM = createArtistModel_album(metaSong);
         }
         return artistM;
     }
@@ -62,6 +69,43 @@ public class ArtistBoImpl implements ArtistBo {
         artistM.getAlbumModels().add(albumM);
         artistDao.update(artistM);
         return artistM;
+    }
+
+    @Override
+    public void connectSingleAndMultiArtistM(ArtistModel singleArtistM,
+        ArtistModel multiArtistM) {
+        multiArtistM.setMulti_status(true);
+        multiArtistM.getRelatedSingleArtists().add(singleArtistM);
+        singleArtistM.getRelatedMultiArtists().add(multiArtistM);
+        artistDao.update(multiArtistM);
+        artistDao.update(singleArtistM);
+    }
+
+    @Override
+    public void disconnectSingleAndMultiArtistM(ArtistModel singleArtistM,
+        ArtistModel multiArtistM) {
+        multiArtistM.getRelatedSingleArtists().remove(singleArtistM);
+        singleArtistM.getRelatedMultiArtists().remove(multiArtistM);
+        artistDao.update(multiArtistM);
+        artistDao.update(singleArtistM);
+    }
+
+    @Override
+    public void registerArtistJacket(ArtistModel rootArtistM, ArtistModel jacketArtistM) {
+        jacketArtistM.setRoot_status(false);
+        jacketArtistM.setRootArtistM(rootArtistM);
+        rootArtistM.getJacketArtists().add(jacketArtistM);
+        artistDao.update(jacketArtistM);
+        artistDao.update(rootArtistM);
+    }
+
+    @Override
+    public void abandonArtistJacket(ArtistModel jacketArtistM) {
+        ArtistModel rootArtistM = jacketArtistM.getRootArtistM();
+        rootArtistM.getJacketArtists().remove(jacketArtistM);
+        jacketArtistM.setRootArtistM(null);
+        artistDao.update(jacketArtistM);
+        artistDao.update(rootArtistM);
     }
 
 

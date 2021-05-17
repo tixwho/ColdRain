@@ -10,8 +10,15 @@ import com.coldrain.database.models.ArtistModel;
 import com.coldrain.database.models.FileModel;
 import com.coldrain.database.models.MetaModel;
 import com.coldrain.database.models.SongModel;
+import com.coldrain.exception.DatabaseException;
+import com.coldrain.exception.ErrorCodes;
+import com.coldrain.exception.MetaIOException;
 import com.coldrain.playlist.generic.MetaSong;
+import com.coldrain.playlist.generic.SupportedAudioFormat;
+import java.io.File;
+import java.util.Collection;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +50,35 @@ public class AudioDBService {
         this.songBo = songBo;
     }
 
+    public void fullFolderScan(File inDir) throws DatabaseException {
+        // check this is a directory
+        if (!inDir.isDirectory()) {
+            throw new DatabaseException("Not a Directory to apply fullScan",
+                ErrorCodes.BASE_IO_ERROR);
+        }
+
+        // filter audiofiles with SuffixFileFilter (from commonsIO)
+        String[] acceptedAudioFormat = SupportedAudioFormat.getSupportedAudioArray();
+        Collection<File> allAudios = FileUtils.listFiles(inDir, acceptedAudioFormat, true);
+
+        //scan all srcs, and only add if no file presents here
+        List<String> storedSrcs = fileBo.findAllFileModelsSRC();
+        for(File audioFile: allAudios){
+            //skip scanned ones
+            if(storedSrcs.contains(audioFile.getAbsolutePath())){
+                continue;
+            }
+            MetaSong meta;
+            try {
+                meta = new MetaSong(audioFile);
+            } catch (MetaIOException e) {
+                logger.warn("Failure reading audioFile when applying fullScan!",e);
+                continue;
+            }
+            scanSingle(meta);
+        }
+    }
+
 
     public FileModel scanSingle(MetaSong metaSong){
         //file prototypeT");
@@ -66,8 +102,6 @@ public class AudioDBService {
             albumM = albumBo.guaranteeAlbumModel(metaSong,albumArtistM);
             artistBo.registerAlbumMtoArtistM(albumArtistM, albumM);
         }
-        System.out.println(albumM);
-        System.out.println(albumArtistM);
 
         //End with Meta, always add to relation
         MetaModel metaM = metaBo.findByAlbumMandSongM(albumM,songM);
@@ -79,7 +113,7 @@ public class AudioDBService {
         //link with file
         fileBo.attachMetaMToFileM(fileM,metaM);
         metaBo.registerFileMtoMetaM(metaM,fileM);
-        logger.debug("Meta loaded:"+metaM);
+        logger.info("Meta loaded:"+metaM);
         return fileM;
     }
 
