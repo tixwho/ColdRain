@@ -29,6 +29,7 @@ public class ArtistBoImpl implements ArtistBo {
         artistDao.save(artistM);
         return artistM;
     }
+
     @Override
     public ArtistModel createArtistModel_track(MetaSong metaSong) {
         return createArtistModel(metaSong.getArtist());
@@ -104,6 +105,7 @@ public class ArtistBoImpl implements ArtistBo {
         ArtistModel rootArtistM = jacketArtistM.getRootArtistM();
         rootArtistM.getJacketArtists().remove(jacketArtistM);
         jacketArtistM.setRootArtistM(null);
+        jacketArtistM.setRoot_status(true); //add back root status
         artistDao.update(jacketArtistM);
         artistDao.update(rootArtistM);
     }

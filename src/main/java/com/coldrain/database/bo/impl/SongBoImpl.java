@@ -62,6 +62,27 @@ public class SongBoImpl implements SongBo {
     }
 
     @Override
+    public void registerCoverSong(SongModel origSongM, SongModel coverSongM) {
+        coverSongM.setOrigSongM(origSongM);
+        origSongM.getCoverSongs().add(coverSongM);
+        origSongM.setHas_cover(true);
+        songDao.update(coverSongM);
+        songDao.update(origSongM);
+    }
+
+    @Override
+    public void abandonCoverSong(SongModel coverSongM) {
+        SongModel origSongM = coverSongM.getOrigSongM();
+        origSongM.getCoverSongs().remove(coverSongM);
+        if(origSongM.getCoverSongs().size()==0){
+            origSongM.setHas_cover(false);
+        }
+        coverSongM.setOrigSongM(null);
+        songDao.update(coverSongM);
+        songDao.update(origSongM);
+    }
+
+    @Override
     public void save(SongModel songM) {
         songDao.save(songM);
     }

@@ -46,9 +46,25 @@ public class SongModel extends DatabasePOJO implements Serializable {
     @JoinColumn(name = "artistid")
     private ArtistModel artistM;
 
+    /* One way relationship to actualSong*/
     @ManyToOne
     @JoinColumn(name = "actualSongId")
     private SongModel actualSongM;
+
+
+
+    /* Two way relationship between covers and main*/
+
+    private Boolean has_cover;
+
+
+    @OneToMany(mappedBy = "origSongM", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SELECT)
+    private Set<SongModel> coverSongs = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "origSongId")
+    private SongModel origSongM;
 
     private String trackTitle;
 
@@ -102,6 +118,31 @@ public class SongModel extends DatabasePOJO implements Serializable {
 
     public void setActualSongM(SongModel actualSongM) {
         this.actualSongM = actualSongM;
+    }
+
+    public Boolean getHas_cover() {
+        return has_cover;
+    }
+
+    public void setHas_cover(Boolean has_cover) {
+        this.has_cover = has_cover;
+    }
+
+
+    public Set<SongModel> getCoverSongs() {
+        return coverSongs;
+    }
+
+    public void setCoverSongs(Set<SongModel> coverSongs) {
+        this.coverSongs = coverSongs;
+    }
+
+    public SongModel getOrigSongM() {
+        return origSongM;
+    }
+
+    public void setOrigSongM(SongModel origSongM) {
+        this.origSongM = origSongM;
     }
 
     public void attachArtistModel(ArtistModel artistModel) {

@@ -59,7 +59,7 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
     //root status
     private Boolean root_status;
 
-    //jacket
+    /* jacket */
     @ManyToOne
     @JoinColumn(name = "rootArtistid")
     private ArtistModel rootArtistM;
@@ -68,7 +68,7 @@ public class ArtistModel extends DatabasePOJO implements Serializable {
     @Fetch(FetchMode.SELECT)
     private Set<ArtistModel> jacketArtists;
 
-    //multi-artist
+    /* multi-artist */
     private Boolean multi_status;
 
     @ManyToMany(fetch = FetchType.LAZY,cascade= CascadeType.ALL)
